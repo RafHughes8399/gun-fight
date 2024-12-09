@@ -1,83 +1,72 @@
 #pragma once
 #include "projectiles.h"
 #include <memory>
-namespace wep{
-class weapon {
+namespace wep {
+	static const int REVOLVER_AMMO = 6;
+	static const int REVOLVER_DMG = 1;
+	class weapon {
 	public:
+
+		class weapon_state {
+		public:
+			virtual ~weapon_state() = default;
+			weapon_state(weapon_state&& other) = default;
+			weapon_state& operator=(weapon_state&& other) = default;
+
+			weapon_state() {};
+			virtual bool fire(weapon* w) = 0;
+			virtual bool reload(weapon* w) = 0;
+		protected:
+		};
+
+		class loaded_state : public weapon_state {
+		public:
+			loaded_state() {};
+			bool fire(weapon* w) override;
+			bool reload(weapon* w) override;
+
+		private:
+
+		};
+
+		class unloaded_state : public weapon_state {
+		public:
+			unloaded_state() {};
+			bool fire(weapon* w) override;
+			bool reload(weapon* w) override;
+		private:
+
+		};
+
 		virtual ~weapon() = default;
 		weapon(weapon&& other) = default;
 		weapon& operator=(weapon&& other) = default;
-		weapon(int ammo, int damage, proj::projectile p)
-			: ammo_(ammo), damage_(damage), 
-			load_state_(std::make_unique<weapon_state>(loaded_state())),
-			projectile_type_(std::make_unique<proj::projectile>(p))
-			{};
-		weapon(const weapon& other);
+		weapon(int ammo, int damage)
+			: ammo_(ammo), damage_(damage), state_(std::make_unique<loaded_state>(loaded_state())){};
 
-		int get_ammo() const;
-		int get_damage() const;
-		bool change_state();
-		std::unique_ptr<proj::projectile> get_projectile_type();
-
+		int get_ammo() { return ammo_; }
+		int get_damage() {return damage_;}
+		bool is_loaded();
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
 
-	private:
+		friend class weapon_state;
+	protected:
 		int ammo_;
 		const int damage_;
-		std::unique_ptr<weapon_state> load_state_;
-		std::unique_ptr<proj::projectile> projectile_type_;
-	
+		std::unique_ptr<weapon_state> state_; // if you wanted a get_state return a raw pointer
+		std::unique_ptr<proj::projectile> bullet_type_;
 	};
 	//TODO 
 	class revolver : public weapon {
 	public:
-		bool fire() override;
-		bool reload() override;
-	private:	
-
-	};
-
-	// TODO: implement subclasses
-	class shotgun : public weapon {
-	public:
-	private:
-	};
-	class rifle : public weapon {
-	public:
-	private:
-	};
-	class dynamite : public weapon {
-	public:
-	private:
-	};
-
-
-	class weapon_state {
-	public:
-		virtual ~weapon_state() = default;
-		weapon_state(weapon_state&& other) = default;
-		weapon_state& operator=(weapon_state&& other) = default;
-		weapon_state();
-		virtual bool fire() = 0;
-		virtual bool reload() = 0;
-	protected:
-		const std::unique_ptr<weapon> weapon_;
-	};
-
-	class loaded_state : public weapon_state {
-	public:
-		loaded_state() {};
+		revolver()
+			: weapon(REVOLVER_AMMO, REVOLVER_DMG) {
+		};
 		bool fire() override;
 		bool reload() override;
 	private:
+
 	};
 
-	class unloaded_state : public weapon_state { 
-	public:
-		unloaded_state();
-		bool fire() override;
-		bool reload() override;	
-	private:
-	};
 }

@@ -9,9 +9,7 @@ public:
 	~gunman() = default;
 
 	// create a gunman at (0,0), with a revolver)
-	gunman() 
-		: position_({ 0,0 }), gun_(std::make_unique<revolver>(revolver(6, 1))), health_(1) {
-	};
+	gunman();
 	// move
 	gunman(const gunman &&other);
 	// copy
@@ -20,7 +18,7 @@ public:
 
 private:
 	std::vector<int> position_ = std::vector<int>{};
-	std::unique_ptr<weapon> gun_; // make this a pointer 
+	std::unique_ptr<wep::weapon> gun_; // make this a pointer 
 	int health_;
 };
 }

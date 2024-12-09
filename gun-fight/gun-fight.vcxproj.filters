@@ -24,15 +24,18 @@
     <ClCompile Include="weapons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="projectiles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gunman.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="weapons.h">
+    <ClInclude Include="projectiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="projectiles.h">
+    <ClInclude Include="weapons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
