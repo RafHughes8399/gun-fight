@@ -6,9 +6,8 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace gunfighttest{
-	TEST_CLASS(gunfighttest){
+	TEST_CLASS(revolvertests){
 	public:
-		
 		TEST_METHOD(WepInit){
 			auto rev = std::make_unique<wep::revolver>(wep::revolver());
 			Assert::AreEqual(rev->get_ammo(), wep::REVOLVER_AMMO);
@@ -40,5 +39,25 @@ namespace gunfighttest{
 			Assert::AreEqual(rev->fire(), true);
 			Assert::AreEqual(rev->fire(), false);
 		}
+		TEST_METHOD(WepNoAmmo) {
+			auto rev = std::make_unique<wep::revolver>(wep::revolver());
+			Assert::AreEqual(rev->is_loaded(), true);
+			while (rev->get_ammo() > 0) {
+				rev->fire();
+				rev->reload();
+			}
+			Assert::AreEqual(rev->get_ammo(), 0);
+			Assert::AreEqual(rev->is_loaded(), true);
+			// cannot reload, no spare bullets
+			Assert::AreEqual(rev->reload(), false);
+
+			// fire the last bullet and try to reload
+			Assert::AreEqual(rev->fire(), true);
+			Assert::AreEqual(rev->reload(), false);
+		}
 	};
+	TEST_CLASS(gunmantests) {
+
+	};
+
 }
