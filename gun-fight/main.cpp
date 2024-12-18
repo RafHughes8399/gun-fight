@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdio.h>
 #include "raylib.h"
-
 int main() {
 	const int width = 1280;
 	const int height = 1024;

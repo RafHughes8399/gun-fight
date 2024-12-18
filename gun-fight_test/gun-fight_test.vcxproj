@@ -77,7 +77,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\raffa\source\repos\gun-fight;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\raffa\source\repos\RafHughes8399\gun-fight\gun-fight\x64\Debug;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -102,7 +102,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;C:\Users\raffa\source\repos\gun-fight\gun-fight\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>weapons.obj;projectiles.obj;gunman.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>weapons.obj;projectiles.obj;gunman.obj;"C:\Users\raffa\source\repos\RafHughes8399\gun-fight\gun-fight\x64\Debug";%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
