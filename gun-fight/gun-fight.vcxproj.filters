@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gunman.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="weapons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gunman.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="projectiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>

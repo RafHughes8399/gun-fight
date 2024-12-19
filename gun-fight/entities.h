@@ -12,17 +12,17 @@
 // a width and height
 // an image source
 // 
-#include "Vector2.hpp" // the vector 2 struct from raylib, trying a more selective inclusion strategy
+#include "raylib.h"
+#include "weapons.h"
 #include <vector>
 #include <string>
 #include <memory>
 namespace entities {
 	static const float DEFAULT_X = 100.0;
 	static const float DEFAULT_Y = 100.0;
-	
 	static const int HEIGHT = 50;
 	static const int WIDTH = 50;
-	static const std::string DEFAULT_PATH = "sprites/default.png";
+	static const char* DEFAULT_PATH = "sprites/default.png";
 	class entity {
 	public:
 		// inheritance overhead
@@ -33,23 +33,28 @@ namespace entities {
 		// default entitiy constructor (at default position, uses default entity image)
 		entity()
 			:position_({DEFAULT_X, DEFAULT_Y}), height_(HEIGHT), width_(WIDTH), path_(DEFAULT_PATH)
-		{};
+		{
+			texture_ = LoadTexture(path_);
+		};
 		entity(float x, float y, int height, int width, const char* path)
-			: position_({ x, y }), height_(height), width_(width), path_(path) {};
+			: position_({ x, y }), height_(height), width_(width), path_(path) {
+			
+			texture_ = LoadTexture(path_);
+		};
 
 		// copy constructor
 		entity(const entity& other)
 			: position_(other.position_), height_(other.height_), 
-			width_(other.width_), path_(other.path_) {};
+			width_(other.width_), path_(other.path_), texture_(other.texture_) {};
 		// accessors and modifiers
 		float get_x();
 		float get_y();
 		Vector2 get_position();
 		int get_height();
 		int get_width();
-		std::string get_path();
+		const char* get_path();
 		// operator overloads
-		entity& operator=(const entity& other);
+		entity& operator=(const entity& other); // TODO: should be virtual
 		// other behaviours
 		void draw(); // all entities would be drawn the same, with the same raylib method??
 		virtual void update() = 0; // all entities would however, update differently
@@ -57,14 +62,44 @@ namespace entities {
 		virtual bool collide(const entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
 	private:
 		Vector2 position_; // x, y position coords using float, necessary for drawing
+		Texture2D texture_;
 		int height_; // entity height, necessary for collision
 		int width_; // entity width, necessary for collision
-		std::string path_; // path to image file
+		const char* path_; // path to image file
 
 		// position, image src file - i think in the form of const char * let me check,
 		// image height and width
 	};
 	
+	// player-controlled entity
+	class gunman : public entity {
+	public:
+		// constructors
+		gunman()
+			: entity() {};
+		// gunman with revolver
+		gunman(float x, float y, int height, int width, const char* path, int health)
+			: entity(x, y, height, width, path), gun_(std::make_unique<wep::revolver>(wep::revolver())), health_(health) {
+		};
+		gunman(const gunman& other)
+			:entity(other), gun_(other.gun_->clone()), health_(other.health_) {};
+		// unique accessors and modifiers
+		wep::weapon* get_weapon();
+		int get_health();
+		// operator overloads 
+
+		// behaviour overloads
+		void update() override;
+		bool collide(const entity& other) override;
+
+
+		//unique behaviour 
+		bool move(Vector2& movement_vector);
+	private:
+		std::unique_ptr<wep::weapon> gun_;
+		int health_;
+	};
+
 	// a stationary entity that blocks projectiles
 	class obstacle : public entity {
 	public:

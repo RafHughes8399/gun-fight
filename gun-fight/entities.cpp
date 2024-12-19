@@ -20,7 +20,7 @@ int entities::entity::get_width() {
 	return width_;
 }
 
-std::string entities::entity::get_path() {
+const char* entities::entity::get_path() {
 	return path_;
 }
 
@@ -36,7 +36,34 @@ entities::entity& entities::entity::operator=(const entities::entity& other) {
 // entity - other behaviours
 void entities::entity::draw() {
 	//TODO: implement
+	// draw the loaded texture at the position
+	DrawTexture(texture_, position_.x, position_.y, WHITE);
 	return;
+}
+
+
+//gunman - accessors
+wep::weapon* entities::gunman::get_weapon() {
+	return gun_.get();
+}
+
+//gunman - inherited behaviour
+int entities::gunman::get_health() {
+	return health_;
+}
+
+void entities::gunman::update() {
+	//TODO: implement
+	return;
+}
+bool entities::gunman::collide(const entities::entity& other) {
+	//TODO: implement
+	return true;
+}
+
+//gunman - unique behaviour
+bool entities::gunman::move(Vector2& movement_vector) {
+	return true;
 }
 
 // obstacle - accessors

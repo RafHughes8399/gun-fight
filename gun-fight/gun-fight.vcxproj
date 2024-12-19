@@ -147,14 +147,12 @@
   <ItemGroup>
     <ClCompile Include="crf.cpp" />
     <ClCompile Include="entities.cpp" />
-    <ClCompile Include="gunman.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="projectiles.cpp" />
     <ClCompile Include="weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entities.h" />
-    <ClInclude Include="gunman.h" />
     <ClInclude Include="projectiles.h" />
     <ClInclude Include="weapons.h" />
   </ItemGroup>
