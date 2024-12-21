@@ -51,7 +51,7 @@ wep::weapon& wep::weapon::operator=(const wep::weapon& other) {
 	return *this;
 }
 
-// WEAPON OTHER BEAHVIOURS
+// ---------- REVOLVER -----------
 bool wep::revolver::fire(){
 	return state_->fire(this);
 }
@@ -62,4 +62,8 @@ bool wep::revolver::reload() {
 
 std::unique_ptr<wep::weapon> wep::revolver::clone() const {
 	return std::make_unique<wep::revolver>(*this);
+}
+
+bool wep::revolver::operator==(const weapon& other) {
+	return true;
 }

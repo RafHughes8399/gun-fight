@@ -60,7 +60,7 @@ namespace wep {
 
 		// operator overloads
 		weapon& operator=(const weapon& other);
-
+		virtual bool operator==(const weapon& other) = 0;
 		// other behaviours
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
@@ -80,6 +80,7 @@ namespace wep {
 		};
 		revolver(const revolver& other)
 			: weapon(other) {};
+		bool operator==(const weapon& other) override;
 		bool fire() override;
 		bool reload() override;
 		std::unique_ptr<weapon> clone() const override;
