@@ -119,7 +119,9 @@ void update_game() {
 			it = game_entities.erase(it);
 		}
 		else {
-			// check collision
+			// check collision, you aren't checking the gunmen here
+			// only the entities which presently is just the bullet 
+			// so check the gunmen too
 			for (auto it2 = game_entities.begin(); it2 != game_entities.end(); ++it2) {
 				if (it != it2) {
 					if (CheckCollisionRecs((*it)->get_rectangle(), (*it2)->get_rectangle())) {
