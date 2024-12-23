@@ -29,7 +29,6 @@ namespace wep {
 			bool reload(weapon* w) override;
 			std::unique_ptr<weapon_state> clone() override;
 
-
 		private:
 
 		};

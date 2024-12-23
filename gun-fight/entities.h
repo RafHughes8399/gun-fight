@@ -59,7 +59,7 @@ namespace entities {
 		void draw(); // all entities would be drawn the same, with the same raylib method??
 		virtual bool update() = 0; // all entities would however, update differently
 
-		virtual bool collide(std::unique_ptr<entity>& other) = 0; // likewise with collision i think better handled by the next level of inheritance
+		virtual bool collide(entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
 	protected:
 		Vector2 position_; // x, y position coords using float, necessary for drawing
 		Texture2D texture_;
@@ -85,8 +85,8 @@ namespace entities {
 		bool operator==(const entity& other) override;
 		// behaviour overloads
 		bool update() override;
-		bool collide(std::unique_ptr<entity>& other) override;
-
+		bool collide(entity&  other) override;
+		bool take_damage(int& damage);
 
 		//unique behaviour 
 		bool move(Vector2& movement_vector, const int& screen_width, const int& screen_height);
@@ -109,7 +109,7 @@ namespace entities {
 			:entity(other), health_(other.health_) {};
 		// overload the virtual methods
 		bool update() override;
-		bool collide(std::unique_ptr<entity>& other) override;
+		bool collide(entity& other) override;
 
 		// operator overloads
 		bool operator==(const entity& other) override;
@@ -117,7 +117,7 @@ namespace entities {
 		// unqiue accessors and modifiers
 		int get_health();
 		void die(); // destroys the obstacle when it dies 
-		void take_damage(int& damage); // returns true if health > 0
+		bool take_damage(int& damage); // returns true if health > 0
 	protected:
 		//TODO revisit
 		int health_;
@@ -138,7 +138,7 @@ namespace entities {
 
 		// overload collide and update
 		bool update() override; // this is where projectile movement will occur
-		bool collide(std::unique_ptr<entity>& other) override;
+		bool collide(entity& other) override;
 
 		// operator overloads
 		bool operator==(const entity& other) override;
@@ -169,7 +169,7 @@ namespace entities {
 		
 		// overloads
 		bool update() override;
-		bool collide(std::unique_ptr<entity>& other) override;
+		bool collide(entity& other) override;
 
 		// operator overloads
 		bool operator==(const entity& other) override;
@@ -189,7 +189,7 @@ namespace entities {
 			:entity(other) {};
 
 		bool update() override;
-		bool collide(std::unique_ptr<entity>& other) override; // maybe specify to be a gunman 
+		bool collide(entity& other) override; // maybe specify to be a gunman 
 		// needs more chin scratching, this is not part of the MVP, more like DLC 0
 		// leave for now 
 		// will have more unique behaviour in regard to interacting with the player

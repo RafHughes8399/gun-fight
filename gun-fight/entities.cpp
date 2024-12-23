@@ -47,6 +47,12 @@ bool entities::gunman::operator==(const entities::entity& other) {
 	return entities::entity::operator==(other)
 		and gun_.get() == gunman_ptr->get_weapon() and health_ == gunman_ptr->get_health();
 }
+
+bool entities::gunman::take_damage(int& damage) {
+	// return true if still alive, return false if not
+	health_ -= damage;
+	return (health_ > 0);
+}
 wep::weapon* entities::gunman::get_weapon() const {
 	return gun_.get();
 }
@@ -60,9 +66,10 @@ bool entities::gunman::update() {
 
 	// changes health
 	// changes textures too, for animation, or that would be draw
+	// do a health check
 	return true;
 }
-bool entities::gunman::collide(std::unique_ptr<entities::entity>& other) {
+bool entities::gunman::collide(entities::entity& other) {
 	//TODO: implement
 	return true;
 }
@@ -82,6 +89,10 @@ bool entities::gunman::move(Vector2& movement_vector, const int& screen_width, c
 }
 
 // obstacle - accessors
+
+bool entities::obstacle::operator==(const entities::entity& other) {
+	return true;
+}
 int entities::obstacle::get_health(){
 	return health_;
 }
@@ -93,7 +104,7 @@ bool entities::obstacle::update() {
 	// do a health chek
 	return true;
 }
-bool entities::obstacle::collide(std::unique_ptr<entities::entity>& other) {
+bool entities::obstacle::collide(entities::entity& other) {
 	//TODO implement
 	return true;
 }
@@ -101,14 +112,9 @@ void entities::obstacle::die() {
 	//TODO: implement
 	return;
 }
-void entities::obstacle::take_damage(int& damage) {
-	//TODO: implement
-
-	// subtract damage from health
-	// if healthj > 0, return true, obstacle is not dead
-	// if health < 0, destroy object
-	// at some point incorporate draw update to show object damage
-	return;
+bool entities::obstacle::take_damage(int& damage) {
+	health_ -= damage;
+	return health_ > 0;
 }
 
 bool entities::projectile::operator==(const entities::entity& other) {
@@ -130,7 +136,7 @@ bool entities::projectile::update() {
 	//TODO implement
 	return true;
 }
-bool entities::projectile::collide(std::unique_ptr<entities::entity>& other) {
+bool entities::projectile::collide(entities::entity& other) {
 	//TODO implement
 	return true;
 }
@@ -151,9 +157,21 @@ bool entities::bullet::update() {
 	return true;
 
 }
-bool entities::bullet::collide(std::unique_ptr<entities::entity>& other) {
-	
-	return true;
+bool entities::bullet::collide(entities::entity& other) {
+	// true if still alive, false if not
+	entities::gunman* gunman = dynamic_cast<entities::gunman*> (&other);
+	if (gunman != nullptr) {
+		auto dmg = weapon_->get_damage();
+		return gunman->take_damage(dmg);
+	}
+
+	entities::obstacle* obstacle = dynamic_cast<entities::obstacle*>(&other);
+	if (obstacle != nullptr) {
+		auto dmg = weapon_->get_damage();
+		return obstacle->take_damage(dmg);
+	}
+	// if obstacle, decrease health of obstacle
+	return true; // return true if still alive, return false if not alive
 }
 
 bool entities::pickup::operator==(const entities::entity& other) {
@@ -164,7 +182,7 @@ bool entities::pickup::update() {
 	//TODO implement
 	return true;
 }
-bool entities::pickup::collide(std::unique_ptr<entities::entity>& other) {
+bool entities::pickup::collide(entities::entity& other) {
 	//TODO implement
 	return true;
 }

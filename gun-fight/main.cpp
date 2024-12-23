@@ -14,9 +14,9 @@ const int height = 1024;
 const int half_w = width / 2;
 const int half_h = height / 2;
 static int frame_count = 0;
-static bool round_over = false;
+static bool game_over = false;
 
-static std::vector <std::unique_ptr<entities::entity>> game_entities = {};
+static std::vector<std::unique_ptr<entities::entity>> game_entities = {};
 static std::unique_ptr<entities::gunman> gunman1;
 static std::unique_ptr<entities::gunman> gunman2;
 
@@ -26,15 +26,16 @@ static void update_game();
 static void draw_game();
 static void unload_game();
 static void update_draw_frame();
-std::vector <entities::entity*>  get_gunmen_and_obstacles(std::vector < std::unique_ptr<entities::entity>>& e);
-
+std::vector <entities::obstacle*>  get_obstacles(std::vector < std::unique_ptr<entities::entity>>& e);
+std::vector <entities::projectile*> get_projectiles(std::vector<std::unique_ptr<entities::entity>>& e);
+bool is_moving(int gunman);
 int main() {	
 	
 	SetTargetFPS(60);
 	// initialise the window and the game
 	InitWindow(width, height, "gun fight yo");
 	init_game();
-	while (not WindowShouldClose()) {
+	while (not WindowShouldClose() and not game_over) {
 		update_draw_frame();
 	}
 	unload_game();
@@ -47,10 +48,11 @@ void init_game() {
 	gunman1 = std::make_unique<entities::gunman>(entities::gunman(50, half_h,"sprites/gunman-1.png", 1));
 	gunman2 = std::make_unique<entities::gunman>(entities::gunman(1150, half_h, "sprites/gunman-2.png", 1));
 
-	// populate the level
-
+	// populate the level - start with static then move onto randmon generatio
+	
 	// update other tracking variables
 	frame_count = 0;
+	game_over = false;
 }
 
 // update the game by one frame
@@ -61,82 +63,129 @@ void update_game() {
 	// player controls - gunman 1
 	Vector2 movement;
 	if (IsKeyDown(KEY_W)) {
-		movement = {0, config::GUNMAN_SPEED * -1};
+		movement = { 0, config::GUNMAN_SPEED * -1 };
 		gunman1->move(movement, width, height);
 	}
 	if (IsKeyDown(KEY_A)) {
-		movement = { config::GUNMAN_SPEED * -1, 0};
+		movement = { config::GUNMAN_SPEED * -1, 0 };
 		gunman1->move(movement, width, height);
-	}	
+	}
 	if (IsKeyDown(KEY_S)) {
-		movement = {0, config::GUNMAN_SPEED};
+		movement = { 0, config::GUNMAN_SPEED };
 		gunman1->move(movement, width, height);
-	}	
+	}
 	if (IsKeyDown(KEY_D)) {
-		movement = {config::GUNMAN_SPEED, 0};
+		movement = { config::GUNMAN_SPEED, 0 };
 		gunman1->move(movement, width, height);
 	}
 	if (IsKeyPressed(KEY_R)) {
 		gunman1->get_weapon()->reload();
 	}
 
-	if (IsKeyPressed(KEY_F)) {
+	if (IsKeyPressed(KEY_F) and not is_moving(1)) {
 		if (gunman1->get_weapon()->fire()) {
-			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman1->get_x(), gunman1->get_y() + 50, "sprites/bullet-1.png", 1, gunman1->get_weapon())));
+			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman1->get_x() + 95, gunman1->get_y() + 45, "sprites/bullet-1.png", 1, gunman1->get_weapon())));
 		}
 	}
 	// player controls - gunman 2
 	if (IsKeyDown(KEY_I)) {
-		movement = {0,config::GUNMAN_SPEED * -1};
+		movement = { 0,config::GUNMAN_SPEED * -1 };
 		gunman2->move(movement, width, height);
 	}
 	if (IsKeyDown(KEY_J)) {
-		movement = {config::GUNMAN_SPEED * -1, 0};
+		movement = { config::GUNMAN_SPEED * -1, 0 };
 		gunman2->move(movement, width, height);
-	}	
+	}
 	if (IsKeyDown(KEY_K)) {
-		movement = {0, config::GUNMAN_SPEED};
+		movement = { 0, config::GUNMAN_SPEED };
 		gunman2->move(movement, width, height);
-	}	
+	}
 	if (IsKeyDown(KEY_L)) {
-		movement = {config::GUNMAN_SPEED, 0};
+		movement = { config::GUNMAN_SPEED, 0 };
 		gunman2->move(movement, width, height);
 	}
 	if (IsKeyPressed(KEY_U)) {
 		gunman2->get_weapon()->reload();
 	}
 
-	if (IsKeyPressed(KEY_H)) {
+	if (IsKeyPressed(KEY_H) and not is_moving(2)) {
 		if (gunman2->get_weapon()->fire()) {
-			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x(), gunman2->get_y() + 50, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
+			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x() - 10, gunman2->get_y() + 45, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
 		}
-	}	
+	}
+	// update entities 
 
 	gunman1->update();
 	gunman2->update();
+
 	for (auto it = game_entities.begin(); it != game_entities.end();) {
+
 		if (not (*it)->update()) {
 			it = game_entities.erase(it);
 		}
 		else {
-			// check collision, you aren't checking the gunmen here
-			// only the entities which presently is just the bullet 
-			// so check the gunmen too
-			for (auto it2 = game_entities.begin(); it2 != game_entities.end(); ++it2) {
-				if (it != it2) {
-					if (CheckCollisionRecs((*it)->get_rectangle(), (*it2)->get_rectangle())) {
-						(*it)->collide(*it2);
-					}
-				}
-				else {
-					std::cout << "same iterator" << std::endl;
-				}
-			}
-			++it;
+			++it; // DO NOT DELETE THIS LINE YOU SILLY GOOBER 
 		}
 	}
-}
 
+	// check collisions
+	auto projectiles = get_projectiles(game_entities);
+	auto obstacles = get_obstacles(game_entities);
+
+	// maybe the other way around
+	for (auto proj = projectiles.begin(); proj != projectiles.end();){
+		if (CheckCollisionRecs((*proj)->get_rectangle(), gunman1->get_rectangle())) {
+			if (not (*proj)->collide(*gunman1)) {
+				// update the gunman texture to dead,
+				proj = projectiles.erase(proj);
+				game_over = true;
+				continue;
+				// change the game states (game_over, etc)
+			}
+			else {
+				proj = projectiles.erase(proj);
+				continue;
+			}
+		}
+		// same thing
+		else if (CheckCollisionRecs((*proj)->get_rectangle(), gunman2->get_rectangle())) {
+			if (not (*proj)->collide(*gunman2)) {
+				
+				proj = projectiles.erase(proj);
+				game_over = true;
+				continue;
+			}
+			else {
+				// still destroy the bullet and increment
+				proj = projectiles.erase(proj);
+				continue;
+			}
+		}
+		else {
+			for (auto obs = obstacles.begin(); obs != obstacles.end();) {			
+				if (CheckCollisionRecs((*proj)->get_rectangle(), (*obs)->get_rectangle())) {
+					if (not (*proj)->collide(**obs)) {
+						// update the obstacle texture
+						proj = projectiles.erase(proj);
+						obs++;
+						continue;
+						// destroy the bullet
+					}
+					else{
+						// destroy the obstacle
+						obs = obstacles.erase(obs);
+						proj = projectiles.erase(proj);
+						continue;
+						// destroy the bullet
+					}
+				}
+			}
+		}
+		++proj;
+	}
+	// then check gunman collision with pickups and obstacles
+	// TODO: pending pickup implementation
+}
 void draw_game() {
 	BeginDrawing();
 	ClearBackground(colours::night);
@@ -159,20 +208,35 @@ void update_draw_frame() {
 
 
 // --------------------- other helper functions --------------------------------
-std::vector <entities::entity*> get_gunmen_and_obstacles(std::vector < std::unique_ptr<entities::entity>>& e) {
-	auto gunmen_obstacles = std::vector<entities::entity*>{};
+std::vector <entities::obstacle*> get_obstacles(std::vector < std::unique_ptr<entities::entity>>& e) {
+	auto obstacles = std::vector<entities::obstacle*>{};
 	for (std::unique_ptr<entities::entity>& current : e) {
-		// try to dynamic cast to a gunman or obstacle
-		entities::gunman* gunman = dynamic_cast<entities::gunman*>(current.get());
-		if (gunman != nullptr) { 
-			gunmen_obstacles.push_back(gunman); 
-			continue;
-		}
 		entities::obstacle* obstacle = dynamic_cast<entities::obstacle*>(current.get());
 		if (obstacle != nullptr) {
-			gunmen_obstacles.push_back(obstacle);
+			obstacles.push_back(obstacle);
 			continue;
 		}
 	}
-	return gunmen_obstacles;
+	return obstacles;
+}
+
+std::vector <entities::projectile*> get_projectiles(std::vector<std::unique_ptr<entities::entity>>& e) {
+	auto projectiles = std::vector<entities::projectile*>{};
+	for (std::unique_ptr<entities::entity>& current : e) {
+		entities::projectile* projectile = dynamic_cast<entities::projectile*>(current.get());
+		if (projectile != nullptr) {
+			projectiles.push_back(projectile);
+			continue;
+		}
+	}
+	return projectiles;
+}
+
+bool is_moving(int gunman) {
+	if (gunman == 1) {
+		return IsKeyDown(KEY_W) or IsKeyDown(KEY_A) or IsKeyDown(KEY_S) or IsKeyDown(KEY_D);
+	}
+	else if(gunman == 2){
+		return IsKeyDown(KEY_I) or IsKeyDown(KEY_J) or IsKeyDown(KEY_K) or IsKeyDown(KEY_L);	}
+	else { return false; }
 }
