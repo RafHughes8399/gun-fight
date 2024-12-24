@@ -26,8 +26,6 @@ static void update_game();
 static void draw_game();
 static void unload_game();
 static void update_draw_frame();
-std::vector <entities::obstacle*>  get_obstacles(std::vector < std::unique_ptr<entities::entity>>& e);
-std::vector <entities::projectile*> get_projectiles(std::vector<std::unique_ptr<entities::entity>>& e);
 bool is_moving(int gunman);
 int main() {	
 	
@@ -110,7 +108,7 @@ void update_game() {
 
 	if (IsKeyPressed(KEY_H) and not is_moving(2)) {
 		if (gunman2->get_weapon()->fire()) {
-			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x() - 10, gunman2->get_y() + 45, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
+			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x() - 20, gunman2->get_y() + 45, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
 		}
 	}
 	// update entities 
@@ -128,10 +126,45 @@ void update_game() {
 		}
 	}
 
-	// check collisions
-	auto projectiles = get_projectiles(game_entities);
-	auto obstacles = get_obstacles(game_entities);
 
+	// check collision, there is some iterator invalidation
+
+
+	// restructure the collision method, pass the gunmen and entities via reference
+
+	for (auto it1 = game_entities.begin(); it1 != game_entities.end();) {
+		auto e = it1->get();
+		bool alive = true;
+		if (CheckCollisionRecs(e->get_rectangle(), gunman1->get_rectangle())) {
+			alive = e->collide(*gunman1);
+			it1 = game_entities.erase(it1);
+			if (not alive) {
+				game_over = true;
+			}
+			continue;
+		}
+		if (CheckCollisionRecs(e->get_rectangle(), gunman2->get_rectangle())) {
+			alive = e->collide(*gunman2);
+			it1 = game_entities.erase(it1);
+			if (not alive) {
+				game_over = true;
+			}
+		}
+		for (auto it2 = game_entities.begin(); it2 != game_entities.end();) {
+			auto e2 = it2->get();
+			if (e == e2) { ++it2; }
+			else if(CheckCollisionRecs(e->get_rectangle(), e2->get_rectangle())){
+				alive = e->collide(*e2); // texture of obstacles would be updated here
+				it1 = game_entities.erase(it1);
+				if (not alive) {
+					it2 = game_entities.erase(it2);
+					break;
+				}
+				
+			}
+		}
+		++it1;
+	}
 	// maybe the other way around
 	for (auto proj = projectiles.begin(); proj != projectiles.end();){
 		if (CheckCollisionRecs((*proj)->get_rectangle(), gunman1->get_rectangle())) {
@@ -150,8 +183,8 @@ void update_game() {
 		// same thing
 		else if (CheckCollisionRecs((*proj)->get_rectangle(), gunman2->get_rectangle())) {
 			if (not (*proj)->collide(*gunman2)) {
-				
 				proj = projectiles.erase(proj);
+				std::cout << projectiles.size() << " and " << game_entities.size() << std::endl;
 				game_over = true;
 				continue;
 			}
@@ -208,29 +241,6 @@ void update_draw_frame() {
 
 
 // --------------------- other helper functions --------------------------------
-std::vector <entities::obstacle*> get_obstacles(std::vector < std::unique_ptr<entities::entity>>& e) {
-	auto obstacles = std::vector<entities::obstacle*>{};
-	for (std::unique_ptr<entities::entity>& current : e) {
-		entities::obstacle* obstacle = dynamic_cast<entities::obstacle*>(current.get());
-		if (obstacle != nullptr) {
-			obstacles.push_back(obstacle);
-			continue;
-		}
-	}
-	return obstacles;
-}
-
-std::vector <entities::projectile*> get_projectiles(std::vector<std::unique_ptr<entities::entity>>& e) {
-	auto projectiles = std::vector<entities::projectile*>{};
-	for (std::unique_ptr<entities::entity>& current : e) {
-		entities::projectile* projectile = dynamic_cast<entities::projectile*>(current.get());
-		if (projectile != nullptr) {
-			projectiles.push_back(projectile);
-			continue;
-		}
-	}
-	return projectiles;
-}
 
 bool is_moving(int gunman) {
 	if (gunman == 1) {
