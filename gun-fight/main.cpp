@@ -17,6 +17,9 @@ static int frame_count = 0;
 static bool game_over = false;
 
 static std::vector<std::unique_ptr<entities::entity>> game_entities = {};
+static std::vector<std::unique_ptr<entities::projectile>> game_projectiles = {};
+static std::vector<std::unique_ptr<entities::obstacle>> game_obstacles = {};
+static std::vector<std::unique_ptr<entities::pickup>> game_pickups = {};
 static std::unique_ptr<entities::gunman> gunman1;
 static std::unique_ptr<entities::gunman> gunman2;
 
@@ -82,7 +85,7 @@ void update_game() {
 
 	if (IsKeyPressed(KEY_F) and not is_moving(1)) {
 		if (gunman1->get_weapon()->fire()) {
-			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman1->get_x() + 95, gunman1->get_y() + 45, "sprites/bullet-1.png", 1, gunman1->get_weapon())));
+			game_projectiles.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman1->get_x() + 95, gunman1->get_y() + 45, "sprites/bullet-1.png", 1, gunman1->get_weapon())));
 		}
 	}
 	// player controls - gunman 2
@@ -108,116 +111,104 @@ void update_game() {
 
 	if (IsKeyPressed(KEY_H) and not is_moving(2)) {
 		if (gunman2->get_weapon()->fire()) {
-			game_entities.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x() - 20, gunman2->get_y() + 45, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
+			game_projectiles.push_back(std::make_unique<entities::bullet>(entities::bullet(gunman2->get_x() - 20, gunman2->get_y() + 45, "sprites/bullet-2.png", -1, gunman1->get_weapon())));
 		}
 	}
 	// update entities 
-
 	gunman1->update();
 	gunman2->update();
 
-	for (auto it = game_entities.begin(); it != game_entities.end();) {
-
+	// pickups
+	for (auto it = game_pickups.begin(); it != game_pickups.end();) {
 		if (not (*it)->update()) {
-			it = game_entities.erase(it);
+			it = game_pickups.erase(it);
+		}
+		else {
+			++it; // DO NOT DELETE THIS LINE YOU SILLY GOOBER 
+		}
+	}	
+	// obstacles
+	for (auto it = game_obstacles.begin(); it != game_obstacles.end();) {
+		if (not (*it)->update()) {
+			it = game_obstacles.erase(it);
 		}
 		else {
 			++it; // DO NOT DELETE THIS LINE YOU SILLY GOOBER 
 		}
 	}
-
-
-	// check collision, there is some iterator invalidation
-
-
-	// restructure the collision method, pass the gunmen and entities via reference
-
-	for (auto it1 = game_entities.begin(); it1 != game_entities.end();) {
-		auto e = it1->get();
-		bool alive = true;
-		if (CheckCollisionRecs(e->get_rectangle(), gunman1->get_rectangle())) {
-			alive = e->collide(*gunman1);
-			it1 = game_entities.erase(it1);
-			if (not alive) {
-				game_over = true;
-			}
-			continue;
-		}
-		if (CheckCollisionRecs(e->get_rectangle(), gunman2->get_rectangle())) {
-			alive = e->collide(*gunman2);
-			it1 = game_entities.erase(it1);
-			if (not alive) {
-				game_over = true;
-			}
-		}
-		for (auto it2 = game_entities.begin(); it2 != game_entities.end();) {
-			auto e2 = it2->get();
-			if (e == e2) { ++it2; }
-			else if(CheckCollisionRecs(e->get_rectangle(), e2->get_rectangle())){
-				alive = e->collide(*e2); // texture of obstacles would be updated here
-				it1 = game_entities.erase(it1);
-				if (not alive) {
-					it2 = game_entities.erase(it2);
-					break;
-				}
-				
-			}
-		}
-		++it1;
-	}
-	// maybe the other way around
-	for (auto proj = projectiles.begin(); proj != projectiles.end();){
-		if (CheckCollisionRecs((*proj)->get_rectangle(), gunman1->get_rectangle())) {
-			if (not (*proj)->collide(*gunman1)) {
-				// update the gunman texture to dead,
-				proj = projectiles.erase(proj);
-				game_over = true;
-				continue;
-				// change the game states (game_over, etc)
-			}
-			else {
-				proj = projectiles.erase(proj);
-				continue;
-			}
-		}
-		// same thing
-		else if (CheckCollisionRecs((*proj)->get_rectangle(), gunman2->get_rectangle())) {
-			if (not (*proj)->collide(*gunman2)) {
-				proj = projectiles.erase(proj);
-				std::cout << projectiles.size() << " and " << game_entities.size() << std::endl;
-				game_over = true;
-				continue;
-			}
-			else {
-				// still destroy the bullet and increment
-				proj = projectiles.erase(proj);
-				continue;
-			}
+	for (auto it = game_projectiles.begin(); it != game_projectiles.end();) {
+		if (not (*it)->update()) {
+			it = game_projectiles.erase(it);
 		}
 		else {
-			for (auto obs = obstacles.begin(); obs != obstacles.end();) {			
-				if (CheckCollisionRecs((*proj)->get_rectangle(), (*obs)->get_rectangle())) {
-					if (not (*proj)->collide(**obs)) {
-						// update the obstacle texture
-						proj = projectiles.erase(proj);
-						obs++;
-						continue;
-						// destroy the bullet
+			++it; // DO NOT DELETE THIS LINE YOU SILLY GOOBER 
+		}
+	}
+	// do collision from the perspective of the gunman
+	// if gunman collides with bullet call bullet.collide(gunman)
+	// this should handle projectiles, obstacles and pickups 
+	// gunmen projectile collision
+	for (auto it = game_projectiles.begin(); it != game_projectiles.end();) {
+		auto e = (*it).get();
+		bool remove_proj = false;
+		if (CheckCollisionRecs(gunman1->get_rectangle(), e->get_rectangle())) {
+			remove_proj = true;
+			if (not e->collide(*gunman1)) {
+				game_over = true;
+			}
+			else {
+				continue;
+			
+			}
+		}
+		
+		else if (CheckCollisionRecs(gunman2->get_rectangle(), e->get_rectangle())) {
+			remove_proj = true;
+			if (not e->collide(*gunman2)) {
+				game_over = true;
+			}
+			else {
+				continue;
+			}
+		}
+		// projectile obstacle collision
+		else {
+			for (auto it2 = game_obstacles.begin(); it2 != game_obstacles.end();) {
+				auto e2 = (*it2).get();
+				bool remove_obs = false;
+				if (CheckCollisionRecs(e->get_rectangle(), e2->get_rectangle())) {
+					if (not e->collide(*e2)) {
+						remove_proj = true;
+						// update the texture, i think should happen in the take_damage method though 
 					}
-					else{
-						// destroy the obstacle
-						obs = obstacles.erase(obs);
-						proj = projectiles.erase(proj);
-						continue;
-						// destroy the bullet
+					else {
+						remove_obs = true;
 					}
+				}
+				if (remove_obs) {
+					it2 = game_obstacles.erase(it2);
+				}
+				else {
+					++it2;
 				}
 			}
 		}
-		++proj;
+		if (remove_proj) {
+			it = game_projectiles.erase(it);
+			continue;
+		}
+		else {
+			++it;
+			continue;
+		}
 	}
-	// then check gunman collision with pickups and obstacles
-	// TODO: pending pickup implementation
+
+	// projectile obstacle collision
+	
+	// gunmen obstacle collision (gunman is an obstacle
+	// 
+	// gunmen pickup collision
+	// 
 }
 void draw_game() {
 	BeginDrawing();
@@ -226,7 +217,12 @@ void draw_game() {
 	gunman1->draw();
 	gunman2->draw();
 	// draw every entity
-	for (std::unique_ptr<entities::entity>& e : game_entities) {
+	for (std::unique_ptr<entities::projectile>& e : game_projectiles) {
+		e->draw();
+	}
+	for (std::unique_ptr<entities::pickup>& e : game_pickups) {
+		e->draw();
+	}for (std::unique_ptr<entities::obstacle>& e : game_obstacles) {
 		e->draw();
 	}
 	EndDrawing();
