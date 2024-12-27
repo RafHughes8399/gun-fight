@@ -56,8 +56,8 @@ namespace entities {
 		entity& operator=(const entity& other); // TODO: should be virtual
 		virtual bool operator==(const entity& other);
 		// other behaviours
-		void draw(); // all entities would be drawn the same, with the same raylib method??
-		virtual bool update() = 0; // all entities would however, update differently
+		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
+		virtual bool update(std::vector<std::unique_ptr<entity>>& entities) = 0;
 
 		virtual bool collide(entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
 	protected:
@@ -70,29 +70,33 @@ namespace entities {
 	class gunman : public entity {
 	public:
 		// constructors
-		gunman()
-			: entity() {};
 		// gunman with revolver
-		gunman(float x, float y, const char* path, int health)
-			: entity(x, y, path), gun_(std::make_unique<wep::revolver>(wep::revolver())), health_(health) {
+		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload)
+			: entity(x, y, path), gun_(std::make_unique<wep::revolver>(wep::revolver())), 
+			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload){
 		};
 		gunman(const gunman& other)
-			:entity(other), gun_(other.gun_->clone()), health_(other.health_) {};
+			:entity(other), gun_(other.gun_->clone()), health_(other.health_), 
+			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_){};
 		// unique accessors and modifiers
 		wep::weapon* get_weapon() const;
 		int get_health() const;
+		int get_score() const;
 		// operator overloads 
 		bool operator==(const entity& other) override;
 		// behaviour overloads
-		bool update() override;
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity&  other) override;
 		bool take_damage(int& damage);
 
 		//unique behaviour 
-		bool move(Vector2& movement_vector, const int& screen_width, const int& screen_height);
+		bool move(Vector2& movement_vector);
 	private:
 		std::unique_ptr<wep::weapon> gun_;
 		int health_;
+		int score_;
+		std::map<int, Vector2>& movement_;
+		std::pair<int, int>& fire_reload_;
 	};
 
 	// a stationary entity that blocks projectiles
@@ -108,7 +112,7 @@ namespace entities {
 		obstacle(const obstacle& other)
 			:entity(other), health_(other.health_) {};
 		// overload the virtual methods
-		bool update() override;
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
 		// operator overloads
@@ -117,13 +121,92 @@ namespace entities {
 		// unqiue accessors and modifiers
 		int get_health();
 		void die(); // destroys the obstacle when it dies 
-		bool take_damage(int& damage); // returns true if health > 0
+		void take_damage(int& damage); // returns true if health > 0
 	protected:
 		//TODO revisit
 		int health_;
 		// an obstacle has health
 	};
 
+	class cactus : public obstacle {
+	public:
+		cactus()
+			: obstacle() {
+		};
+		cactus(float x, float y, const char* path, int health)
+			: obstacle(x, y, path, health) {
+		};
+		cactus(const cactus& other)
+			: obstacle(other) {
+		};
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur
+		bool collide(entity& other) override;
+
+		bool operator==(const entity& other) override;
+	private:
+
+	};	
+	class barrel : public obstacle {
+	public:
+		barrel()
+			: obstacle() {
+		};
+		barrel(float x, float y, const char* path, int health)
+			: obstacle(x, y, path, health) {
+		};
+		barrel(const barrel& other)
+			: obstacle(other) {
+		};
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur
+		bool collide(entity& other) override;
+
+		bool operator==(const entity& other) override;
+	private:
+
+	};	
+	class wagon : public obstacle {
+	public:
+		wagon()
+			: obstacle() {
+		};
+		wagon(float x, float y, const char* path, int health)
+			: obstacle(x, y, path, health) {
+		};
+		wagon(const wagon& other)
+			: obstacle(other) {
+		};
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur, and movement for wagons
+		bool collide(entity& other) override;
+
+		bool operator==(const entity& other) override;
+	private:
+
+	};
+	class tumbleweed : public obstacle {
+	public:
+		tumbleweed()
+			: obstacle() {
+		};
+		tumbleweed(float x, float y, const char* path, int health)
+			: obstacle(x, y, path, health) {
+		};
+		tumbleweed(const tumbleweed& other)
+			: obstacle(other) {
+		};
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur, and movement for wagons
+		bool collide(entity& other) override;
+
+		bool operator==(const entity& other) override;
+	private:
+
+	};
+
+	//TODO	implemen
+class train : public obstacle {
+public:
+private:
+
+	};
 	// an entity that can move and collide with others
 	class projectile : public entity {
 	public:
@@ -137,7 +220,7 @@ namespace entities {
 			: entity(other), speed_direction_(other.speed_direction_), weapon_(other.weapon_) {};
 
 		// overload collide and update
-		bool update() override; // this is where projectile movement will occur
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where projectile movement will occur
 		bool collide(entity& other) override;
 
 		// operator overloads
@@ -168,7 +251,7 @@ namespace entities {
 			: projectile(other) {};
 		
 		// overloads
-		bool update() override;
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
 		// operator overloads
@@ -188,7 +271,7 @@ namespace entities {
 		pickup(const pickup& other)
 			:entity(other) {};
 
-		bool update() override;
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override; // maybe specify to be a gunman 
 		// needs more chin scratching, this is not part of the MVP, more like DLC 0
 		// leave for now 

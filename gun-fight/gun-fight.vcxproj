@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="crf.cpp" />
     <ClCompile Include="entities.cpp" />
+    <ClCompile Include="level_builder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="projectiles.cpp" />
     <ClCompile Include="weapons.cpp" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
+    <ClInclude Include="level_builder.h" />
     <ClInclude Include="projectiles.h" />
     <ClInclude Include="weapons.h" />
   </ItemGroup>
