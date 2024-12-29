@@ -1,121 +1,52 @@
 #include "level_builder.h"
 
-void level::level1_5::build_tumbleweed()
-{
+void level::level::build_level(){
+	if (level_category_ >= config::TUMBLEWEED_CATEGORY and obstacles_to_generate_ > 0) {
+		build_tumbleweed();
+	}
+	if (level_category_ >= config::CACTUS_CATEGORY and obstacles_to_generate_ > 0) {
+		build_cacti();
+	}
+	if (level_category_ >= config::BARREL_CATEGORY and obstacles_to_generate_ > 0) {
+		build_barrels();
+	}
+	if (level_category_ >= config::WAGON_CATEGORY and obstacles_to_generate_ > 0) {
+		build_wagons();
+	}
 }
 
-void level::level1_5::build_cacti()
-{
+void level::level::build_tumbleweed(){
+	// select random number between 0.4 and 0.6
+
+	int num_tumbleweed = ceil(obstacles_to_generate_ * generate_random_num(0.3, 0.6));
+
+
+
+	obstacles_to_generate_ -= num_tumbleweed;
 }
 
-void level::level1_5::build_barrels()
-{
+void level::level::build_cacti(){
+	int num_cacti = ceil(obstacles_to_generate_ + 0.6);
+
+	obstacles_to_generate_ -= num_cacti;
 }
 
-void level::level1_5::build_wagons()
-{
+void level::level::build_barrels(){
+
 }
 
-void level::level1_5::build_train()
-{
+void level::level::build_wagons(){
+
 }
 
-void level::level6_9::build_tumbleweed()
-{
+void level::level::build_train(){
+	return;
 }
 
-void level::level6_9::build_cacti()
-{
-}
+double level::level_builder::generate_random_num(double min, double max){
+	std::random_device rd;
+	std::mt19937 gen(rd());
 
-void level::level6_9::build_barrels()
-{
-}
-
-void level::level6_9::build_wagons()
-{
-}
-
-void level::level6_9::build_train()
-{
-}
-
-void level::level11_15::build_tumbleweed()
-{
-}
-
-void level::level11_15::build_cacti()
-{
-}
-
-void level::level11_15::build_barrels()
-{
-}
-
-void level::level11_15::build_wagons()
-{
-}
-
-void level::level11_15::build_train()
-{
-}
-
-void level::level16_19::build_tumbleweed()
-{
-}
-
-void level::level16_19::build_cacti()
-{
-}
-
-void level::level16_19::build_barrels()
-{
-}
-
-void level::level16_19::build_wagons()
-{
-}
-
-void level::level16_19::build_train()
-{
-}
-
-void level::level21_25::build_tumbleweed()
-{
-}
-
-void level::level21_25::build_cacti()
-{
-}
-
-void level::level21_25::build_barrels()
-{
-}
-
-void level::level21_25::build_wagons()
-{
-}
-
-void level::level21_25::build_train()
-{
-}
-
-void level::train_level::build_tumbleweed()
-{
-}
-
-void level::train_level::build_cacti()
-{
-}
-
-void level::train_level::build_barrels()
-{
-}
-
-void level::train_level::build_wagons()
-{
-}
-
-void level::train_level::build_train()
-{
+	std::uniform_real_distribution<double> dis(min, max);
+	return dis(gen);
 }

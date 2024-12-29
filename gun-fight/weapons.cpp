@@ -59,7 +59,10 @@ bool wep::revolver::fire(){
 bool wep::revolver::reload() {
 	return state_->reload(this);
 }
-
+void wep::revolver::replenish() {
+	ammo_ = config::REVOLVER_AMMO;
+	state_ = std::make_unique<loaded_state>();
+}
 std::unique_ptr<wep::weapon> wep::revolver::clone() const {
 	return std::make_unique<wep::revolver>(*this);
 }

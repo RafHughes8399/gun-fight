@@ -15,29 +15,31 @@ static int round_count = 0;
 static bool round_over = false;
 
 static std::vector<std::unique_ptr<entities::entity>> game_entities = {};
-static std::unique_ptr<entities::gunman> gunman1;
-static std::unique_ptr<entities::gunman> gunman2;
-
+static entities::gunman* gunman1;
+static entities::gunman* gunman2;
 // ------------ function declarations --------------
 static void init_game();
 static void update_game();
 static void draw_game();
 static void unload_game();
 static void update_draw_frame();
-bool is_moving(int gunman);
+
+static void clear_environment();
 int main() {	
-	
 	SetTargetFPS(60);
 	// initialise the window and the game
-	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun fight yo");
+	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
+	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(50, config::SCREEN_HEIGHT_HALF, "sprites/gunman-1.png", 1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING)));
+	gunman1 = static_cast<entities::gunman*>(game_entities.back().get());
+	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(1150, config::SCREEN_HEIGHT_HALF, "sprites/gunman-2.png", 1, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING)));
+	gunman2 = static_cast<entities::gunman*>(game_entities.back().get());
+	
 	init_game();
 	while (not WindowShouldClose()) {
-		update_draw_frame();
-		++frame_count;
-
 		if (round_over) {
 			init_game();
 		}
+		update_draw_frame();
 	}
 	unload_game();
 	CloseWindow();
@@ -46,39 +48,53 @@ int main() {
 
 // --------------------- game updating, drawing and initalisation--------------------------------
 void init_game() {
-	game_entities.clear();
-	gunman1 = std::make_unique<entities::gunman>(entities::gunman(50, config::SCREEN_HEIGHT_HALF,"sprites/gunman-1.png", 1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING));
-	gunman2 = std::make_unique<entities::gunman>(entities::gunman(1150, config::SCREEN_HEIGHT_HALF, "sprites/gunman-2.png", 1, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING));
-
-	
+	// clear the environment, keep the gunmen
+	// oh because it doesn't clear the envuronment
+	clear_environment();
+	// reset both gunmen, health, ammo, position, items, 
+	gunman1->reset(config::GUNMAN_1_X, config::SCREEN_HEIGHT_HALF);
+	gunman2->reset(config::GUNMAN_2_X, config::SCREEN_HEIGHT_HALF);
 	// populate the level - start with static then move onto randmon generatio
 	
 	// update other tracking variables
 	frame_count = 0;
+	++round_count;
 	round_over = false;
+
 }
 
 // update the game by one frame
 void update_game() {
-	gunman1->update(game_entities);
-	gunman2->update(game_entities);
-	std::remove_if(game_entities.begin(), game_entities.end(), [](std::unique_ptr<entities::entity>& entity) {
-		return entity->update(game_entities);
-		});
+	if (not gunman1->update(game_entities)) {
+		round_over = true;
+		gunman2->win_point();
+	}	
+	if (not gunman2->update(game_entities)) {
+		round_over = true;
+		gunman1->win_point();
+	}
 
+	for (auto& e : game_entities) {
+		// if e is not a gunman
+		auto gunman_ptr = dynamic_cast<entities::gunman*>(e.get());
+		if (gunman_ptr == nullptr) {
+			e->update(game_entities);
+		}
+	}
+
+	auto new_end = std::remove_if(game_entities.begin(), game_entities.end(), [](auto& e) {
+		return e->get_remove();
+		});
+	game_entities.erase(new_end, game_entities.end());
 }
 void draw_game() {
 	BeginDrawing();
 	ClearBackground(colours::night);
-	// draw gunmen
-	gunman1->draw();
-	gunman2->draw();
-	// draw every entity
-	for (auto& e : game_entities) {
-		e->draw();
-	}
+	std::for_each(game_entities.begin(), game_entities.end(), [](auto& e) {e->draw();});
 	DrawText(std::to_string(gunman1->get_score()).c_str(), (config::SCREEN_WIDTH / 4), 50, 36, colours::maize);
 	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);
+
+	DrawRectangleLines(config::SCREEN_WIDTH_HALF - 200, 0, 400, config::SCREEN_HEIGHT, colours::maize);
 	EndDrawing();
 }
 
@@ -87,4 +103,14 @@ void unload_game() {
 void update_draw_frame() {
 	update_game();
 	draw_game();
+}
+
+// helper functions 
+static void clear_environment() {
+	auto new_end = std::remove_if(game_entities.begin(), game_entities.end(), [](auto& e) {
+		auto g_ptr = dynamic_cast<entities::gunman*>(e.get());
+		return g_ptr == nullptr;
+		});
+	game_entities.erase(new_end, game_entities.end());
+	return;
 }

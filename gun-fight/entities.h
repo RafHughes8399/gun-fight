@@ -38,22 +38,24 @@ namespace entities {
 			texture_ = LoadTexture(path_);
 		};
 		entity(float x, float y, const char* path)
-			: position_({ x, y }), path_(path) {
+			: position_({ x, y }), path_(path), remove_(false) {
 			
 			texture_ = LoadTexture(path_);
 		};
 
 		// copy constructor
 		entity(const entity& other)
-			: position_(other.position_), path_(other.path_), texture_(other.texture_) {};
+			: position_(other.position_), path_(other.path_), texture_(other.texture_), remove_(other.remove_) {};
 		// accessors and modifiers
+		bool get_remove();
+		void set_remove(bool b);
 		float get_x() const;
 		float get_y() const;
 		Vector2 get_position();
 		Rectangle get_rectangle();
 		const char* get_path() const;
 		// operator overloads
-		entity& operator=(const entity& other); // TODO: should be virtual
+		entity& operator=(const entity& other);
 		virtual bool operator==(const entity& other);
 		// other behaviours
 		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
@@ -64,6 +66,7 @@ namespace entities {
 		Vector2 position_; // x, y position coords using float, necessary for drawing
 		Texture2D texture_;
 		const char* path_; 
+		bool remove_;
 	};
 	
 	// player-controlled entity
@@ -87,10 +90,12 @@ namespace entities {
 		// behaviour overloads
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity&  other) override;
-		bool take_damage(int& damage);
 
 		//unique behaviour 
-		bool move(Vector2& movement_vector);
+		void win_point();
+		void take_damage(int damage);
+		bool move(Vector2& movement_vector, std::vector<std::unique_ptr<entity>>& entities);
+		void reset(float x, float y);
 	private:
 		std::unique_ptr<wep::weapon> gun_;
 		int health_;
@@ -121,10 +126,11 @@ namespace entities {
 		// unqiue accessors and modifiers
 		int get_health();
 		void die(); // destroys the obstacle when it dies 
-		void take_damage(int& damage); // returns true if health > 0
+		void take_damage(int damage); // returns true if health > 0
 	protected:
 		//TODO revisit
 		int health_;
+		int obstacle_category_;
 		// an obstacle has health
 	};
 
@@ -201,12 +207,12 @@ namespace entities {
 
 	};
 
-	//TODO	implemen
-class train : public obstacle {
-public:
-private:
+	//TODO	implement
+	class train : public obstacle {
+	public:
+	private:
 
-	};
+		};
 	// an entity that can move and collide with others
 	class projectile : public entity {
 	public:
@@ -251,9 +257,6 @@ private:
 			: projectile(other) {};
 		
 		// overloads
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
-		bool collide(entity& other) override;
-
 		// operator overloads
 		bool operator==(const entity& other) override;
 		// unique accessors 

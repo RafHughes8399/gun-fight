@@ -1,9 +1,8 @@
 #pragma once
 #include "projectiles.h"
+#include "config.h"
 #include <memory>
 namespace wep {
-	static const int REVOLVER_AMMO = 6;
-	static const int REVOLVER_DMG = 1;
 	class weapon {
 	public:
 
@@ -63,6 +62,7 @@ namespace wep {
 		// other behaviours
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
+		virtual void replenish() = 0;
 		virtual std::unique_ptr<weapon> clone() const = 0;
 		friend class weapon_state;		
 	protected:
@@ -75,13 +75,14 @@ namespace wep {
 	class revolver : public weapon {
 	public:
 		revolver()
-			: weapon(REVOLVER_AMMO, REVOLVER_DMG) {
+			: weapon(config::REVOLVER_AMMO, config::REVOLVER_DAMAGE) {
 		};
 		revolver(const revolver& other)
 			: weapon(other) {};
 		bool operator==(const weapon& other) override;
 		bool fire() override;
 		bool reload() override;
+		void replenish() override;
 		std::unique_ptr<weapon> clone() const override;
 	private:
 
