@@ -18,6 +18,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <compare>
 namespace entities {
 	static const float DEFAULT_X = 100.0;
 	static const float DEFAULT_Y = 100.0;
@@ -57,6 +58,8 @@ namespace entities {
 		// operator overloads
 		entity& operator=(const entity& other);
 		virtual bool operator==(const entity& other);
+		auto operator<=>(entity& other);
+
 		// other behaviours
 		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
 		virtual bool update(std::vector<std::unique_ptr<entity>>& entities) = 0;

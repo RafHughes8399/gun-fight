@@ -58,8 +58,9 @@ namespace config {
 	// obstacle attributes
 	const int TUMBLEWEED_HEALTH = 1;
 	const int TUMBLEWEED_SPEED = 4;
-	const int TUMBLEWEED_DURATION = 540;
+	const int TUMBLEWEED_DURATION = 540; // how many frames the tumbleweed will last 
 	const int TUMBLEWEED_CATEGORY = 1;
+	const char* TUMBLEWEED_PATH = "sprites/default.png";
 
 	const int CACTUS_HEALTH = 2;
 	const int CACTUS_CATEGORY = 1;
@@ -73,7 +74,7 @@ namespace config {
 
 	const int TRAIN_HEALTH = 100;
 	const int TRAIN_SPEED = 35;
-	const int TRAIN_DELAY = 150;
+	const int TRAIN_DELAY = 150; // the delay between trains travelling across the screen
 
 	// obstacle bounds 
 	const int OBSTACLE_RANGE_X = SCREEN_WIDTH_HALF - 200;

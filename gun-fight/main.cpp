@@ -65,6 +65,10 @@ void init_game() {
 
 // update the game by one frame
 void update_game() {
+	// temp for quickly cycling through rounds to test environemnt generation
+	if (IsKeyPressed(KEY_X)) {
+		round_over = true;
+	}
 	if (not gunman1->update(game_entities)) {
 		round_over = true;
 		gunman2->win_point();
@@ -96,6 +100,7 @@ void draw_game() {
 
 	DrawRectangleLines(config::SCREEN_WIDTH_HALF - 200, 0, 400, config::SCREEN_HEIGHT, colours::maize);
 	EndDrawing();
+	++frame_count;
 }
 
 void unload_game() {

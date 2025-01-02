@@ -1,8 +1,7 @@
 #pragma once
-#include <memory>
-#include <vector>
 #include "entities.h"
 #include <random>
+#include <set>
 namespace level {
 
 	// abstract base class for the bulding interface
@@ -30,7 +29,7 @@ namespace level {
 
 	protected:
 		// you can move the pointers to the game_entities after building
-		std::vector<std::unique_ptr<entities::entity>> level_entities_ = {};
+		std::set<std::unique_ptr<entities::entity>> level_entities_ = {};
 		int level_category_;
 		int obstacles_to_generate_;
 	};

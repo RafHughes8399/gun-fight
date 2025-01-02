@@ -42,6 +42,10 @@ bool entities::entity::operator==(const entities::entity& other) {
 	return typeid(*this) == typeid(other) and position_.x == other.get_x() and position_.y == other.get_y();
 }
 
+auto entities::entity::operator<=>(entity& other){
+	return Vector2Length(get_position()) <=> Vector2Length(other.get_position());
+}
+
 //--------------- GUNMAN --------------------------------------------------------------------------------------------------------
 bool entities::gunman::operator==(const entities::entity& other) {
 	if (typeid(*this) != typeid(other)) { return false; }
