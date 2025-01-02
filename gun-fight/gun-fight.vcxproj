@@ -159,6 +159,7 @@
     <ClInclude Include="entities.h" />
     <ClInclude Include="level_builder.h" />
     <ClInclude Include="projectiles.h" />
+    <ClInclude Include="utility.h" />
     <ClInclude Include="weapons.h" />
   </ItemGroup>
   <ItemGroup>

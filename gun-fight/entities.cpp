@@ -9,6 +9,10 @@ float entities::entity::get_y() const{
 	return position_.y;
 }
 
+void entities::entity::set_pos(float x, float y){
+	position_ = Vector2{ x, y };
+}
+
 Vector2 entities::entity::get_position() {
 	return position_;
 }
@@ -44,7 +48,9 @@ bool entities::entity::operator==(const entities::entity& other) {
 
 auto entities::entity::operator<=>(entity& other){
 	return Vector2Length(get_position()) <=> Vector2Length(other.get_position());
+
 }
+
 
 //--------------- GUNMAN --------------------------------------------------------------------------------------------------------
 bool entities::gunman::operator==(const entities::entity& other) {
@@ -169,6 +175,10 @@ void entities::gunman::reset(float x, float y) {
 // ------------------------------OBSTACLE------------------------------------------------
 bool entities::obstacle::operator==(const entities::entity& other) {
 	return true;
+}
+int entities::obstacle::get_category()
+{
+	return 0;
 }
 int entities::obstacle::get_health(){
 	return health_;

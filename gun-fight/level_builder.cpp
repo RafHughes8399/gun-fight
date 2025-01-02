@@ -1,5 +1,5 @@
 #include "level_builder.h"
-
+#include "utility.h"
 //TODO make this a set of obstacles, be able to compare obstacles based on vector length (from origin)
 void level::level::build_level(){
 	if (level_category_ >= config::TUMBLEWEED_CATEGORY and obstacles_to_generate_ > 0) {
@@ -17,56 +17,70 @@ void level::level::build_level(){
 }
 
 void level::level::build_tumbleweed(){
-	// select random number between 0.4 and 0.6
-
-	int num_tumbleweed = ceil(obstacles_to_generate_ * generate_random_num(0.3, 0.6));
-	// check the list of entities in the level
-	// just check the most recent one lets keep it simple for now and see what it does
-	// if empty, just pick a random position and add the entity there
+	// select random number between 0.0 and 0.6, it is the propeortion of total obstacles 
+	// that will be tumbleweeds
+	//int num_tumbleweed = ceil(obstacles_to_generate_ * util::generate_random_num(0.0, 0.6));
+	
+	// for initial testing for random positions, keep it static
+	//TODO get a basic image for a tumbleweed and test the random generation
+	int num_tumbleweed = 5;
+	
+	
 	for (auto i = 0; i < num_tumbleweed; ++i) {
-		auto random_pos = Vector2{static_cast<float>(generate_random_num(config::OBSTACLE_RANGE_X, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH)), static_cast<float>(generate_random_num(config::OBSTACLE_RANGE_Y, config::OBSTACLE_RANGE_HEIGHT))};
-		auto tumbleweed = std::make_unique<entities::tumbleweed>(entities::tumbleweed(random_pos.x, random_pos.y, config::TUMBLEWEED_PATH, config::TUMBLEWEED_HEALTH));
+		auto random_x = util::generate_random_num(config::OBSTACLE_RANGE_X, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH);
+		auto random_y = util::generate_random_num(config::OBSTACLE_RANGE_Y, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT);
+		auto tumbleweed = std::make_unique<entities::tumbleweed>(entities::tumbleweed(
+			static_cast<float>(random_x), static_cast<float>(random_y), config::TUMBLEWEED_PATH,
+			config::TUMBLEWEED_HEALTH, config::TUMBLEWEED_CATEGORY));
+		// case - there are no current obstacles
 		if (level_entities_.empty()) {
-			level_entities_.insert(std::move(tumbleweed));
+			level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
 		}
 		else {
-			// make a copy of the pointer 
-			bool inserted = false; 
-			while (not inserted) {
-				// get the bounds
+			auto insert = false;
+			while (not insert) {
+				auto upper = level_entities_.upper_bound(std::make_unique<entities::tumbleweed>(*tumbleweed.get())); 				// case - there is no lower bound
+				// case - there is no lower
+				if (upper == level_entities_.begin()) {
+					// check the distance between two vectors
+					auto distance_from_bound = Vector2Distance(tumbleweed->get_position(), (*upper)->get_position());
+					insert = std::abs(distance_from_bound) >= config::MINIMUM_OBSTACLE_DISTANCE;
+				}
+				// case - there is no upper bound
+				else if (upper == level_entities_.end()) {
+					auto lower = --upper;
+					auto distance_from_lower = Vector2Distance(tumbleweed->get_position(), (*lower)->get_position());
 
-				// check the bounds 
-
-				// if in the bounds add
-
-				// otherwise generate a new position
-			
+					// check distance, if too close. reroll the pos
+					insert = std::abs(distance_from_lower) >= config::MINIMUM_OBSTACLE_DISTANCE;
+				}
+				// case - there is a lower and upper bound
+				else {
+					// get the lower bound 
+					auto lower = --upper;
+					// compare distance with both bounds 
+					auto distance_from_lower = Vector2Distance(tumbleweed->get_position(), (*lower)->get_position());
+					auto distance_from_upper = Vector2Distance(tumbleweed->get_position(), (*upper)->get_position());
+					insert = std::abs(distance_from_lower) >= config::MINIMUM_OBSTACLE_DISTANCE
+						and std::abs(distance_from_upper) >= config::MINIMUM_OBSTACLE_DISTANCE;
+				}
+				if (insert) {
+					// insert the element
+					level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
+				}
+				else {
+					// otherwise reroll the posiition
+					tumbleweed->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y, config::OBSTACLE_RANGE_HEIGHT)),
+						static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y, config::OBSTACLE_RANGE_HEIGHT)));
+				}
 			}
-			auto lower = level_entities_.lower_bound(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
-			auto upper = level_entities_.lower_bound(std::make_unique<entities::tumbleweed>(*tumbleweed.get())); // maybe need to do copy
 		}
 	}
-	// otherwise pick a random distance that is at least, the minimum distance away
-
-	// for all num_tumbleweed
-		// geerate a random position 
-		// 
-		// make the obstacle
-		// if empty, add element
-
-		// otherwise get upper and lower bound for the obstaacle
-
-		// check lower, if exists make sure it is minimum away
-		// check upper, if exists make sure it is minimum away
-		
-
-		// if valid, add the obstacle, otherwise generate a new position
-
 	obstacles_to_generate_ -= num_tumbleweed;
 }
 
 void level::level::build_cacti(){
-	int num_cacti = ceil(obstacles_to_generate_ * generate_random_num(0.3, 0.6));
+	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num(0.3, 0.6));
 	// if empty, just pick a random position and add the entity there
 
 // otherwise pick a random distance that is at least, the minimum distance away
@@ -74,25 +88,21 @@ void level::level::build_cacti(){
 }
 
 void level::level::build_barrels(){
-	int num_barrels = ceil(obstacles_to_generate_ * generate_random_num(0.3, 0.6));
+	int num_barrels = ceil(obstacles_to_generate_ * util::generate_random_num(0.3, 0.6));
 
 	obstacles_to_generate_ -= num_barrels;
 }
 
 void level::level::build_wagons(){
-	int num_wagons = ceil(obstacles_to_generate_ * generate_random_num(0.3, 0.6));
+	int num_wagons = ceil(obstacles_to_generate_ * util::generate_random_num(0.3, 0.6));
 
 	obstacles_to_generate_ -= num_wagons;
 }
 
-void level::level::build_train(){
+void level::level::build_train() {
 	return;
 }
 
-double level::level_builder::generate_random_num(double min, double max){
-	std::random_device rd;
-	std::mt19937 gen(rd());
-
-	std::uniform_real_distribution<double> dis(min, max);
-	return dis(gen);
+std::set<std::unique_ptr<entities::entity>>& level::level_builder::get_level_entities(){
+	return level_entities_;
 }

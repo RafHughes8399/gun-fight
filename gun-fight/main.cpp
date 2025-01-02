@@ -1,14 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <utility>
 #include <algorithm>
 
 #include "raylib.h"
 #include "entities.h"
 #include "weapons.h"
 #include "config.h"
-
+#include "utility.h"
+#include "level_builder.h"
 // ---------------- game variables --------------------
 static int frame_count = 0;
 static int round_count = 0;
@@ -23,7 +23,7 @@ static void update_game();
 static void draw_game();
 static void unload_game();
 static void update_draw_frame();
-
+static void build_level();
 static void clear_environment();
 int main() {	
 	SetTargetFPS(60);
@@ -51,6 +51,7 @@ void init_game() {
 	// clear the environment, keep the gunmen
 	// oh because it doesn't clear the envuronment
 	clear_environment();
+	build_level();
 	// reset both gunmen, health, ammo, position, items, 
 	gunman1->reset(config::GUNMAN_1_X, config::SCREEN_HEIGHT_HALF);
 	gunman2->reset(config::GUNMAN_2_X, config::SCREEN_HEIGHT_HALF);
@@ -104,6 +105,7 @@ void draw_game() {
 }
 
 void unload_game() {
+
 }
 void update_draw_frame() {
 	update_game();
@@ -118,4 +120,25 @@ static void clear_environment() {
 		});
 	game_entities.erase(new_end, game_entities.end());
 	return;
+}
+
+static void build_level() {
+	// get a random number for level category
+	//TODO check if should be train level
+
+	auto level_category = static_cast<int>(util::generate_random_num(1, 3));
+	auto obstacles_to_generate = 7; // TODO put in formula, might need tweaking
+	auto builder = std::make_unique<level::level>(level::level(level_category, obstacles_to_generate));
+	builder->build_level();
+
+	// transfer the obstacles
+	// iterator invalidation
+	//for (auto& entity : builder->get_level_entities()) {
+	//	game_entities.push_back(std::move(entity));
+	//}
+	// generate the level
+	// 
+	// put the new entities in the current list
+	// 	
+
 }

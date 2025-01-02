@@ -13,19 +13,13 @@ namespace level {
 
 		level_builder(int level_category, int obstacles_to_generate)
 			: level_category_(level_category), obstacles_to_generate_(obstacles_to_generate) {};
-
-
-		virtual level_builder& operator=(const level_builder& other);
 		virtual void build_level() = 0;
 		virtual void build_tumbleweed() = 0;
 		virtual void build_cacti() = 0;
 		virtual void build_barrels() = 0;
 		virtual void build_wagons() = 0;
 		virtual void build_train() = 0;
-
-		double generate_random_num(double min, double max);
-
-		std::vector<std::unique_ptr<entities::entity>> get_level_entities();
+		std::set<std::unique_ptr<entities::entity>>& get_level_entities();
 
 	protected:
 		// you can move the pointers to the game_entities after building

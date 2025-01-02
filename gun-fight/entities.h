@@ -13,6 +13,7 @@
 // an image source
 // 
 #include "raylib.h"
+#include "raymath.h"
 #include "weapons.h"
 #include "config.h"
 #include <vector>
@@ -52,6 +53,8 @@ namespace entities {
 		void set_remove(bool b);
 		float get_x() const;
 		float get_y() const;
+
+		void set_pos(float x, float y);
 		Vector2 get_position();
 		Rectangle get_rectangle();
 		const char* get_path() const;
@@ -114,19 +117,20 @@ namespace entities {
 		obstacle()
 			: entity() {};
 		// overload the custom constructor
-		obstacle(float x, float y, const char* path, int health)
-			: entity(x, y, path), health_(health) {};
+		obstacle(float x, float y, const char* path, int health, int category)
+			: entity(x, y, path), health_(health), obstacle_category_(category) {};
 		// overload the copy constructor 
 		obstacle(const obstacle& other)
-			:entity(other), health_(other.health_) {};
+			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_) {};
 		// overload the virtual methods
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-
+		// might need a clone so i can copy over the elements?
 		// operator overloads
 		bool operator==(const entity& other) override;
 
 		// unqiue accessors and modifiers
+		int get_category();
 		int get_health();
 		void die(); // destroys the obstacle when it dies 
 		void take_damage(int damage); // returns true if health > 0
@@ -142,16 +146,12 @@ namespace entities {
 		cactus()
 			: obstacle() {
 		};
-		cactus(float x, float y, const char* path, int health)
-			: obstacle(x, y, path, health) {
+		cactus(float x, float y, const char* path, int health, int category)
+			: obstacle(x, y, path, health, category) {
 		};
 		cactus(const cactus& other)
 			: obstacle(other) {
 		};
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur
-		bool collide(entity& other) override;
-
-		bool operator==(const entity& other) override;
 	private:
 
 	};	
@@ -160,16 +160,12 @@ namespace entities {
 		barrel()
 			: obstacle() {
 		};
-		barrel(float x, float y, const char* path, int health)
-			: obstacle(x, y, path, health) {
+		barrel(float x, float y, const char* path, int health, int category)
+			: obstacle(x, y, path, health, category) {
 		};
 		barrel(const barrel& other)
 			: obstacle(other) {
 		};
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur
-		bool collide(entity& other) override;
-
-		bool operator==(const entity& other) override;
 	private:
 
 	};	
@@ -178,16 +174,12 @@ namespace entities {
 		wagon()
 			: obstacle() {
 		};
-		wagon(float x, float y, const char* path, int health)
-			: obstacle(x, y, path, health) {
+		wagon(float x, float y, const char* path, int health, int category)
+			: obstacle(x, y, path, health, category) {
 		};
 		wagon(const wagon& other)
 			: obstacle(other) {
 		};
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur, and movement for wagons
-		bool collide(entity& other) override;
-
-		bool operator==(const entity& other) override;
 	private:
 
 	};
@@ -196,16 +188,12 @@ namespace entities {
 		tumbleweed()
 			: obstacle() {
 		};
-		tumbleweed(float x, float y, const char* path, int health)
-			: obstacle(x, y, path, health) {
+		tumbleweed(float x, float y, const char* path, int health, int category)
+			: obstacle(x, y, path, health, category) {
 		};
 		tumbleweed(const tumbleweed& other)
 			: obstacle(other) {
 		};
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where the texture chaneg would occur, and movement for wagons
-		bool collide(entity& other) override;
-
-		bool operator==(const entity& other) override;
 	private:
 
 	};
@@ -265,8 +253,6 @@ namespace entities {
 		// unique accessors 
 	private:
 	};
-
-
 
 	class pickup : public entity {
 	public:
