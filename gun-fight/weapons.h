@@ -46,20 +46,21 @@ namespace wep {
 		virtual ~weapon() = default;
 		weapon(weapon&& other) = default;
 		weapon& operator=(weapon&& other) = default;
-		weapon(int ammo, int damage)
-			: ammo_(ammo), damage_(damage), state_(std::make_unique<loaded_state>(loaded_state())){};
+		weapon(int ammo, int damage, int penetration)
+			: ammo_(ammo), damage_(damage), penetration_(penetration), state_(std::make_unique<loaded_state>(loaded_state())){};
 		weapon(const weapon& other)
-			: ammo_(other.ammo_), damage_(other.damage_), state_(other.state_->clone()) {
+			: ammo_(other.ammo_), damage_(other.damage_), penetration_(other.penetration_), state_(other.state_->clone()) {
 		};
 		// accessors and modifiers
 		int get_ammo() { return ammo_; }
 		int get_damage() {return damage_;}
 		bool is_loaded();
-
+		int get_penetration();
 		// operator overloads
 		weapon& operator=(const weapon& other);
 		virtual bool operator==(const weapon& other) = 0;
 		// other behaviours
+		bool penetrate(const int& obstacle_penetration);
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
 		virtual void replenish() = 0;
@@ -68,6 +69,7 @@ namespace wep {
 	protected:
 		int ammo_;
 		int damage_;
+		int penetration_;
 		std::unique_ptr<weapon_state> state_; // if you wanted a get_state return a raw pointer
 		//std::unique_ptr<proj::projectile> bullet_type_;
 	};
@@ -75,7 +77,7 @@ namespace wep {
 	class revolver : public weapon {
 	public:
 		revolver()
-			: weapon(config::REVOLVER_AMMO, config::REVOLVER_DAMAGE) {
+			: weapon(config::REVOLVER_AMMO, config::REVOLVER_DAMAGE, config::REVOLVER_PENETRATION) {
 		};
 		revolver(const revolver& other)
 			: weapon(other) {};

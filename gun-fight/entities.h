@@ -61,8 +61,7 @@ namespace entities {
 		// operator overloads
 		entity& operator=(const entity& other);
 		virtual bool operator==(const entity& other);
-		auto operator<=>(entity& other);
-
+		bool operator<(entity& other);
 		// other behaviours
 		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
 		virtual bool update(std::vector<std::unique_ptr<entity>>& entities) = 0;
@@ -117,37 +116,54 @@ namespace entities {
 		obstacle()
 			: entity() {};
 		// overload the custom constructor
-		obstacle(float x, float y, const char* path, int health, int category)
-			: entity(x, y, path), health_(health), obstacle_category_(category) {};
+		obstacle(float x, float y, const char* path, int health, int category, int penetration)
+			: entity(x, y, path), health_(health), obstacle_category_(category), penetration_(penetration){};
 		// overload the copy constructor 
 		obstacle(const obstacle& other)
-			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_) {};
+			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {};
 		// overload the virtual methods
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		// might need a clone so i can copy over the elements?
-		// operator overloads
 		bool operator==(const entity& other) override;
 
 		// unqiue accessors and modifiers
+		int get_penetration();
 		int get_category();
 		int get_health();
-		void die(); // destroys the obstacle when it dies 
 		void take_damage(int damage); // returns true if health > 0
 	protected:
 		//TODO revisit
 		int health_;
 		int obstacle_category_;
+		int penetration_;
 		// an obstacle has health
 	};
+	class moveable_obstacle : public obstacle {
+	public:
+		moveable_obstacle()
+			: obstacle() {}
+		moveable_obstacle(float x, float y, const char* path, int health, int category, int penetration, float movement_x, float movement_y)
+			: obstacle(x, y, path, health, category, penetration), movement_speed_(Vector2 {movement_x, movement_y}) {
+		}
+		moveable_obstacle(const moveable_obstacle& other)
+			: obstacle(other), movement_speed_(other.movement_speed_) {};
+		Vector2 get_speed();
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool collide(entity& other) override;
+		bool move(std::vector<std::unique_ptr<entity>>& entities);
+		virtual void change_direction() = 0;
+	protected:
+		Vector2 movement_speed_;
 
+
+	};
 	class cactus : public obstacle {
 	public:
 		cactus()
 			: obstacle() {
 		};
-		cactus(float x, float y, const char* path, int health, int category)
-			: obstacle(x, y, path, health, category) {
+		cactus(float x, float y)
+			: obstacle(x, y, config::CACTUS_PATH, config::CACTUS_HEALTH, config::CACTUS_CATEGORY, config::CACTUS_PENETRATION) {
 		};
 		cactus(const cactus& other)
 			: obstacle(other) {
@@ -160,8 +176,8 @@ namespace entities {
 		barrel()
 			: obstacle() {
 		};
-		barrel(float x, float y, const char* path, int health, int category)
-			: obstacle(x, y, path, health, category) {
+		barrel(float x, float y)
+			: obstacle(x, y, config::BARREL_PATH, config::BARREL_HEALTH, config::BARREL_CATEGORY, config::BARREL_PENETRATION) {
 		};
 		barrel(const barrel& other)
 			: obstacle(other) {
@@ -169,31 +185,33 @@ namespace entities {
 	private:
 
 	};	
-	class wagon : public obstacle {
+	class wagon : public moveable_obstacle {
 	public:
 		wagon()
-			: obstacle() {
+			: moveable_obstacle() {
 		};
-		wagon(float x, float y, const char* path, int health, int category)
-			: obstacle(x, y, path, health, category) {
+		wagon(float x, float y, float movement_x, float movement_y)
+			: moveable_obstacle(x, y, config::WAGON_UP_PATH, config::WAGON_HEALTH, config::WAGON_CATEGORY, config::WAGON_PENETRATION, movement_x, movement_y) {
 		};
 		wagon(const wagon& other)
-			: obstacle(other) {
+			: moveable_obstacle(other) {
 		};
+		void change_direction() override;
 	private:
 
 	};
-	class tumbleweed : public obstacle {
+	class tumbleweed : public moveable_obstacle {
 	public:
 		tumbleweed()
-			: obstacle() {
+			: moveable_obstacle() {
 		};
-		tumbleweed(float x, float y, const char* path, int health, int category)
-			: obstacle(x, y, path, health, category) {
+		tumbleweed(float x, float y)
+			: moveable_obstacle(x, y, config::TUMBLEWEED_PATH, config::TUMBLEWEED_HEALTH, config::TUMBLEWEED_CATEGORY, config::TUMBLEWEED_PENETRATION, config::TUMBLEWEED_SPEED, 0.0) {
 		};
 		tumbleweed(const tumbleweed& other)
-			: obstacle(other) {
+			: moveable_obstacle(other) {
 		};
+		void change_direction() override;
 	private:
 
 	};

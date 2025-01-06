@@ -42,13 +42,22 @@ bool wep::weapon::is_loaded() {
 	return dynamic_cast<wep::weapon::loaded_state*>(state) != nullptr;
 }
 
+int wep::weapon::get_penetration(){
+	return penetration_;
+}
+
 // WEAPON OPERATOR OVERLOADS
 wep::weapon& wep::weapon::operator=(const wep::weapon& other) {
 	ammo_ = other.ammo_;
 	damage_ = other.damage_;
+	penetration_ = other.penetration_;
 	state_ = other.state_->clone();
 
 	return *this;
+}
+
+bool wep::weapon::penetrate(const int& obstacle_penetration){
+	return penetration_ >= obstacle_penetration;
 }
 
 // ---------- REVOLVER -----------

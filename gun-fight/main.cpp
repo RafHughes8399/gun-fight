@@ -94,12 +94,10 @@ void update_game() {
 }
 void draw_game() {
 	BeginDrawing();
-	ClearBackground(colours::night);
+	ClearBackground(colours::redwood);
 	std::for_each(game_entities.begin(), game_entities.end(), [](auto& e) {e->draw();});
 	DrawText(std::to_string(gunman1->get_score()).c_str(), (config::SCREEN_WIDTH / 4), 50, 36, colours::maize);
 	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);
-
-	DrawRectangleLines(config::SCREEN_WIDTH_HALF - 200, 0, 400, config::SCREEN_HEIGHT, colours::maize);
 	EndDrawing();
 	++frame_count;
 }
@@ -126,19 +124,19 @@ static void build_level() {
 	// get a random number for level category
 	//TODO check if should be train level
 
-	auto level_category = static_cast<int>(util::generate_random_num(1, 3));
-	auto obstacles_to_generate = 7; // TODO put in formula, might need tweaking
-	auto builder = std::make_unique<level::level>(level::level(level_category, obstacles_to_generate));
-	builder->build_level();
+	auto category = util::generate_random_num(0.0, 2.0);
+	if (category <= 0.5) {category = 0;}
+	else { category = ceil(category); }
+	auto obstacles_to_generate = 2 * (round_count % 4) + 3;
+	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
-	// transfer the obstacles
-	// iterator invalidation
-	//for (auto& entity : builder->get_level_entities()) {
-	//	game_entities.push_back(std::move(entity));
-	//}
-	// generate the level
-	// 
-	// put the new entities in the current list
-	// 	
+	// generate the environment
+	builder->build_level();
+	auto& level_entities = builder->get_level_entities();
+
+	while (not level_entities.empty()) {
+		auto it = level_entities.extract(level_entities.begin());
+		game_entities.push_back(std::move(it.value()));
+	}
 
 }

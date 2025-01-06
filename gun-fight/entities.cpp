@@ -46,9 +46,8 @@ bool entities::entity::operator==(const entities::entity& other) {
 	return typeid(*this) == typeid(other) and position_.x == other.get_x() and position_.y == other.get_y();
 }
 
-auto entities::entity::operator<=>(entity& other){
-	return Vector2Length(get_position()) <=> Vector2Length(other.get_position());
-
+bool entities::entity::operator<(entity& other){
+	return Vector2Length(get_position()) < Vector2Length(other.get_position());
 }
 
 
@@ -121,44 +120,47 @@ bool entities::gunman::collide(entities::entity& other) {
 }
 // unique behaviour
 bool entities::gunman::move(Vector2& movement_vector, std::vector<std::unique_ptr<entities::entity>>& entities) {
-
-	// check if the gunman would collide with anything at the x 
-	// 
-	// check if the gunman would collide with anything at the y
-	// check which half the gunman is in
 	Vector2 new_pos = { position_.x + movement_vector.x, position_.y + movement_vector.y };
-	// check if any obstacle interrupts, if so, prevent the movement
+
+	// Create a rectangle for the proposed new position
+	Rectangle proposed_rect = get_rectangle();
+	proposed_rect.x = new_pos.x;
+	proposed_rect.y = new_pos.y;
+
+	// Check if any obstacle interrupts at the new position
 	bool blocked = false;
-	std::for_each(entities.begin(), entities.end(), [this, &blocked](std::unique_ptr<entities::entity>& e)
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
 		{
-			if (CheckCollisionRecs(this->get_rectangle(), e->get_rectangle()) and this != e.get()) {
+			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
 				// if collide is false then do not move
 				if (not this->collide(*e)) {
 					blocked = true;
 				}
 			}
 		});
-	if (blocked) { return false; }
-	if (position_.x >= 0 and position_.x <= config::SCREEN_WIDTH_HALF) {
-		if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH_HALF) {
-			if (new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
-				position_ = new_pos;
-				return true;
-			}
-		}	
+
+	if (blocked) {
+		return false;
 	}
-	// there is a bug where if the second gunman hits the halfway point it gets stuck
+	// Check screen boundaries based on which half the gunman is in
+	if (position_.x >= 0 and position_.x <= config::SCREEN_WIDTH_HALF) {
+		// Left half of screen
+		if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH_HALF and
+			new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+			position_ = new_pos;
+			return true;
+		}
+	}
 	else if (position_.x >= config::SCREEN_WIDTH_HALF and position_.x <= config::SCREEN_WIDTH) {
-		if (new_pos.x >= config::SCREEN_WIDTH_HALF and new_pos.x + texture_.width <= config::SCREEN_WIDTH) {
-			if (new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
-				position_ = new_pos;
-				return true;
-			}
+		// Right half of screen
+		if (new_pos.x >= config::SCREEN_WIDTH_HALF and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
+			new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+			position_ = new_pos;
+			return true;
 		}
 	}
 	return false;
 }
-
 void entities::gunman::take_damage(int damage) {
 	// return true if still alive, return false if not
 	health_ -= damage;
@@ -176,9 +178,11 @@ void entities::gunman::reset(float x, float y) {
 bool entities::obstacle::operator==(const entities::entity& other) {
 	return true;
 }
-int entities::obstacle::get_category()
-{
-	return 0;
+int entities::obstacle::get_penetration(){
+	return penetration_;
+}
+int entities::obstacle::get_category(){
+	return obstacle_category_;
 }
 int entities::obstacle::get_health(){
 	return health_;
@@ -189,18 +193,75 @@ int entities::obstacle::get_health(){
 bool entities::obstacle::update(std::vector<std::unique_ptr<entity>>& entities) {
 	//TODO implement
 	// do a health check
+	if (health_ <= 0) {
+		remove_ = true;
+	}
 	return health_ > 0;
 }
 bool entities::obstacle::collide(entities::entity& other) {
 	//TODO implement
 	return true;
 }
-void entities::obstacle::die() {
-	//TODO: implement
-	return;
-}
 void entities::obstacle::take_damage(int damage) {
 	health_ -= damage;
+}
+
+bool entities::moveable_obstacle::update(std::vector<std::unique_ptr<entity>>& entities){
+	bool alive = obstacle::update(entities);
+	if (not alive) { return alive; }
+
+	// then do movement
+	move(entities);
+	return false;
+}
+
+bool entities::moveable_obstacle::collide(entity& other){
+	// if collision, change direction 
+	return false;
+}
+bool entities::moveable_obstacle::move(std::vector<std::unique_ptr<entity>>& entities){
+	Vector2 new_pos = { position_.x + movement_speed_.x, position_.y + movement_speed_.y };
+
+	// Create a rectangle for the proposed new position
+	Rectangle proposed_rect = get_rectangle();
+	proposed_rect.x = new_pos.x;
+	proposed_rect.y = new_pos.y;
+
+	// Check if any obstacle interrupts at the new position
+	bool blocked = false;
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
+		{
+			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
+				// if collide is false then do not move
+				if (not this->collide(*e)) {
+					blocked = true;
+				}
+			}
+		});
+
+	if (blocked) {
+		change_direction();
+	}
+	// Check screen boundaries based on which half the gunman is in
+	if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
+		new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+		position_ = new_pos;
+		return true;
+	}
+	else {
+		change_direction();
+	}
+	return false;
+}
+Vector2 entities::moveable_obstacle::get_speed(){
+	return movement_speed_;
+}
+void entities::tumbleweed::change_direction(){
+	movement_speed_.x *= -1;
+}
+
+void entities::wagon::change_direction(){
+	movement_speed_.y *= -1;
 }
 
 bool entities::projectile::operator==(const entities::entity& other) {
@@ -246,7 +307,11 @@ bool entities::projectile::collide(entities::entity& other) {
 	}
 	// if obstacle
 	auto obstacle = dynamic_cast<entities::obstacle*>(&other);
-	// otherwise do nothing 
+	if (obstacle != nullptr) {
+		obstacle->take_damage(weapon_->get_damage());
+		// check penetration for tumbleweeds
+		return weapon_->penetrate(obstacle->get_penetration()); // a revolver can penetrate a tumbleweed but not a cactus
+	}
 	return true;
 }
 // --------- BULLET ----------------

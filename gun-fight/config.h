@@ -6,9 +6,10 @@ namespace colours {
 	inline constexpr Color night = { 10, 16, 13, 255 };
 	inline constexpr Color fern_green = { 85, 111, 68, 255 };
 	inline constexpr Color alice_blue = {};
-	inline constexpr Color silver = {192, 192, 192, 255};
-	inline constexpr Color crimson{217, 30, 54, 255};
-	inline constexpr Color maize{244, 244, 77, 255};
+	inline constexpr Color silver = { 192, 192, 192, 255 };
+	inline constexpr Color crimson{ 217, 30, 54, 255 };
+	inline constexpr Color maize{ 244, 244, 77, 255 };
+	inline constexpr Color redwood{173, 93, 78, 255};
 	// add more colours here 
 }
 
@@ -49,26 +50,43 @@ namespace config {
 	//WEAPON ATTRIBUTES
 	inline const int REVOLVER_AMMO = 6;
 	inline const int REVOLVER_DAMAGE = 1;
-
+	inline const int REVOLVER_PENETRATION = 0;
 	// bullet attributes;
 	inline const float BULLET_SPEED = 8.5;
 
 	// obstacle attributes
 	inline const int TUMBLEWEED_HEALTH = 1;
+	inline const int TUMBLEWEED_CATEGORY = 0;
+	inline const char* TUMBLEWEED_PATH = "sprites/tumbleweed.png";
+	inline const int TUMBLEWEED_PENETRATION = 0;
+	inline const float TUMBLEWEED_LENGTH = 50.0;
+	inline const float TUMBLEWEED_HEIGHT = 46.0;
 	inline const int TUMBLEWEED_SPEED = 4;
 	inline const int TUMBLEWEED_DURATION = 540; // how many frames the tumbleweed will last 
-	inline const int TUMBLEWEED_CATEGORY = 1;
-	inline const char* TUMBLEWEED_PATH = "sprites/default.png";
 
 	inline const int CACTUS_HEALTH = 2;
 	inline const int CACTUS_CATEGORY = 1;
+	inline const char* CACTUS_PATH = "sprites/cactus.png";
+	inline const int CACTUS_PENETRATION = 1;
+	inline const float CACTUS_LENGTH = 32;
+	inline const float CACTUS_HEIGHT = 64;
+
 
 	inline const int BARREL_HEALTH = 3;
 	inline const int BARREL_CATEGORY = 2;
+	inline const char* BARREL_PATH = "sprites/barrel.png";
+	inline const int BARREL_PENETRATION = 3;
+	inline const float BARREL_LENGTH= 32;
+	inline const float BARREL_HEIGHT = 32;
 
 	inline const int WAGON_HEALTH = 3;
-	inline const int WAGON_SPEED = 7;
 	inline const int WAGON_CATEGORY = 3;
+	inline const char* WAGON_UP_PATH = "sprites/barrel.png";
+	inline const char* WAGON_DOWN_PATH = "sprites/barrel.png";
+	inline const int WAGON_PENETRATION = 3;
+	inline const float WAGON_LENGTH = 0;
+	inline const float WAGON_WIDTH = 0;
+	inline const float WAGON_SPEED = 7;
 
 	inline const int TRAIN_HEALTH = 100;
 	inline const int TRAIN_SPEED = 35;
@@ -79,7 +97,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = 0;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = SCREEN_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 55.5; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 225; //subject to change
 
 	
 }

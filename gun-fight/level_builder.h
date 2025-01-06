@@ -1,5 +1,6 @@
 #pragma once
 #include "entities.h"
+#include "utility.h"
 #include <random>
 #include <set>
 namespace level {
@@ -19,11 +20,11 @@ namespace level {
 		virtual void build_barrels() = 0;
 		virtual void build_wagons() = 0;
 		virtual void build_train() = 0;
-		std::set<std::unique_ptr<entities::entity>>& get_level_entities();
+		std::set<std::unique_ptr<entities::entity>, decltype(util::cmp)>& get_level_entities();
 
 	protected:
 		// you can move the pointers to the game_entities after building
-		std::set<std::unique_ptr<entities::entity>> level_entities_ = {};
+		std::set<std::unique_ptr<entities::entity>, decltype(util::cmp)> level_entities_ = {};
 		int level_category_;
 		int obstacles_to_generate_;
 	};
