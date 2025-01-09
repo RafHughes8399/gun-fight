@@ -95,6 +95,8 @@ void update_game() {
 void draw_game() {
 	BeginDrawing();
 	ClearBackground(colours::redwood);
+	gunman1->get_weapon()->draw(100, config::SCREEN_HEIGHT - 300);
+	gunman2->get_weapon()->draw(1100, config::SCREEN_HEIGHT - 300);
 	std::for_each(game_entities.begin(), game_entities.end(), [](auto& e) {e->draw();});
 	DrawText(std::to_string(gunman1->get_score()).c_str(), (config::SCREEN_WIDTH / 4), 50, 36, colours::maize);
 	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);

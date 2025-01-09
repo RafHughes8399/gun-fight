@@ -31,7 +31,6 @@ void level::level::build_level(){
 
 void level::level::build_tumbleweed(){
 	int num_tumbleweed =  ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
-	std::cout << "gen " << num_tumbleweed << "tumbleweed" << std::endl;
 	obstacles_to_generate_ -= num_tumbleweed;
 	auto tumbleweed_dimensions = Vector2{ config::TUMBLEWEED_LENGTH, config::TUMBLEWEED_HEIGHT };
 	for (auto i = 0; i < num_tumbleweed; ++i) {
@@ -49,7 +48,6 @@ void level::level::build_tumbleweed(){
 
 void level::level::build_cacti(){
 	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
-	std::cout << "gen " << num_cacti << " cacti " << std::endl;
 	obstacles_to_generate_ -= num_cacti;
 	// if empty, just pick a random position and add the entity there
 	auto cactus_dimensions = Vector2{ config::CACTUS_LENGTH, config::CACTUS_HEIGHT };
@@ -71,7 +69,6 @@ void level::level::build_cacti(){
 void level::level::build_barrels(){
 	int num_barrels = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
 	obstacles_to_generate_ -= num_barrels;
-	std::cout << "gen " << num_barrels << " barrels " << std::endl;
 	auto barrel_dimensions = Vector2{ config::BARREL_LENGTH, config::CACTUS_LENGTH };
 	for (auto i = 0; i < num_barrels; ++i) {
 		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_LENGTH);

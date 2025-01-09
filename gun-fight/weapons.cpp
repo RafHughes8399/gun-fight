@@ -1,4 +1,5 @@
 #include "weapons.h"
+#include <iostream>
 #include <memory>
 //-----------WEAPON-STATE-------------
 bool wep::weapon::loaded_state::fire(wep::weapon* w){	
@@ -72,6 +73,10 @@ void wep::revolver::replenish() {
 	ammo_ = config::REVOLVER_AMMO;
 	state_ = std::make_unique<loaded_state>();
 }
+void wep::revolver::draw(int x, int y) {
+	std::cout << frame_rec_.x << " " << frame_rec_.y << " " << frame_rec_.width << " " << frame_rec_.height << std::endl;
+	DrawTextureRec(animation_sheet_, frame_rec_, Vector2{ static_cast<float>(x), static_cast<float>(y) }, WHITE);
+}
 std::unique_ptr<wep::weapon> wep::revolver::clone() const {
 	return std::make_unique<wep::revolver>(*this);
 }
@@ -79,3 +84,4 @@ std::unique_ptr<wep::weapon> wep::revolver::clone() const {
 bool wep::revolver::operator==(const weapon& other) {
 	return true;
 }
+

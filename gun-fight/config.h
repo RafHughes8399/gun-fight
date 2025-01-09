@@ -51,6 +51,11 @@ namespace config {
 	inline const int REVOLVER_AMMO = 6;
 	inline const int REVOLVER_DAMAGE = 1;
 	inline const int REVOLVER_PENETRATION = 0;
+	inline const char* REVOLVER_ANIMATION_PATH = "sprites/revolver-chamber.png";
+	inline const int REVOLVER_SHEET_WIDTH = 750;
+	inline const int REVOLVER_SHEET_HEIGHT = 1650;
+	inline const int REVOLVER_FRAME_WIDTH = 5;
+	inline const int REVOLVER_FRAME_HEIGHT = 11;
 	// bullet attributes;
 	inline const float BULLET_SPEED = 8.5;
 
