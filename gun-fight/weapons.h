@@ -50,10 +50,10 @@ namespace wep {
 		weapon& operator=(weapon&& other) = default;
 		weapon(int ammo, int damage, int penetration, const char* path, float x, float y, float width, float height)
 			: ammo_(ammo), damage_(damage), penetration_(penetration), state_(std::make_unique<loaded_state>(loaded_state())),
-			animation_sheet_(LoadTexture(path)), current_frame_(0), frame_rec_(Rectangle{x, y, width, height}){};
+			animation_sheet_(LoadTexture(path)), current_frame_(0), play_frames_(0), frame_rec_(Rectangle{x, y, width, height}){};
 		weapon(const weapon& other)
 			: ammo_(other.ammo_), damage_(other.damage_), penetration_(other.penetration_), state_(other.state_->clone())
-			, animation_sheet_(other.animation_sheet_), current_frame_(other.current_frame_), frame_rec_(other.frame_rec_) {
+			, animation_sheet_(other.animation_sheet_), current_frame_(other.current_frame_), play_frames_(other.play_frames_), frame_rec_(other.frame_rec_) {
 
 		};
 		// accessors and modifiers
@@ -81,6 +81,7 @@ namespace wep {
 		std::unique_ptr<weapon_state> state_; // if you wanted a get_state return a raw pointer
 		//std::unique_ptr<proj::projectile> bullet_type_;
 		int current_frame_;
+		int play_frames_;
 		Texture2D animation_sheet_;
 		Rectangle frame_rec_;
 	};

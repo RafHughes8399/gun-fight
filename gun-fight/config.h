@@ -48,7 +48,7 @@ namespace config {
 
 
 	//WEAPON ATTRIBUTES
-	inline const int REVOLVER_AMMO = 6;
+	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
 	inline const int REVOLVER_PENETRATION = 0;
 	inline const char* REVOLVER_ANIMATION_PATH = "sprites/revolver-chamber.png";

@@ -7,6 +7,7 @@ bool wep::weapon::loaded_state::fire(wep::weapon* w){
 	// change the state
 	w->state_.reset(nullptr);
 	w->state_ = std::make_unique<unloaded_state>(unloaded_state());
+	w->play_frames_ = config::REVOLVER_FRAME_WIDTH;
 	return true;
 }
 bool wep::weapon::loaded_state::reload(wep::weapon* w) {
@@ -29,6 +30,7 @@ bool wep::weapon::unloaded_state::reload(wep::weapon* w) {
 	w->ammo_ -= 1;
 	w->state_.reset(nullptr);
 	w->state_ = std::make_unique <wep::weapon::loaded_state>(wep::weapon::loaded_state());
+	w->play_frames_ = config::REVOLVER_FRAME_WIDTH;
 	return true;
 }
 
@@ -53,7 +55,6 @@ wep::weapon& wep::weapon::operator=(const wep::weapon& other) {
 	damage_ = other.damage_;
 	penetration_ = other.penetration_;
 	state_ = other.state_->clone();
-
 	return *this;
 }
 
@@ -72,9 +73,20 @@ bool wep::revolver::reload() {
 void wep::revolver::replenish() {
 	ammo_ = config::REVOLVER_AMMO;
 	state_ = std::make_unique<loaded_state>();
+	frame_rec_ = Rectangle{ 0.0, 0.0, static_cast<float>(config::REVOLVER_SHEET_WIDTH / config::REVOLVER_FRAME_WIDTH) , static_cast<float>(config::REVOLVER_SHEET_HEIGHT / config::REVOLVER_FRAME_HEIGHT) };
+	// reset the frame rectangle
 }
 void wep::revolver::draw(int x, int y) {
-	std::cout << frame_rec_.x << " " << frame_rec_.y << " " << frame_rec_.width << " " << frame_rec_.height << std::endl;
+	if (play_frames_ > 0) {
+		// progress to the next frame in the animation
+		frame_rec_.x += static_cast<float>(config::REVOLVER_SHEET_WIDTH / config::REVOLVER_FRAME_WIDTH);
+		if (play_frames_ == 1) {
+			// go back to the beginning of the row
+			frame_rec_.x = 0.0;
+			frame_rec_.y += static_cast<float>(config::REVOLVER_SHEET_HEIGHT / config::REVOLVER_FRAME_HEIGHT);
+		}
+		--play_frames_;
+	}
 	DrawTextureRec(animation_sheet_, frame_rec_, Vector2{ static_cast<float>(x), static_cast<float>(y) }, WHITE);
 }
 std::unique_ptr<wep::weapon> wep::revolver::clone() const {
