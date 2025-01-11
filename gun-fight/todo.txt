@@ -1,0 +1,15 @@
+TODO LIST
+as of 12 / 1 
+-> refactor animation into its own class 
+-> refactor drawing as part of the animation
+-> you have methods in the animation class that play certain animations 
+-> these methods are then called by the entity that owns the animation
+
+-> add a fire rate delay so the shooting does not outpace the animation
+-> redraw cactus and barrel with damage states 
+-> fix the animation for the 2nd bullet 
+-> design the hud, set the boundaries
+
+-> chnage the gunman to have a direction that they face, refactor to use that 
+-> to discern between them instead of the position thing you currently do
+-> that should fix the bug 
