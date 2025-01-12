@@ -48,16 +48,10 @@ int main() {
 
 // --------------------- game updating, drawing and initalisation--------------------------------
 void init_game() {
-	// clear the environment, keep the gunmen
-	// oh because it doesn't clear the envuronment
-	clear_environment();
 	build_level();
 	// reset both gunmen, health, ammo, position, items, 
 	gunman1->reset(config::GUNMAN_1_X, config::SCREEN_HEIGHT_HALF);
 	gunman2->reset(config::GUNMAN_2_X, config::SCREEN_HEIGHT_HALF);
-	// populate the level - start with static then move onto randmon generatio
-	
-	// update other tracking variables
 	frame_count = 0;
 	++round_count;
 	round_over = false;
@@ -91,6 +85,7 @@ void update_game() {
 		return e->get_remove();
 		});
 	game_entities.erase(new_end, game_entities.end());
+	++frame_count;
 }
 void draw_game() {
 	BeginDrawing();
@@ -100,12 +95,12 @@ void draw_game() {
 	std::for_each(game_entities.begin(), game_entities.end(), [](auto& e) {e->draw();});
 	DrawText(std::to_string(gunman1->get_score()).c_str(), (config::SCREEN_WIDTH / 4), 50, 36, colours::maize);
 	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);
+	DrawRectangle(100, 100, 30, 75, colours::fern_green);
+	
 	EndDrawing();
-	++frame_count;
 }
 
-void unload_game() {
-
+void unload_game(){
 }
 void update_draw_frame() {
 	update_game();
@@ -125,7 +120,7 @@ static void clear_environment() {
 static void build_level() {
 	// get a random number for level category
 	//TODO check if should be train level
-
+	clear_environment();
 	auto category = util::generate_random_num(0.0, 2.0);
 	if (category <= 0.5) {category = 0;}
 	else { category = ceil(category); }

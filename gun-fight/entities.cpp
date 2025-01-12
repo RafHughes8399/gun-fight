@@ -9,6 +9,24 @@ float entities::entity::get_y() const{
 	return position_.y;
 }
 
+// interpret spritesheets as a 2 dimensional array of images
+// move between frames by adjusting the rectnagle to display them 
+// goto a frame in the current animation row
+
+
+// these would be called in update to simulate animation
+void entities::entity::goto_frame(int frame){
+	texture_rectangle_.x = frame_width_ * frame;
+	frame_ = frame;
+}
+
+// goto the start of an animation 
+void entities::entity::goto_animation(int animation){
+	texture_rectangle_.x = 0.0;
+	texture_rectangle_.y = frame_height_ * animation;
+	animation_ = animation;
+}
+
 void entities::entity::set_pos(float x, float y){
 	position_ = Vector2{ x, y };
 }
@@ -39,7 +57,7 @@ entities::entity& entities::entity::operator=(const entities::entity& other) {
 
 void entities::entity::draw() {
 	// TODO eventually chagne to animation
-	DrawTexture(texture_, position_.x, position_.y, WHITE);
+	DrawTextureRec(texture_, texture_rectangle_, position_, WHITE);
 }
 
 bool entities::entity::operator==(const entities::entity& other) {
@@ -322,4 +340,11 @@ bool entities::pickup::update(std::vector<std::unique_ptr<entity>>& entities) {
 bool entities::pickup::collide(entities::entity& other) {
 	//TODO implement
 	return true;
+}
+
+void entities::cactus::take_damage(int damage){
+	obstacle::take_damage(damage);
+	if (health_ > 0) {
+		goto_frame(frame_ + 1);
+	}
 }

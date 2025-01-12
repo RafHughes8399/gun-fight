@@ -116,14 +116,3 @@ namespace wep {
 	};
 
 }
-
-// ok we use a sprite sheet
-// each animation is 5 frames
-// if the frame count is 60, then 5 frames is 1/12 of a secon
-
-
-// ok so you load the png file in a texutre
-
-// and you a drawing portions of the sprite sheet
-
-// set the frame count and the frame speed

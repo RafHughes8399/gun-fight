@@ -16,5 +16,21 @@ TODO LIST
 -> fix the animation for the 2nd bullet 
 
 
--> incorporate frame rectangles into entities to support animations
+-> refactor incorporate frame rectangles into entities to support animations
 -> draw the cactus and animate it
+
+
+
+-> draw and animate barrel 
+
+-> refactor animation into its own class
+
+-> draw and animate bulleta
+
+-> movement functions for moveable obstacles
+
+-> fix collision bug, currently checks the rectangle of the whole sprite sheet
+-> cactus looks a bit like a penis, i accidentally drew shrek's penis
+
+-> redraw the cactus, make it bigger, like twice the size, the damage should remove one of its branches 
+and add bandages on the head

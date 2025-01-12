@@ -32,14 +32,14 @@ void level::level::build_level(){
 void level::level::build_tumbleweed(){
 	int num_tumbleweed =  ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
 	obstacles_to_generate_ -= num_tumbleweed;
-	auto tumbleweed_dimensions = Vector2{ config::TUMBLEWEED_LENGTH, config::TUMBLEWEED_HEIGHT };
+	auto tumbleweed_dimensions = Vector2{ config::TUMBLEWEED_WIDTH, config::TUMBLEWEED_HEIGHT };
 	for (auto i = 0; i < num_tumbleweed; ++i) {
-		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_LENGTH);
+		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH);
 		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT);
 		auto tumbleweed = std::make_unique<entities::tumbleweed>(entities::tumbleweed(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		while (not can_insert_obstacle(tumbleweed->get_position(), tumbleweed_dimensions, level_entities_)) {
-			tumbleweed->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_LENGTH),
+			tumbleweed->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT));
 		}
 		level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
@@ -50,14 +50,14 @@ void level::level::build_cacti(){
 	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
 	obstacles_to_generate_ -= num_cacti;
 	// if empty, just pick a random position and add the entity there
-	auto cactus_dimensions = Vector2{ config::CACTUS_LENGTH, config::CACTUS_HEIGHT };
+	auto cactus_dimensions = Vector2{ config::CACTUS_WIDTH, config::CACTUS_HEIGHT };
 	for (auto i = 0; i < num_cacti; ++i) {
-		auto random_x = util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_LENGTH);
+		auto random_x = util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH);
 		auto random_y = util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT);
 		auto cactus = std::make_unique<entities::cactus>(entities::cactus(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		while (not can_insert_obstacle(cactus->get_position(), cactus_dimensions, level_entities_)) {
-			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_LENGTH)),
+			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH)),
 				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
 		}
 		level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
@@ -69,14 +69,14 @@ void level::level::build_cacti(){
 void level::level::build_barrels(){
 	int num_barrels = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
 	obstacles_to_generate_ -= num_barrels;
-	auto barrel_dimensions = Vector2{ config::BARREL_LENGTH, config::CACTUS_LENGTH };
+	auto barrel_dimensions = Vector2{ config::BARREL_WIDTH, config::BARREL_HEIGHT };
 	for (auto i = 0; i < num_barrels; ++i) {
-		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_LENGTH);
+		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH);
 		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT);
 		auto barrel = std::make_unique<entities::barrel>(entities::barrel(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		while (not can_insert_obstacle(barrel->get_position(), barrel_dimensions, level_entities_)) {
-			barrel->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_LENGTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_LENGTH),
+			barrel->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT));
 		}
 		level_entities_.insert(std::make_unique<entities::barrel>(*barrel.get()));

@@ -21,8 +21,8 @@ namespace config {
 	inline const int SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2;
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 	// gunman attributes
-	inline const int GUNMAN_HEIGHT = 99;
-	inline const int GUNMAN_WIDTH = 115;
+	inline const int GUNMAN_HEIGHT = 115;
+	inline const int GUNMAN_WIDTH = 99;
 	inline const float GUNMAN_SPEED = 2.5;
 	inline const int GUNMAN_HEALTH = 1;
 	inline const int GUNMAN_1_X = 50;
@@ -57,7 +57,10 @@ namespace config {
 	inline const int REVOLVER_FRAME_WIDTH = 5;
 	inline const int REVOLVER_FRAME_HEIGHT = 11;
 	inline const int REVOLVER_FIRE_RATE = 30;
+	
 	// bullet attributes;
+	inline const float BULLET_WIDTH = 20;
+	inline const float BULLET_HEIGHT = 9;
 	inline const float BULLET_SPEED = 8.5;
 
 	// obstacle attributes
@@ -65,7 +68,7 @@ namespace config {
 	inline const int TUMBLEWEED_CATEGORY = 0;
 	inline const char* TUMBLEWEED_PATH = "sprites/tumbleweed.png";
 	inline const int TUMBLEWEED_PENETRATION = 0;
-	inline const float TUMBLEWEED_LENGTH = 50.0;
+	inline const float TUMBLEWEED_WIDTH = 50.0;
 	inline const float TUMBLEWEED_HEIGHT = 46.0;
 	inline const int TUMBLEWEED_SPEED = 4;
 	inline const int TUMBLEWEED_DURATION = 540; // how many frames the tumbleweed will last 
@@ -74,15 +77,15 @@ namespace config {
 	inline const int CACTUS_CATEGORY = 1;
 	inline const char* CACTUS_PATH = "sprites/cactus.png";
 	inline const int CACTUS_PENETRATION = 1;
-	inline const float CACTUS_LENGTH = 32;
-	inline const float CACTUS_HEIGHT = 64;
+	inline const float CACTUS_WIDTH = 32;
+	inline const float CACTUS_HEIGHT = 75;
 
 
 	inline const int BARREL_HEALTH = 3;
 	inline const int BARREL_CATEGORY = 2;
 	inline const char* BARREL_PATH = "sprites/barrel.png";
 	inline const int BARREL_PENETRATION = 3;
-	inline const float BARREL_LENGTH= 32;
+	inline const float BARREL_WIDTH = 32;
 	inline const float BARREL_HEIGHT = 32;
 
 	inline const int WAGON_HEALTH = 3;
@@ -90,8 +93,8 @@ namespace config {
 	inline const char* WAGON_UP_PATH = "sprites/barrel.png";
 	inline const char* WAGON_DOWN_PATH = "sprites/barrel.png";
 	inline const int WAGON_PENETRATION = 3;
-	inline const float WAGON_LENGTH = 0;
 	inline const float WAGON_WIDTH = 0;
+	inline const float WAGON_HEIGHT = 0;
 	inline const float WAGON_SPEED = 7;
 
 	inline const int TRAIN_HEALTH = 100;
