@@ -77,8 +77,8 @@ namespace config {
 	inline const int CACTUS_CATEGORY = 1;
 	inline const char* CACTUS_PATH = "sprites/cactus.png";
 	inline const int CACTUS_PENETRATION = 1;
-	inline const float CACTUS_WIDTH = 32;
-	inline const float CACTUS_HEIGHT = 75;
+	inline const float CACTUS_WIDTH = 90;
+	inline const float CACTUS_HEIGHT = 150;
 
 
 	inline const int BARREL_HEALTH = 3;
