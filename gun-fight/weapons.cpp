@@ -3,20 +3,18 @@
 #include <memory>
 //-----------WEAPON-STATE-------------
 bool wep::weapon::loaded_state::fire(wep::weapon* w){	
-	// create projectile -- tentative, maybe outsourced by the game manager, because it would not exist out of the scope
-	// change the state
-	w->state_.reset(nullptr);
-	w->state_ = std::make_unique<unloaded_state>(unloaded_state());
-	w->play_frames_ = config::REVOLVER_FRAME_WIDTH;
-	return true;
+	if (w->cooldown_ == 0) {
+		w->state_.reset(nullptr);
+		w->state_ = std::make_unique<unloaded_state>(unloaded_state());
+		w->play_frames_ = config::REVOLVER_FRAME_WIDTH;
+		w->reset_cooldown();
+
+		return true;
+	}
+	return false;
+
 }
 bool wep::weapon::loaded_state::reload(wep::weapon* w) {
-	// reduce ammo
-	// do not change state
-
-	// check ammo count
-	if (w->ammo_ == 0) { return false; }
-	w->ammo_ -= 1;
 	return true;
 }
 std::unique_ptr<wep::weapon::weapon_state> wep::weapon::loaded_state::clone() {
@@ -38,6 +36,12 @@ std::unique_ptr<wep::weapon::weapon_state> wep::weapon::unloaded_state::clone() 
 	return std::make_unique<wep::weapon::unloaded_state>(*this);
 
 }
+int wep::weapon::get_ammo(){
+	return ammo_;
+}
+int wep::weapon::get_damage(){
+	return damage_;
+}
 // WEAPON ACCESSORS AND MODIFIERS 
 bool wep::weapon::is_loaded() {
 	// attempt to cast to loaded_state, return the null ptr check
@@ -47,6 +51,18 @@ bool wep::weapon::is_loaded() {
 
 int wep::weapon::get_penetration(){
 	return penetration_;
+}
+
+int wep::weapon::get_frame(){
+	return current_frame_;
+}
+
+int wep::weapon::get_cooldown(){
+	return cooldown_;
+}
+
+void wep::weapon::decrement_cooldown(){
+	--cooldown_;
 }
 
 // WEAPON OPERATOR OVERLOADS
@@ -88,6 +104,9 @@ void wep::revolver::draw(int x, int y) {
 		--play_frames_;
 	}
 	DrawTextureRec(animation_sheet_, frame_rec_, Vector2{ static_cast<float>(x), static_cast<float>(y) }, WHITE);
+}
+void wep::revolver::reset_cooldown(){
+	cooldown_ = config::REVOLVER_FIRE_RATE;
 }
 std::unique_ptr<wep::weapon> wep::revolver::clone() const {
 	return std::make_unique<wep::revolver>(*this);

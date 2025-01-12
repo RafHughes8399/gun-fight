@@ -70,6 +70,9 @@ int entities::gunman::get_health() const {
 int entities::gunman::get_score() const {
 	return score_;
 }
+int entities::gunman::get_direction() const{
+	return direction_;
+}
 // overloaded behaviour
 bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { // make this a pointer
 	// TODO: check collisions with obstacles and pickup items pending implementation, and projectiles, 
@@ -86,16 +89,13 @@ bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { 
 		});
 
 	// then check firing and reloading key inputs
+	if (gun_->get_cooldown() > 0) { gun_->decrement_cooldown();}
 	if (IsKeyPressed(fire_reload_.first) and std::none_of(movement_.begin(), movement_.end(),[](auto& key_direction) {
 		return IsKeyDown(key_direction.first);
 	})){
 		if (gun_->fire()) {
-			if (position_.x < config::SCREEN_WIDTH_HALF) {
-				entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x + 100, position_.y + 45, "sprites/bullet-1.png", 1,gun_.get())));
-			}
-			else if (position_.x > config::SCREEN_WIDTH_HALF) {
-				entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x- 20, position_.y + 45, "sprites/bullet-2.png", -1, gun_.get())));
-			}
+			if (direction_ == 1) { entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x + 100, position_.y + 45, "sprites/bullet-1.png", 1, gun_.get())));}
+			else if (direction_ == -1 ) {entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x - 20, position_.y + 45, "sprites/bullet-2.png", -1, gun_.get())));}
 		}
 	}
 	if (IsKeyPressed(fire_reload_.second)) {
@@ -142,22 +142,10 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::unique_pt
 	if (blocked) {
 		return false;
 	}
-	// Check screen boundaries based on which half the gunman is in
-	if (position_.x >= 0 and position_.x <= config::SCREEN_WIDTH_HALF) {
-		// Left half of screen
-		if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH_HALF and
-			new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
+		new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
 			position_ = new_pos;
 			return true;
-		}
-	}
-	else if (position_.x >= config::SCREEN_WIDTH_HALF and position_.x <= config::SCREEN_WIDTH) {
-		// Right half of screen
-		if (new_pos.x >= config::SCREEN_WIDTH_HALF and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
-			new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
-			position_ = new_pos;
-			return true;
-		}
 	}
 	return false;
 }

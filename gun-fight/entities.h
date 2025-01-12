@@ -79,17 +79,18 @@ namespace entities {
 	public:
 		// constructors
 		// gunman with revolver
-		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload)
+		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload, int direction)
 			: entity(x, y, path), gun_(std::make_unique<wep::revolver>(wep::revolver())), 
-			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload){
+			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload), direction_(direction){
 		};
 		gunman(const gunman& other)
 			:entity(other), gun_(other.gun_->clone()), health_(other.health_), 
-			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_){};
+			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_), direction_(other.direction_){};
 		// unique accessors and modifiers
 		wep::weapon* get_weapon() const;
 		int get_health() const;
 		int get_score() const;
+		int get_direction() const;
 		// operator overloads 
 		bool operator==(const entity& other) override;
 		// behaviour overloads
@@ -107,6 +108,7 @@ namespace entities {
 		int score_;
 		std::map<int, Vector2>& movement_;
 		std::pair<int, int>& fire_reload_;
+		const int direction_; // left facing is 1, right facing is -1 
 	};
 
 	// a stationary entity that blocks projectiles

@@ -29,9 +29,9 @@ int main() {
 	SetTargetFPS(60);
 	// initialise the window and the game
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
-	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(50, config::SCREEN_HEIGHT_HALF, "sprites/gunman-1.png", 1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING)));
+	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(50, config::SCREEN_HEIGHT_HALF, "sprites/gunman-1.png", 1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, 1)));
 	gunman1 = static_cast<entities::gunman*>(game_entities.back().get());
-	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(1150, config::SCREEN_HEIGHT_HALF, "sprites/gunman-2.png", 1, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING)));
+	game_entities.push_back(std::make_unique<entities::gunman>(entities::gunman(1150, config::SCREEN_HEIGHT_HALF, "sprites/gunman-2.png", 1, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, -1)));
 	gunman2 = static_cast<entities::gunman*>(game_entities.back().get());
 	
 	init_game();

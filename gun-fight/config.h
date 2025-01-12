@@ -37,14 +37,14 @@ namespace config {
 		{KEY_D, Vector2{GUNMAN_SPEED,0}}
 	};
 	inline static auto GUNMAN2_MOVEMENT = std::map<int, Vector2>{
-		{KEY_I, Vector2{0,-GUNMAN_SPEED}},
-		{KEY_J, Vector2{-GUNMAN_SPEED,0}},
-		{KEY_K, Vector2{0,GUNMAN_SPEED}},
-		{KEY_L, Vector2{GUNMAN_SPEED,0}}
+		{KEY_UP, Vector2{0,-GUNMAN_SPEED}},
+		{KEY_LEFT, Vector2{-GUNMAN_SPEED,0}},
+		{KEY_DOWN, Vector2{0,GUNMAN_SPEED}},
+		{KEY_RIGHT, Vector2{GUNMAN_SPEED,0}}
 	};
 
 	inline static auto GUNMAN1_FIRING = std::pair<int, int>{ KEY_F, KEY_R };
-	inline static auto GUNMAN2_FIRING = std::pair<int, int>{ KEY_H, KEY_U};
+	inline static auto GUNMAN2_FIRING = std::pair<int, int>{ KEY_COMMA, KEY_PERIOD};
 
 
 	//WEAPON ATTRIBUTES
@@ -56,6 +56,7 @@ namespace config {
 	inline const int REVOLVER_SHEET_HEIGHT = 1650;
 	inline const int REVOLVER_FRAME_WIDTH = 5;
 	inline const int REVOLVER_FRAME_HEIGHT = 11;
+	inline const int REVOLVER_FIRE_RATE = 30;
 	// bullet attributes;
 	inline const float BULLET_SPEED = 8.5;
 
