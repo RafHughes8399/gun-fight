@@ -21,13 +21,12 @@ namespace config {
 	inline const int SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2;
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 	// gunman attributes
-	inline const int GUNMAN_HEIGHT = 115;
-	inline const int GUNMAN_WIDTH = 99;
+	inline const float GUNMAN_HEIGHT = 115;
+	inline const float GUNMAN_WIDTH = 99;
 	inline const float GUNMAN_SPEED = 2.5;
 	inline const int GUNMAN_HEALTH = 1;
 	inline const int GUNMAN_1_X = 50;
 	inline const int GUNMAN_2_X = 1150;
-
 
 	// need a set of movement_keys and directions
 	inline static auto GUNMAN1_MOVEMENT = std::map<int, Vector2>{
@@ -68,10 +67,14 @@ namespace config {
 	inline const int TUMBLEWEED_CATEGORY = 0;
 	inline const char* TUMBLEWEED_PATH = "sprites/tumbleweed.png";
 	inline const int TUMBLEWEED_PENETRATION = 0;
-	inline const float TUMBLEWEED_WIDTH = 50.0;
-	inline const float TUMBLEWEED_HEIGHT = 46.0;
+	inline const float TUMBLEWEED_WIDTH = 64;
+	inline const float TUMBLEWEED_HEIGHT = 64;
+	inline const float TUMBLEWEED_ANIMATION_LENGTH = 19;
+	inline const float TUMBLEWEED_ANIMATIONS = 2;
 	inline const int TUMBLEWEED_SPEED = 4;
-	inline const int TUMBLEWEED_DURATION = 540; // how many frames the tumbleweed will last 
+	inline const int TUMBLEWEED_LIFESPAN_LOWER = 600;
+	inline const int TUMBLEWEED_LIFESPAN_UPPER = 900; // how many frames the tumbleweed will last, incorporate into the update method
+	inline const int TUMBLEWEED_AMPLITUDE = 25;
 
 	inline const int CACTUS_HEALTH = 2;
 	inline const int CACTUS_CATEGORY = 1;
@@ -79,7 +82,8 @@ namespace config {
 	inline const int CACTUS_PENETRATION = 1;
 	inline const float CACTUS_WIDTH = 90;
 	inline const float CACTUS_HEIGHT = 150;
-
+	inline const int CACTUS_ANIMATION_LENGTH = 2;
+	inline const int CACTUS_ANIMATIONS = 1;
 
 	inline const int BARREL_HEALTH = 3;
 	inline const int BARREL_CATEGORY = 2;
@@ -87,6 +91,8 @@ namespace config {
 	inline const int BARREL_PENETRATION = 3;
 	inline const float BARREL_WIDTH = 32;
 	inline const float BARREL_HEIGHT = 32;
+	inline const int BARREL_ANIMATION_LENGTH = 3;
+	inline const int BARREL_ANIMATIONS = 1;
 
 	inline const int WAGON_HEALTH = 3;
 	inline const int WAGON_CATEGORY = 3;

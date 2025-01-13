@@ -1,23 +1,35 @@
 #include "animation.h"
 
-Texture2D animation::get_sheet()
-{
-	return Texture2D();
+Texture2D animation::get_sheet(){
+	return animation_sheet_;
 }
 
-Rectangle animation::get_current_frame()
-{
-	return Rectangle();
+Rectangle animation::get_current_frame(){
+	return frame_;
 }
 
-int animation::get_animation_length()
-{
-	return 0;
+float animation::get_frame_width(){
+	return frame_width_;
 }
 
-int animation::get_num_animation()
-{
-	return 0;
+float animation::get_frame_height(){
+	return frame_height_;
+}
+
+int animation::get_animation_length(){
+	return animation_length_;
+}
+
+int animation::get_frame_num(){
+	return current_frame_;
+}
+
+int animation::get_animation_num(){
+	return current_anim_;
+}
+
+int animation::get_num_animations(){
+	return num_animations_;
 }
 
 bool animation::get_play()
@@ -25,46 +37,58 @@ bool animation::get_play()
 	return false;
 }
 
-void animation::draw_frame()
-{
+void animation::draw_frame(Vector2& pos){
+	DrawTextureRec(animation_sheet_, frame_, pos, WHITE);
 }
 
-void animation::next_frame()
-{
+void animation::next_frame(){
+	frame_.x += frame_width_;
+	++current_frame_;
 }
 
-void animation::previous_frame()
-{
+void animation::previous_frame(){
+	frame_.y -= frame_width_;
+	--current_frame_;
 }
 
-void animation::next_animation()
-{
+void animation::next_animation(){
+	frame_.x = 0.0;
+	frame_.y += frame_height_;
+	++current_anim_;
 }
 
-void animation::previous_animation()
-{
+void animation::previous_animation(){
+	frame_.x = 0.0;
+	frame_.y -= frame_height_;
+	--current_anim_;
 }
 
-void animation::select_animaiton(int index)
-{
+void animation::reset_animation(){
+	frame_.x = 0.0;
 }
 
-void animation::end_frame()
-{
+void animation::select_animaiton(int index){
+	frame_.y = frame_height_ * index;
 }
 
-void animation::default_frame()
-{
+void animation::select_frame(int frame){
+	frame_.x = frame_width_ * frame;
 }
 
-void animation::set_animation(int animation_row)
-{
+void animation::end_frame(){
+	frame_.x = frame_width_ * (animation_length_ - 1);
+	frame_.y = frame_height_ * (num_animations_ - 1);
 }
 
-void animation::play_animation()
-{
+void animation::default_frame(){
+	frame_.x = 0.0;
+	frame_.y = 0.0;
 }
 
-void animation::pause_animation()
-{
+void animation::play_animation(){
+	play_ = true;
+}
+
+void animation::pause_animation(){
+	play_ = false;
 }

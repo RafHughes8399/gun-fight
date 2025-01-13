@@ -15,11 +15,14 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "weapons.h"
+#include "animation.h"
 #include "config.h"
+#include "utility.h"
 #include <vector>
 #include <string>
 #include <memory>
 #include <compare>
+#include <iostream>
 namespace entities {
 	static const float DEFAULT_X = 100.0;
 	static const float DEFAULT_Y = 100.0;
@@ -33,26 +36,17 @@ namespace entities {
 		entity(entity&& other) = default;
 		entity& operator=(entity&& other) = default;
 		// default entitiy constructor (at default position, uses default entity image)
-		entity(float x, float y, const char* path, float frame_width, float frame_height)
-			: position_({ x, y }), path_(path), frame_width_(frame_width), frame_height_(frame_height) {
-			
-			texture_ = LoadTexture(path_);
-			texture_rectangle_ = Rectangle{ 0.0, 0.0, frame_width_, frame_height_};
-		};
-
+		entity(float x, float y, const char* path)
+			: position_({ x, y }), path_(path){};
 		// copy constructor
 		entity(const entity& other)
-			: position_(other.position_), path_(other.path_), texture_(other.texture_), texture_rectangle_(other.texture_rectangle_), 
-			frame_width_(other.frame_width_), frame_height_(other.frame_height_), remove_(other.remove_) {};
+			: position_(other.position_), path_(other.path_), remove_(other.remove_), animation_(other.animation_) {};
 		// accessors and modifiers
 		bool get_remove();
 		void set_remove(bool b);
 		float get_x() const;
 		float get_y() const;
 
-
-		void goto_frame(int frame);
-		void goto_animation(int animation);
 		void set_pos(float x, float y);
 		Vector2 get_position();
 		Rectangle get_rectangle();
@@ -68,16 +62,7 @@ namespace entities {
 		virtual bool collide(entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
 	protected:
 		Vector2 position_; // x, y position coords using float, necessary for drawing
-		Texture2D texture_;
-		Rectangle texture_rectangle_; // position starts at 0.0, 0.0, the length and width of the frame depend on the sprite sheet 
-		float frame_width_ = 0.0;
-		float frame_height_ = 0.0;
-
-		// start by displaying the first frame in the first animation
-		int frame_ = 0;
-		int animation_ = 0;
-		
-		
+		animation animation_ = animation();
 		const char* path_; 
 		bool remove_ = false;
 	};
@@ -88,8 +73,9 @@ namespace entities {
 		// constructors
 		// gunman with revolver
 		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload, int direction)
-			: entity(x, y, path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT), gun_(std::make_unique<wep::revolver>(wep::revolver())),
+			: entity(x, y, path), gun_(std::make_unique<wep::revolver>(wep::revolver())),
 			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload), direction_(direction){
+			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, 0, 0);
 		};
 		gunman(const gunman& other)
 			:entity(other), gun_(other.gun_->clone()), health_(other.health_), 
@@ -124,8 +110,8 @@ namespace entities {
 	public:
 
 		// overload the custom constructor
-		obstacle(float x, float y, const char* path, float frame_width, float frame_height_, int health, int category, int penetration)
-			: entity(x, y, path, frame_width, frame_height_), health_(health), obstacle_category_(category), penetration_(penetration){};
+		obstacle(float x, float y, const char* path, int health, int category, int penetration)
+			: entity(x, y, path), health_(health), obstacle_category_(category), penetration_(penetration){};
 		// overload the copy constructor 
 		obstacle(const obstacle& other)
 			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {};
@@ -140,7 +126,6 @@ namespace entities {
 		int get_health();
 		virtual void take_damage(int damage); // returns true if health > 0
 	protected:
-		//TODO revisit
 		int health_;
 		int obstacle_category_;
 		int penetration_;
@@ -148,37 +133,38 @@ namespace entities {
 	};
 	class moveable_obstacle : public obstacle {
 	public:
-		moveable_obstacle(float x, float y, const char* path, float frame_width, float frame_height_, int health, int category, int penetration, float movement_x, float movement_y)
-			: obstacle(x, y, path, frame_width_, frame_height_, health, category, penetration), movement_speed_(Vector2 {movement_x, movement_y}) {
+		moveable_obstacle(float x, float y, const char* path, int health, int category, int penetration, float movement_x, float movement_y)
+			: obstacle(x, y, path, health, category, penetration), movement_speed_(Vector2 {movement_x, movement_y}) {
 		}
 		moveable_obstacle(const moveable_obstacle& other)
-			: obstacle(other), movement_speed_(other.movement_speed_) {};
+			: obstacle(other), movement_speed_(other.movement_speed_), frames_existed_(other.frames_existed_) {};
 		Vector2 get_speed();
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		bool move(std::vector<std::unique_ptr<entity>>& entities);
+		virtual bool move(std::vector<std::unique_ptr<entity>>& entities);
 		virtual void change_direction() = 0;
 	protected:
 		Vector2 movement_speed_;
-
+		int frames_existed_ = 0;
 
 	};
 	class cactus : public obstacle {
 	public:
 		cactus(float x, float y)
-			: obstacle(x, y, config::CACTUS_PATH, config::CACTUS_WIDTH, config::CACTUS_HEIGHT, config::CACTUS_HEALTH, config::CACTUS_CATEGORY, config::CACTUS_PENETRATION) {
+			: obstacle(x, y, config::CACTUS_PATH, config::CACTUS_HEALTH, config::CACTUS_CATEGORY, config::CACTUS_PENETRATION) {
+			animation_ = animation(path_, config::CACTUS_WIDTH, config::CACTUS_HEIGHT, config::CACTUS_ANIMATION_LENGTH, config::CACTUS_ANIMATIONS);
 		};
 		cactus(const cactus& other)
 			: obstacle(other) {
 		};
 		void take_damage(int damage) override;
 	private:
-
 	};	
 	class barrel : public obstacle {
 	public:
 		barrel(float x, float y)
-			: obstacle(x, y, config::BARREL_PATH, config::BARREL_WIDTH, config::BARREL_HEIGHT, config::BARREL_HEALTH, config::BARREL_CATEGORY, config::BARREL_PENETRATION) {
+			: obstacle(x, y, config::BARREL_PATH, config::BARREL_HEALTH, config::BARREL_CATEGORY, config::BARREL_PENETRATION) {
+			animation_ = animation(path_, config::BARREL_WIDTH, config::BARREL_HEIGHT, config::BARREL_ANIMATION_LENGTH, config::BARREL_ANIMATIONS);
 		};
 		barrel(const barrel& other)
 			: obstacle(other) {
@@ -189,7 +175,7 @@ namespace entities {
 	class wagon : public moveable_obstacle {
 	public:
 		wagon(float x, float y, float movement_x, float movement_y)
-			: moveable_obstacle(x, y, config::WAGON_UP_PATH, config::WAGON_WIDTH, config::WAGON_HEIGHT, config::WAGON_HEALTH, config::WAGON_CATEGORY, config::WAGON_PENETRATION, movement_x, movement_y) {
+			: moveable_obstacle(x, y, config::WAGON_UP_PATH, config::WAGON_HEALTH, config::WAGON_CATEGORY, config::WAGON_PENETRATION, movement_x, movement_y) {
 		};
 		wagon(const wagon& other)
 			: moveable_obstacle(other) {
@@ -201,19 +187,25 @@ namespace entities {
 	class tumbleweed : public moveable_obstacle {
 	public:
 		tumbleweed(float x, float y)
-			: moveable_obstacle(x, y, config::TUMBLEWEED_PATH, config::TUMBLEWEED_WIDTH, config::TUMBLEWEED_HEIGHT, config::TUMBLEWEED_HEALTH, config::TUMBLEWEED_CATEGORY, config::TUMBLEWEED_PENETRATION, config::TUMBLEWEED_SPEED, 0.0) {
+			: moveable_obstacle(x, y, config::TUMBLEWEED_PATH, config::TUMBLEWEED_HEALTH, config::TUMBLEWEED_CATEGORY, config::TUMBLEWEED_PENETRATION, config::TUMBLEWEED_SPEED, 0.0),
+			baseline_(y), lifespan_(util::generate_random_int(config::TUMBLEWEED_LIFESPAN_LOWER, config::TUMBLEWEED_LIFESPAN_UPPER)){
+			animation_ = animation(path_, config::TUMBLEWEED_WIDTH, config::TUMBLEWEED_HEIGHT, config::TUMBLEWEED_ANIMATION_LENGTH, config::TUMBLEWEED_ANIMATIONS);
 		};
 		tumbleweed(const tumbleweed& other)
-			: moveable_obstacle(other) {
+			: moveable_obstacle(other), baseline_(other.baseline_), lifespan_(other.lifespan_) {
 		};
 		void change_direction() override;
+		bool move(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		void draw() override;
 	private:
-
+		float baseline_;
+		int lifespan_;
 	};
 	class projectile : public entity {
 	public:
-		projectile(float x, float y, const char* path, float frame_width, float frame_height, float speed, float direction, wep::weapon* weapon)
-			: entity(x, y, path, frame_width, frame_height), speed_direction_({ speed, direction }), weapon_(weapon) {};
+		projectile(float x, float y, const char* path, float speed, float direction, wep::weapon* weapon)
+			: entity(x, y, path), speed_direction_({ speed, direction }), weapon_(weapon) {};
 
 		projectile(const projectile& other)
 			: entity(other), speed_direction_(other.speed_direction_), weapon_(other.weapon_) {};
@@ -230,10 +222,6 @@ namespace entities {
 		wep::weapon* get_weapon() const;
 		// TODO unique behaviours if any
 	protected:
-		// a projectile has movement, maybe a movement function?
-		// it has speed
-		// it has direction
-		// speed and direction is a vector, so maybe use a
 		Vector2 speed_direction_; // add this to the position each tick to get movement
 		wep::weapon* weapon_;
 
@@ -242,7 +230,9 @@ namespace entities {
 	class bullet : public projectile {
 	public:
 		bullet(float x, float y, const char* path, float direction, wep::weapon* weapon)
-			: projectile(x, y, path, config::BULLET_WIDTH, config::BULLET_HEIGHT, config::BULLET_SPEED, direction, weapon) {};
+			: projectile(x, y, path, config::BULLET_SPEED, direction, weapon) {
+			animation_ = animation(path, config::BULLET_WIDTH, config::BULLET_HEIGHT, 0, 0);
+		};
 
 		bullet(const bullet& other)
 			: projectile(other) {};
@@ -256,8 +246,8 @@ namespace entities {
 
 	class pickup : public entity {
 	public:
-		pickup(float x, float y, const char* path, float frame_width, float frame_height)
-			: entity(x, y, path, frame_width, frame_height) {};
+		pickup(float x, float y, const char* path)
+			: entity(x, y, path) {};
 		pickup(const pickup& other)
 			:entity(other) {};
 

@@ -1,6 +1,7 @@
 #include "entities.h"
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 //--------------- ENTITY --------------------------------------------------------------------------------------------------------
 float entities::entity::get_x() const {
 	return position_.x;
@@ -13,20 +14,7 @@ float entities::entity::get_y() const{
 // move between frames by adjusting the rectnagle to display them 
 // goto a frame in the current animation row
 
-
 // these would be called in update to simulate animation
-void entities::entity::goto_frame(int frame){
-	texture_rectangle_.x = frame_width_ * frame;
-	frame_ = frame;
-}
-
-// goto the start of an animation 
-void entities::entity::goto_animation(int animation){
-	texture_rectangle_.x = 0.0;
-	texture_rectangle_.y = frame_height_ * animation;
-	animation_ = animation;
-}
-
 void entities::entity::set_pos(float x, float y){
 	position_ = Vector2{ x, y };
 }
@@ -36,7 +24,7 @@ Vector2 entities::entity::get_position() {
 }
 
 Rectangle entities::entity::get_rectangle(){
-	return Rectangle{ position_.x, position_.y, static_cast<float>(texture_.width), static_cast<float>(texture_.height) };
+	return Rectangle{ position_.x, position_.y, animation_.get_frame_width(), animation_.get_frame_height()};
 }
 
 const char* entities::entity::get_path() const {
@@ -57,7 +45,7 @@ entities::entity& entities::entity::operator=(const entities::entity& other) {
 
 void entities::entity::draw() {
 	// TODO eventually chagne to animation
-	DrawTextureRec(texture_, texture_rectangle_, position_, WHITE);
+	animation_.draw_frame(position_);
 }
 
 bool entities::entity::operator==(const entities::entity& other) {
@@ -160,8 +148,8 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::unique_pt
 	if (blocked) {
 		return false;
 	}
-	if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
-		new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
+		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
 			position_ = new_pos;
 			return true;
 	}
@@ -218,7 +206,8 @@ bool entities::moveable_obstacle::update(std::vector<std::unique_ptr<entity>>& e
 
 	// then do movement
 	move(entities);
-	return false;
+	++frames_existed_;
+	return true;
 }
 
 bool entities::moveable_obstacle::collide(entity& other){
@@ -249,8 +238,8 @@ bool entities::moveable_obstacle::move(std::vector<std::unique_ptr<entity>>& ent
 		change_direction();
 	}
 	// Check screen boundaries based on which half the gunman is in
-	if (new_pos.x >= 0 and new_pos.x + texture_.width <= config::SCREEN_WIDTH and
-		new_pos.y >= 0 and new_pos.y + texture_.height <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
+		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
 		position_ = new_pos;
 		return true;
 	}
@@ -264,6 +253,62 @@ Vector2 entities::moveable_obstacle::get_speed(){
 }
 void entities::tumbleweed::change_direction(){
 	movement_speed_.x *= -1;
+}
+
+bool entities::tumbleweed::move(std::vector<std::unique_ptr<entity>>& entities){
+	auto new_y = abs(sin(frames_existed_/15)) * config::TUMBLEWEED_AMPLITUDE + baseline_; // add the baseline not the y
+	Vector2 new_pos{ position_.x + movement_speed_.x, new_y};
+	// Create a rectangle for the proposed new position
+	Rectangle proposed_rect = get_rectangle();
+	proposed_rect.x = new_pos.x;
+	proposed_rect.y = new_pos.y;
+
+	// Check if any obstacle interrupts at the new position
+	bool blocked = false;
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
+		{
+			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
+				// if collide is false then do not move
+				if (not this->collide(*e)) {
+					blocked = true;
+				}
+			}
+		});
+
+	if (blocked) {
+		change_direction();
+	}
+	// Check screen boundaries based on which half the gunman is in
+	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
+		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
+		position_ = new_pos;
+		return true;
+	}
+	else {
+		change_direction();
+	}
+	return false;
+}
+
+bool entities::tumbleweed::update(std::vector<std::unique_ptr<entity>>& entities){
+	// checks if alive, then moves 
+	entities::moveable_obstacle::update(entities);
+	if (frames_existed_ >= lifespan_) { 
+		remove_ = true;
+	}
+	return true;
+}
+
+void entities::tumbleweed::draw(){
+	// update the frame and maybe animation
+	animation_.next_frame();
+	if (animation_.get_frame_num() == static_cast<int>(config::TUMBLEWEED_ANIMATION_LENGTH)) {
+		animation_.reset_animation();
+	}
+	if (frames_existed_ == lifespan_ - config::TUMBLEWEED_ANIMATION_LENGTH) {
+		animation_.next_animation();
+	}
+	entities::entity::draw();
 }
 
 void entities::wagon::change_direction(){
@@ -345,6 +390,6 @@ bool entities::pickup::collide(entities::entity& other) {
 void entities::cactus::take_damage(int damage){
 	obstacle::take_damage(damage);
 	if (health_ > 0) {
-		goto_frame(frame_ + 1);
+		animation_.next_frame();
 	}
 }
