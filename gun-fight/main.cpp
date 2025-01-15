@@ -60,7 +60,7 @@ void init_game() {
 
 // update the game by one frame
 void update_game() {
-	// temp for quickly cycling through rounds to test environemnt generation
+	// temp for quickly cycling through rounds to test environment generation
 	if (IsKeyPressed(KEY_X)) {
 		round_over = true;
 	}
@@ -94,9 +94,7 @@ void draw_game() {
 	gunman2->get_weapon()->draw(1100, config::SCREEN_HEIGHT - 300);
 	std::for_each(game_entities.begin(), game_entities.end(), [](auto& e) {e->draw();});
 	DrawText(std::to_string(gunman1->get_score()).c_str(), (config::SCREEN_WIDTH / 4), 50, 36, colours::maize);
-	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);
-	DrawRectangle(100, 100, 30, 75, colours::fern_green);
-	
+	DrawText(std::to_string(gunman2->get_score()).c_str(), (config::SCREEN_WIDTH * 3 / 4), 50, 36, colours::maize);	
 	EndDrawing();
 }
 
@@ -124,7 +122,7 @@ static void build_level() {
 	auto category = util::generate_random_num(0.0, 2.0);
 	if (category <= 0.5) {category = 0;}
 	else { category = ceil(category); }
-	auto obstacles_to_generate = 2 * (round_count % 4) + 3;
+	auto obstacles_to_generate = 2 * (round_count % 4) + 1;
 	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
 	// generate the environment

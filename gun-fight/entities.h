@@ -169,6 +169,7 @@ namespace entities {
 		barrel(const barrel& other)
 			: obstacle(other) {
 		};
+		void take_damage(int damage) override;
 	private:
 
 	};	

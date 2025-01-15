@@ -1,7 +1,15 @@
 TODO:
--> barrel redraw and animation
--> tumbleweed movement function and redesign and animation
-	-> there will be two animations
-		-> rolling 
-		-> wilting
--> bullet redraw
+
+
+-> tumbleweed movemen, gets stuck on cacti easily 
+-> rework level generation, its not working as it used to (fixed)
+
+-> barrel redraw and animation (done)
+-> bullet redraw (and firing animation?) (done)
+-> hud and background redesign
+-> wagon design and animation
+-> gunman design and movement animation
+
+-> menu navigation
+-> new weapons and pickups
+

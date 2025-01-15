@@ -100,8 +100,8 @@ bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { 
 		return IsKeyDown(key_direction.first);
 	})){
 		if (gun_->fire()) {
-			if (direction_ == 1) { entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x + 100, position_.y + 45, "sprites/bullet-1.png", 1, gun_.get())));}
-			else if (direction_ == -1 ) {entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x - 20, position_.y + 45, "sprites/bullet-2.png", -1, gun_.get())));}
+			if (direction_ == 1) { entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x + config::GUNMAN_WIDTH,  position_.y + 45, "sprites/bullet-1.png", 1, gun_.get())));}
+			else if (direction_ == -1 ) {entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x - config::BULLET_WIDTH, position_.y + 45, "sprites/bullet-2.png", -1, gun_.get())));}
 		}
 	}
 	if (IsKeyPressed(fire_reload_.second)) {
@@ -392,4 +392,12 @@ void entities::cactus::take_damage(int damage){
 	if (health_ > 0) {
 		animation_.next_frame();
 	}
+}
+
+void entities::barrel::take_damage(int damage){
+	obstacle::take_damage(damage);
+	if (health_ > 0) {
+		animation_.next_frame();
+	}
+
 }

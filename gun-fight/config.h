@@ -58,8 +58,8 @@ namespace config {
 	inline const int REVOLVER_FIRE_RATE = 30;
 	
 	// bullet attributes;
-	inline const float BULLET_WIDTH = 20;
-	inline const float BULLET_HEIGHT = 9;
+	inline const float BULLET_WIDTH = 25;
+	inline const float BULLET_HEIGHT = 12;
 	inline const float BULLET_SPEED = 8.5;
 
 	// obstacle attributes
@@ -89,8 +89,8 @@ namespace config {
 	inline const int BARREL_CATEGORY = 2;
 	inline const char* BARREL_PATH = "sprites/barrel.png";
 	inline const int BARREL_PENETRATION = 3;
-	inline const float BARREL_WIDTH = 32;
-	inline const float BARREL_HEIGHT = 32;
+	inline const float BARREL_WIDTH = 67;
+	inline const float BARREL_HEIGHT = 91;
 	inline const int BARREL_ANIMATION_LENGTH = 3;
 	inline const int BARREL_ANIMATIONS = 1;
 
@@ -112,7 +112,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = 0;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = SCREEN_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 225; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 215; //subject to change
 
 	
 }
