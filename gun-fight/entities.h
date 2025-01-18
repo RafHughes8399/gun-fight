@@ -37,10 +37,12 @@ namespace entities {
 		entity& operator=(entity&& other) = default;
 		// default entitiy constructor (at default position, uses default entity image)
 		entity(float x, float y, const char* path)
-			: position_({ x, y }), path_(path){};
+			: position_({ x, y }), path_(path) {
+		};
 		// copy constructor
 		entity(const entity& other)
-			: position_(other.position_), path_(other.path_), remove_(other.remove_), animation_(other.animation_) {};
+			: position_(other.position_), path_(other.path_), remove_(other.remove_), animation_(other.animation_) {
+		};
 		// accessors and modifiers
 		bool get_remove();
 		void set_remove(bool b);
@@ -63,10 +65,10 @@ namespace entities {
 	protected:
 		Vector2 position_; // x, y position coords using float, necessary for drawing
 		animation animation_ = animation();
-		const char* path_; 
+		const char* path_;
 		bool remove_ = false;
 	};
-	
+
 	// player-controlled entity
 	class gunman : public entity {
 	public:
@@ -74,12 +76,13 @@ namespace entities {
 		// gunman with revolver
 		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload, int direction)
 			: entity(x, y, path), gun_(std::make_unique<wep::revolver>(wep::revolver())),
-			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload), direction_(direction){
+			health_(health), score_(0), movement_(movement), fire_reload_(fire_reload), direction_(direction) {
 			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, 0, 0);
 		};
 		gunman(const gunman& other)
-			:entity(other), gun_(other.gun_->clone()), health_(other.health_), 
-			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_), direction_(other.direction_){};
+			:entity(other), gun_(other.gun_->clone()), health_(other.health_),
+			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_), direction_(other.direction_) {
+		};
 		// unique accessors and modifiers
 		wep::weapon* get_weapon() const;
 		int get_health() const;
@@ -89,7 +92,7 @@ namespace entities {
 		bool operator==(const entity& other) override;
 		// behaviour overloads
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
-		bool collide(entity&  other) override;
+		bool collide(entity& other) override;
 
 		//unique behaviour 
 		void win_point();
@@ -111,10 +114,12 @@ namespace entities {
 
 		// overload the custom constructor
 		obstacle(float x, float y, const char* path, int health, int category, int penetration)
-			: entity(x, y, path), health_(health), obstacle_category_(category), penetration_(penetration){};
+			: entity(x, y, path), health_(health), obstacle_category_(category), penetration_(penetration) {
+		};
 		// overload the copy constructor 
 		obstacle(const obstacle& other)
-			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {};
+			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {
+		};
 		// overload the virtual methods
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
@@ -134,10 +139,11 @@ namespace entities {
 	class moveable_obstacle : public obstacle {
 	public:
 		moveable_obstacle(float x, float y, const char* path, int health, int category, int penetration, float movement_x, float movement_y)
-			: obstacle(x, y, path, health, category, penetration), movement_speed_(Vector2 {movement_x, movement_y}) {
+			: obstacle(x, y, path, health, category, penetration), movement_speed_(Vector2{ movement_x, movement_y }) {
 		}
 		moveable_obstacle(const moveable_obstacle& other)
-			: obstacle(other), movement_speed_(other.movement_speed_), frames_existed_(other.frames_existed_) {};
+			: obstacle(other), movement_speed_(other.movement_speed_), frames_existed_(other.frames_existed_) {
+		};
 		Vector2 get_speed();
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
@@ -159,7 +165,7 @@ namespace entities {
 		};
 		void take_damage(int damage) override;
 	private:
-	};	
+	};
 	class barrel : public obstacle {
 	public:
 		barrel(float x, float y)
@@ -172,7 +178,7 @@ namespace entities {
 		void take_damage(int damage) override;
 	private:
 
-	};	
+	};
 	class wagon : public moveable_obstacle {
 	public:
 		wagon(float x, float y, float movement_x, float movement_y)
@@ -189,7 +195,7 @@ namespace entities {
 	public:
 		tumbleweed(float x, float y)
 			: moveable_obstacle(x, y, config::TUMBLEWEED_PATH, config::TUMBLEWEED_HEALTH, config::TUMBLEWEED_CATEGORY, config::TUMBLEWEED_PENETRATION, config::TUMBLEWEED_SPEED, 0.0),
-			baseline_(y), lifespan_(util::generate_random_int(config::TUMBLEWEED_LIFESPAN_LOWER, config::TUMBLEWEED_LIFESPAN_UPPER)){
+			baseline_(y), lifespan_(util::generate_random_int(config::TUMBLEWEED_LIFESPAN_LOWER, config::TUMBLEWEED_LIFESPAN_UPPER)) {
 			animation_ = animation(path_, config::TUMBLEWEED_WIDTH, config::TUMBLEWEED_HEIGHT, config::TUMBLEWEED_ANIMATION_LENGTH, config::TUMBLEWEED_ANIMATIONS);
 		};
 		tumbleweed(const tumbleweed& other)
@@ -206,10 +212,12 @@ namespace entities {
 	class projectile : public entity {
 	public:
 		projectile(float x, float y, const char* path, float speed, float direction, wep::weapon* weapon)
-			: entity(x, y, path), speed_direction_({ speed, direction }), weapon_(weapon) {};
+			: entity(x, y, path), speed_direction_({ speed, direction }), weapon_(weapon) {
+		};
 
 		projectile(const projectile& other)
-			: entity(other), speed_direction_(other.speed_direction_), weapon_(other.weapon_) {};
+			: entity(other), speed_direction_(other.speed_direction_), weapon_(other.weapon_) {
+		};
 
 		// overload collide and update
 		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where projectile movement will occur
@@ -236,8 +244,9 @@ namespace entities {
 		};
 
 		bullet(const bullet& other)
-			: projectile(other) {};
-		
+			: projectile(other) {
+		};
+
 		// overloads
 		// operator overloads
 		bool operator==(const entity& other) override;
@@ -245,6 +254,10 @@ namespace entities {
 	private:
 	};
 
+	class dynamite_stick : public projectile {
+	public:
+	private:
+	};
 	class pickup : public entity {
 	public:
 		pickup(float x, float y, const char* path)
@@ -263,4 +276,27 @@ namespace entities {
 		bool operator==(const entity& other) override;
 	protected:
 	};
+
+	class rifle_pickup : public pickup{
+	public:
+	private:
+	};
+	class dynamite_pickup : public pickup{
+	public:
+	private:
+
+	};
+	class armour_pickup : public pickup{
+	public:
+	private:
+
+	};
+	class ammo_pickup : public pickup {
+	public:
+	private:
+	};
+
+	// investigate wrapper pattern, might be applicable here, you wrap the gunman 
+	// in whatever the pickup does and then return a new one
+	// look into the implementation of it
 }

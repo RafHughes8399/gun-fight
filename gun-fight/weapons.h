@@ -114,5 +114,15 @@ namespace wep {
 	private:
 
 	};
+	class rifle : public weapon {
+	public:
+	private:
 
+	};
+
+	class dynamite : public weapon {
+	public:
+	private:
+
+	};
 }
