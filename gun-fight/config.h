@@ -20,6 +20,7 @@ namespace config {
 	inline const int SCREEN_WIDTH = 1280;
 	inline const int SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2;
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
+
 	// gunman attributes
 	inline const float GUNMAN_HEIGHT = 115;
 	inline const float GUNMAN_WIDTH = 99;
@@ -46,7 +47,7 @@ namespace config {
 	inline static auto GUNMAN2_FIRING = std::pair<int, int>{ KEY_COMMA, KEY_PERIOD};
 
 
-	//WEAPON ATTRIBUTES
+	//revolver attributes
 	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
 	inline const int REVOLVER_PENETRATION = 0;
@@ -62,6 +63,21 @@ namespace config {
 	inline const float BULLET_HEIGHT = 12;
 	inline const float BULLET_SPEED = 8.5;
 
+	// rifle attributes
+
+	// rifle bullet attributes
+	inline const float RIFLE_BULLET_SPEED = 0.0;
+	inline const float RIFLE_BULLET_WIDTH = 0.0;
+	inline const float RIFLE_BULLET_HEIGHT = 0.0;
+	// dynamite attributes
+
+	// dynamite stick attributes
+	inline const float DYNAMITE_SPEED = 0.0;
+	inline const float DYNAMITE_STICK_WIDTH = 0.0;
+	inline const float DYNAMITE_STICK_HEIGHT = 0.0;
+	
+	inline const float DYNAMITE_DET_RADIUS = 0.0;
+	inline const float DYNAMITE_TIMER = 0.0; 
 	// obstacle attributes
 	inline const int TUMBLEWEED_HEALTH = 1;
 	inline const int TUMBLEWEED_CATEGORY = 0;
@@ -107,7 +123,7 @@ namespace config {
 	inline const int TRAIN_SPEED = 35;
 	inline const int TRAIN_DELAY = 150; // the delay between trains travelling across the screen
 
-	// obstacle bounds 
+	// obstacle generation bounds 
 	inline const int OBSTACLE_RANGE_X = SCREEN_WIDTH_HALF - 200;
 	inline const int OBSTACLE_RANGE_Y = 0;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;

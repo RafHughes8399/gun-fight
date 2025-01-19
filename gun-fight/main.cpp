@@ -5,7 +5,7 @@
 
 #include "raylib.h"
 #include "entities.h"
-#include "weapons.h"
+#include "weapon.h"
 #include "config.h"
 #include "utility.h"
 #include "level_builder.h"

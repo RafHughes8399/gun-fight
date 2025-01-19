@@ -41,9 +41,6 @@
     <ClInclude Include="projectiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="weapons.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="entities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

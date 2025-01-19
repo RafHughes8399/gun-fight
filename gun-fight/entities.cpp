@@ -1,4 +1,5 @@
 #include "entities.h"
+#include "weapon.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -66,7 +67,7 @@ bool entities::gunman::operator==(const entities::entity& other) {
 		and gun_.get() == gunman_ptr->get_weapon() and health_ == gunman_ptr->get_health();
 }
 // accessors
-wep::weapon* entities::gunman::get_weapon() const {
+weapons::weapon* entities::gunman::get_weapon() const {
 	return gun_.get();
 }
 
@@ -100,8 +101,9 @@ bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { 
 		return IsKeyDown(key_direction.first);
 	})){
 		if (gun_->fire()) {
-			if (direction_ == 1) { entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x + config::GUNMAN_WIDTH,  position_.y + 45, "sprites/bullet-1.png", 1, gun_.get())));}
-			else if (direction_ == -1 ) {entities.push_back(std::make_unique<entities::bullet>(entities::bullet(position_.x - config::BULLET_WIDTH, position_.y + 45, "sprites/bullet-2.png", -1, gun_.get())));}
+			auto bullet = std::move(gun_->create_bullet(position_.x, position_.y, direction_));
+			
+			entities.push_back(std::move(gun_->create_bullet(position_.x, position_.y, direction_)));
 		}
 	}
 	if (IsKeyPressed(fire_reload_.second)) {
@@ -327,7 +329,7 @@ bool entities::projectile::operator==(const entities::entity& other) {
 Vector2 entities::projectile::get_speed_direction() const{
 	return speed_direction_;
 }
-wep::weapon* entities::projectile::get_weapon() const {
+weapons::weapon* entities::projectile::get_weapon() const {
 	return weapon_;
 }
 //projectile - other beahaviour

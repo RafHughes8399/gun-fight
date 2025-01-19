@@ -9,6 +9,11 @@ public:
 			animation_length_(animation_length), num_animations_(num_animations){
 		frame_ = Rectangle{ 0.0, 0.0, frame_width_, frame_height_};
 	}
+	animation(const char* path, float frame_width, float frame_height)
+		: animation_sheet_(LoadTexture(path)), frame_width_(frame_width), frame_height_(frame_height),
+			animation_length_(0), num_animations_(0){
+		frame_ = Rectangle{ 0.0, 0.0, frame_width_, frame_height_};
+	}
 	animation(const animation& other)
 		: animation_sheet_(other.animation_sheet_), frame_(other.frame_), frame_width_(other.frame_width_),
 		frame_height_(other.frame_height_), animation_length_(other.animation_length_),

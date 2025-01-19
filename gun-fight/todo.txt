@@ -13,3 +13,30 @@ TODO:
 -> menu navigation
 -> new weapons and pickups
 
+
+
+for dynamite:
+- there is an x that shows where the dynamite lands
+- holding the fire button increases the distance thrown, represetned by the x
+- once landing the dynamite sits until the timer goes off, when it explodes, anything in the 
+radius takes damage
+
+
+-> refactor weapon to use animation
+pass in the direction of the gunman, 
+then in fire, make the bullet and return it, then add to entiteis in gvunman update
+
+-> rethink how it works
+
+
+-> refactor projectile, it should not need the weapon 
+-> the weapon is merely a means of creating bullets
+
+
+ok refactor weapon to be an entity that is the big next step
+- for now has no texture, nor size but does have position
+- spawns a bullet at  weapon + 5 * direction or s
+
+- then the bullet is created after firing
+simplify the background for now
+do gunman textures for all the weapons

@@ -162,7 +162,7 @@
     <ClInclude Include="level_builder.h" />
     <ClInclude Include="projectiles.h" />
     <ClInclude Include="utility.h" />
-    <ClInclude Include="weapons.h" />
+    <ClInclude Include="weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
