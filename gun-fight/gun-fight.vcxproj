@@ -150,8 +150,10 @@
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="crf.cpp" />
     <ClCompile Include="entities.cpp" />
+    <ClCompile Include="game_manager.cpp" />
     <ClCompile Include="level_builder.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="projectiles.cpp" />
     <ClCompile Include="weapons.cpp" />
   </ItemGroup>
@@ -159,7 +161,9 @@
     <ClInclude Include="animation.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
+    <ClInclude Include="game_manager.h" />
     <ClInclude Include="level_builder.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="projectiles.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="weapon.h" />

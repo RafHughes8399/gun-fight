@@ -1,5 +1,4 @@
 #include "entities.h"
-#include "weapon.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -67,7 +66,7 @@ bool entities::gunman::operator==(const entities::entity& other) {
 		and gun_.get() == gunman_ptr->get_weapon() and health_ == gunman_ptr->get_health();
 }
 // accessors
-weapons::weapon* entities::gunman::get_weapon() const {
+entities::weapon* entities::gunman::get_weapon() const {
 	return gun_.get();
 }
 
@@ -101,9 +100,10 @@ bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { 
 		return IsKeyDown(key_direction.first);
 	})){
 		if (gun_->fire()) {
-			auto bullet = std::move(gun_->create_bullet(position_.x, position_.y, direction_));
-			
-			entities.push_back(std::move(gun_->create_bullet(position_.x, position_.y, direction_)));
+			// calculate the offset as distance from the centre of the gunman
+			auto gunamn_centre_x = position_.x + config::GUNMAN_WIDTH / 2;
+			auto bullet_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * direction_;
+			entities.push_back(std::move(gun_->create_bullet(bullet_x, position_.y + 45, direction_)));
 		}
 	}
 	if (IsKeyPressed(fire_reload_.second)) {
@@ -322,17 +322,23 @@ bool entities::projectile::operator==(const entities::entity& other) {
 	const auto projectile_ptr = dynamic_cast<const entities::projectile*>(&other);
 	if (projectile_ptr == nullptr) { return false; }
 	return entities::entity::operator==(other)
-		and speed_direction_.x == projectile_ptr->get_speed_direction().x and speed_direction_.y == projectile_ptr->get_speed_direction().y
-		and weapon_ == projectile_ptr->get_weapon();
+		and speed_direction_.x == projectile_ptr->get_speed_direction().x and speed_direction_.y == projectile_ptr->get_speed_direction().y;
 }
 // projectile - accessors
 Vector2 entities::projectile::get_speed_direction() const{
 	return speed_direction_;
 }
-weapons::weapon* entities::projectile::get_weapon() const {
-	return weapon_;
+int entities::projectile::get_damage() {
+	return damage_;
+}
+int entities::projectile::get_penetration() {
+	return penetration_;
 }
 //projectile - other beahaviour
+bool entities::projectile::penetrate(const int& obstacle_penetration) {
+	return penetration_ >= obstacle_penetration;
+}
+
 bool entities::projectile::update(std::vector<std::unique_ptr<entity>>& entities) {
 	//TODO collision with obstacles
 
@@ -355,15 +361,15 @@ bool entities::projectile::collide(entities::entity& other) {
 	// if gunman
 	auto gunman = dynamic_cast<entities::gunman*>(&other);
 	if (gunman != nullptr) {
-		gunman->take_damage(weapon_->get_damage());
+		gunman->take_damage(damage_);
 		return false; // cannot move
 	}
 	// if obstacle
 	auto obstacle = dynamic_cast<entities::obstacle*>(&other);
 	if (obstacle != nullptr) {
-		obstacle->take_damage(weapon_->get_damage());
+		obstacle->take_damage(damage_);
 		// check penetration for tumbleweeds
-		return weapon_->penetrate(obstacle->get_penetration()); // a revolver can penetrate a tumbleweed but not a cactus
+		return penetrate(obstacle->get_penetration()); // a revolver can penetrate a tumbleweed but not a cactus
 	}
 	return true;
 }
@@ -402,4 +408,118 @@ void entities::barrel::take_damage(int damage){
 		animation_.next_frame();
 	}
 
+}
+
+// ----------------------- WEAPON LOADED STATE ------------------
+bool entities::weapon::loaded_state::fire(entities::weapon* w) {
+	if (w->cooldown_ == 0) {
+		w->state_.reset(nullptr);
+		w->state_ = std::make_unique<unloaded_state>(unloaded_state());
+		w->animation_.play_animation(); // in draw check if you are the end of the animation
+		w->reset_cooldown();
+
+		return true;
+	}
+	return false;
+
+}
+bool entities::weapon::loaded_state::reload(entities::weapon* w) {
+	return true;
+}
+std::unique_ptr<entities::weapon::weapon_state> entities::weapon::loaded_state::clone() {
+	return std::make_unique<entities::weapon::loaded_state>(*this);
+}
+
+// ----------------------- WEAPON UNLOADED STATE ------------------
+bool entities::weapon::unloaded_state::fire(entities::weapon* w) {
+	return false;
+}
+bool entities::weapon::unloaded_state::reload(entities::weapon* w) {
+	if (w->ammo_ == 0) { return false; }
+	w->ammo_ -= 1;
+	w->state_.reset(nullptr);
+	w->state_ = std::make_unique <entities::weapon::loaded_state>(entities::weapon::loaded_state());
+	w->animation_.play_animation();
+	return true;
+}
+
+std::unique_ptr<entities::weapon::weapon_state> entities::weapon::unloaded_state::clone() {
+	return std::make_unique<entities::weapon::unloaded_state>(*this);
+
+}
+
+// ----------------------- WEAPON ACCESSORS -------------------------
+int entities::weapon::get_ammo() {
+	return ammo_;
+}
+bool entities::weapon::is_loaded() {
+	auto state = state_.get();
+	return dynamic_cast<entities::weapon::loaded_state*>(state) != nullptr;
+}
+int  entities::weapon::get_fire_rate() {
+	return fire_rate_;
+}
+int entities::weapon::get_cooldown() {
+	return cooldown_;
+}
+
+void entities::weapon::decrement_cooldown() {
+	--cooldown_;
+}
+// ------------------- WEAPON OPERATOR OVERLOADS ------------------------------
+entities::weapon& entities::weapon::operator=(const entities::weapon& other) {
+	//TODO call the entity version of the operator=
+	//entities::entity::operator=(other);
+	ammo_ = other.ammo_;
+	state_ = other.state_->clone();
+	fire_rate_ = other.fire_rate_;
+	cooldown_ = other.cooldown_;
+	return *this;
+}
+
+//--------------------- WEAPON OTHER BEHAVIOUR ----------------------------------
+
+//------------------- REVOLVER OVERLOADS ----------------------------------
+std::unique_ptr<entities::projectile> entities::revolver::create_bullet(float x, float y, int direction){
+	if (direction == 1) {
+		return std::make_unique<entities::bullet>(entities::bullet(x, y, config::BULLET_LEFT, direction));;
+	}
+	else {
+		return std::make_unique<entities::bullet>(entities::bullet(x, y, config::BULLET_RIGHT, direction));;
+	}
+}
+bool entities::revolver::fire() {
+	return state_->fire(this);
+}
+bool entities::revolver::reload() {
+	return state_->reload(this);
+}
+void entities::revolver::replenish() {
+	ammo_ = config::REVOLVER_AMMO;
+	state_.reset(new loaded_state());
+	animation_.reset_animation();
+	cooldown_ = 0;
+
+}
+void entities::revolver::draw(int x, int y) {
+	if (animation_.get_play()) {
+		if (not animation_.get_frame_num() < config::REVOLVER_ANIMATION_LENGTH) {
+			animation_.pause_animation();
+			animation_.next_animation();
+		}
+		animation_.next_frame();
+		animation_.draw_frame(position_);
+	}
+}
+void entities::revolver::reset_cooldown() {
+	cooldown_ = fire_rate_;
+}
+bool entities::revolver::update(std::vector<std::unique_ptr<entity>>& entities){
+	return true;
+}
+bool entities::revolver::collide(entity& other){
+	return false;
+}
+std::unique_ptr<entities::weapon> entities::revolver::clone() const {
+	return std::make_unique<entities::revolver>(*this);
 }

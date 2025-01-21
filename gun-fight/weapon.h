@@ -1,4 +1,11 @@
-#pragma once
+
+/*****************************************************************//**
+ * \file   weapon.h
+ * \brief 
+ * 
+ * \author raffa
+ * \date   January 2025
+ ******************************************************************
 #include "config.h"
 #include "raylib.h"
 #include <memory>
@@ -129,3 +136,4 @@ namespace weapons {
 
 	};
 }
+**/

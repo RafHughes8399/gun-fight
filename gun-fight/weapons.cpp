@@ -1,4 +1,11 @@
-#include "entities.h"
+
+/*****************************************************************//**
+ * \file   weapons.cpp
+ * \brief  
+ * 
+ * \author raffa
+ * \date   January 2025
+ *******************************************************************
 //-----------WEAPON-STATE-------------
 bool entities::weapon::loaded_state::fire(entities::weapon* w){	
 	if (w->cooldown_ == 0) {
@@ -122,4 +129,4 @@ std::unique_ptr<entities::weapon> entities::revolver::clone() const {
 bool entities::revolver::operator==(const weapon& other) {
 	return true;
 }
-
+**/

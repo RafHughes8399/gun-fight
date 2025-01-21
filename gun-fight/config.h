@@ -51,25 +51,45 @@ namespace config {
 	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
 	inline const int REVOLVER_PENETRATION = 0;
-	inline const char* REVOLVER_ANIMATION_PATH = "sprites/revolver-chamber.png";
-	inline const int REVOLVER_SHEET_WIDTH = 750;
-	inline const int REVOLVER_SHEET_HEIGHT = 1650;
-	inline const int REVOLVER_FRAME_WIDTH = 5;
-	inline const int REVOLVER_FRAME_HEIGHT = 11;
+	inline const char* REVOLVER_PATH = "sprites/revolver-chamber.png";
+	inline const float REVOLVER_ANIMATION_LENGTH = 5;
+	inline const float REVOLVER_ANIMATIONS = 11;
+	inline const float REVOLVER_WIDTH = 150;
+	inline const float REVOLVER_HEIGHT = 150;
 	inline const int REVOLVER_FIRE_RATE = 30;
 	
 	// bullet attributes;
 	inline const float BULLET_WIDTH = 25;
 	inline const float BULLET_HEIGHT = 12;
 	inline const float BULLET_SPEED = 8.5;
-
-	// rifle attributes
+	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
+	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
+	// rifle attributes TODO: put in values 
+	inline const int RIFLE_AMMO = 1;
+	inline const int RIFLE_DAMAGE = 1;
+	inline const int RIFLE_PENETRATION = 1;
+	inline const char* RIFLE_PATH = "";
+	inline const float RIFLE_ANIMATION_LENGTH = 1;
+	inline const float RIFLE_ANIMATIONS = 1;
+	inline const float RIFLE_WIDTH = 1;
+	inline const float RIFLE_HEIGHT = 1;
+	inline const int RIFLE_FIRE_RATE = 1;
 
 	// rifle bullet attributes
 	inline const float RIFLE_BULLET_SPEED = 0.0;
 	inline const float RIFLE_BULLET_WIDTH = 0.0;
 	inline const float RIFLE_BULLET_HEIGHT = 0.0;
+
 	// dynamite attributes
+	inline const int DYNAMITE_AMMO = 1;
+	inline const int DYNAMITE_DAMAGE = 1;
+	inline const int DYNAMITE_PENETRATION = 1;
+	inline const char* DYNAMITE_PATH = "";
+	inline const float DYNAMITE_ANIMATION_LENGTH = 1;
+	inline const float DYNAMITE_ANIMATIONS = 1;
+	inline const float DYNAMITE_WIDTH = 1;
+	inline const float DYNAMITE_HEIGHT = 1;
+	inline const int DYNAMITE_FIRE_RATE = 1;
 
 	// dynamite stick attributes
 	inline const float DYNAMITE_SPEED = 0.0;

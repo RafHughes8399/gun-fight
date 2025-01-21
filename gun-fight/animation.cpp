@@ -55,12 +55,14 @@ void animation::next_animation(){
 	frame_.x = 0.0;
 	frame_.y += frame_height_;
 	++current_anim_;
+	current_frame_ = 0;
 }
 
 void animation::previous_animation(){
 	frame_.x = 0.0;
 	frame_.y -= frame_height_;
 	--current_anim_;
+	current_frame_ = 0;
 }
 
 void animation::reset_animation(){
