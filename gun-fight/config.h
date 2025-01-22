@@ -14,12 +14,21 @@ namespace colours {
 }
 
 namespace config {
-
+	inline const char* DEFAULT_PATH = "sprites/default.png";
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
 	inline const int SCREEN_WIDTH = 1280;
 	inline const int SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2;
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
+
+	// player attributes
+	inline const float P1_START_X = 50;
+	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	
+	inline const float P2_START_X = 1150;
+	inline const float P2_START_Y = SCREEN_HEIGHT_HALF;
+
+
+
 
 	// gunman attributes
 	inline const float GUNMAN_HEIGHT = 115;

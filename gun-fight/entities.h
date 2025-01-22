@@ -165,6 +165,7 @@ namespace entities {
 		float baseline_;
 		int lifespan_;
 	};	
+
 	class pickup : public entity {
 	public:
 		pickup(float x, float y, const char* path)
@@ -178,13 +179,25 @@ namespace entities {
 		bool collide(entity& other) override;
 
 		bool operator==(const entity& other) override;
+		virtual std::unique_ptr<pickup> clone() const = 0;
+
 	protected:
+	};
+	class empty_pickup : public pickup {
+	public:
+		empty_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		};
+		std::unique_ptr<pickup> clone() const override;
+	private:
 	};
 	class rifle_pickup : public pickup {
 	public:
 		rifle_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		std::unique_ptr<pickup> clone() const override;
+
 	private:
 	};
 	class dynamite_pickup : public pickup {
@@ -192,6 +205,8 @@ namespace entities {
 		dynamite_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		std::unique_ptr<pickup> clone() const override;
+
 	private:
 	};
 	class armour_pickup : public pickup {
@@ -199,6 +214,8 @@ namespace entities {
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		std::unique_ptr<pickup> clone() const override;
+
 	private:
 
 	};
@@ -207,6 +224,8 @@ namespace entities {
 		ammo_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		std::unique_ptr<pickup> clone() const override;
+
 	private:
 	};
 	
@@ -419,21 +438,12 @@ namespace entities {
 	public:
 		// constructors
 		// gunman with revolver
-		gunman(float x, float y, const char* path, int health, std::map<int, Vector2>& movement, std::pair<int, int>& fire_reload, int direction)
-			: entity(x, y, path), health_(health), score_(0), movement_(movement), fire_reload_(fire_reload), direction_(direction) {
-
-			if (direction == 1) {
-				gun_ = std::make_unique<entities::revolver>(entities::revolver(position_.x + config::GUNMAN_WIDTH, position_.y + 45, config::REVOLVER_PATH));
-
-			}
-			else {
-				gun_ = std::make_unique<entities::revolver>(entities::revolver(position_.x - config::BULLET_WIDTH, position_.y + 45, config::REVOLVER_PATH));
-			}
+		gunman(float x, float y, const char* path, int health, int direction)
+			: entity(x, y, path), health_(health), direction_(direction) {
 			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, 0, 0);
 		};
 		gunman(const gunman& other)
-			:entity(other), gun_(other.gun_->clone()), health_(other.health_),
-			score_(other.score_), movement_(other.movement_), fire_reload_(other.fire_reload_), direction_(other.direction_) {
+			:entity(other), health_(other.health_), direction_(other.direction_) {
 		};
 		// unique accessors and modifiers
 		entities::weapon* get_weapon() const;
@@ -447,19 +457,12 @@ namespace entities {
 		bool collide(entity& other) override;
 
 		//unique behaviour 
-		void win_point();
 		void take_damage(int damage);
 		bool move(Vector2& movement_vector, std::vector<std::unique_ptr<entity>>& entities);
 		void reset(float x, float y);
-		void use_item();
 
 	private:
-		std::unique_ptr<entities::weapon> gun_;
-		std::unique_ptr<pickup> item_;
 		int health_;
-		int score_;
-		std::map<int, Vector2>& movement_;
-		std::pair<int, int>& fire_reload_;
 		const int direction_; // left facing is 1, right facing is -1 
 
 	};

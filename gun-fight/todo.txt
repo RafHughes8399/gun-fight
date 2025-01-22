@@ -22,9 +22,6 @@ for dynamite:
 radius takes damage
 
 
--> refactor weapon to use animation
-pass in the direction of the gunman, 
-then in fire, make the bullet and return it, then add to entiteis in gvunman update
 
 -> rethink how it works
 
@@ -40,3 +37,23 @@ ok refactor weapon to be an entity that is the big next step
 - then the bullet is created after firing
 simplify the background for now
 do gunman textures for all the weapons
+
+
+
+-> implement game manager and player methods
+-> incorporate into main 
+-> refactor code into their own files like obstacles.cpp, gunman.cpp, weapons.cpp, etc
+-> add documentation
+-> draw background and gunman, animate gunman
+
+-> implement rifle and dynamite
+-> implement items
+-> draw rifle and dynamite 
+
+
+-> player constructor 
+-> write in main 
+-> remove gunman dupe code
+-> adjust the update paramters to check players and entities
+
+-> issue with cloning i think, not sure, look at the output

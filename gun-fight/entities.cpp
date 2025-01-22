@@ -62,54 +62,18 @@ bool entities::gunman::operator==(const entities::entity& other) {
 	if (typeid(*this) != typeid(other)) { return false; }
 	const auto gunman_ptr = dynamic_cast<const entities::gunman*>(&other);
 	if (gunman_ptr == nullptr) { return false; }
-	return entities::entity::operator==(other)
-		and gun_.get() == gunman_ptr->get_weapon() and health_ == gunman_ptr->get_health();
+	return entities::entity::operator==(other) and health_ == gunman_ptr->get_health();
 }
 // accessors
-entities::weapon* entities::gunman::get_weapon() const {
-	return gun_.get();
-}
-
 int entities::gunman::get_health() const {
 	return health_;
-}
-int entities::gunman::get_score() const {
-	return score_;
 }
 int entities::gunman::get_direction() const{
 	return direction_;
 }
 // overloaded behaviour
 bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { // make this a pointer
-	// TODO: check collisions with obstacles and pickup items pending implementation, and projectiles, 
-	// check collision
-	// then check health of the gunman 
-	if (health_ <= 0) { return false;} // indicates dead gunman
-	// then check movment key input
-	std::for_each(movement_.begin(), movement_.end(), [this, &entities](auto& key_direction) {
-		if (IsKeyDown(key_direction.first)) {
-			this->move(key_direction.second, entities);
-			return true;
-		}
-		return false; // no movement key was pressed
-		});
-
-	// then check firing and reloading key inputs
-	if (gun_->get_cooldown() > 0) { gun_->decrement_cooldown();}
-	if (IsKeyPressed(fire_reload_.first) and std::none_of(movement_.begin(), movement_.end(),[](auto& key_direction) {
-		return IsKeyDown(key_direction.first);
-	})){
-		if (gun_->fire()) {
-			// calculate the offset as distance from the centre of the gunman
-			auto gunamn_centre_x = position_.x + config::GUNMAN_WIDTH / 2;
-			auto bullet_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * direction_;
-			entities.push_back(std::move(gun_->create_bullet(bullet_x, position_.y + 45, direction_)));
-		}
-	}
-	if (IsKeyPressed(fire_reload_.second)) {
-		gun_->reload();
-	}
-	return true;
+	return health_ > 0;
 }
 bool entities::gunman::collide(entities::entity& other) {
 	// collides with obstacle
@@ -161,14 +125,10 @@ void entities::gunman::take_damage(int damage) {
 	// return true if still alive, return false if not
 	health_ -= damage;
 }
-void entities::gunman::win_point() {
-	++score_;
-}
 void entities::gunman::reset(float x, float y) {
 	position_.x = x;
 	position_.y = y;
 	health_ = config::GUNMAN_HEALTH;
-	gun_->replenish();
 }
 // ------------------------------OBSTACLE------------------------------------------------
 bool entities::obstacle::operator==(const entities::entity& other) {
@@ -224,7 +184,7 @@ bool entities::moveable_obstacle::move(std::vector<std::unique_ptr<entity>>& ent
 	proposed_rect.x = new_pos.x;
 	proposed_rect.y = new_pos.y;
 
-	// Check if any obstacle interrupts at the new position
+	// TODO:: check players and entities
 	bool blocked = false;
 	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
 		{
@@ -340,9 +300,7 @@ bool entities::projectile::penetrate(const int& obstacle_penetration) {
 }
 
 bool entities::projectile::update(std::vector<std::unique_ptr<entity>>& entities) {
-	//TODO collision with obstacles
-
-	// check colliding with gunman
+	// TODO collision both players and entities
 	for (auto& e : entities) {
 		if(CheckCollisionRecs(get_rectangle(), e->get_rectangle()) and this != e.get())
 		if (not collide(*e)) {
@@ -522,4 +480,9 @@ bool entities::revolver::collide(entity& other){
 }
 std::unique_ptr<entities::weapon> entities::revolver::clone() const {
 	return std::make_unique<entities::revolver>(*this);
+}
+
+std::unique_ptr<entities::pickup> entities::empty_pickup::clone() const
+{
+	return std::make_unique<entities::empty_pickup>(*this);
 }
