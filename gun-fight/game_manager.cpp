@@ -1,10 +1,5 @@
 #include "game_manager.h"
 
-void game_manager::set_players(player p1, player p2){
-	player_1 = p1;
-	player_2 = p2;
-}
-
 void game_manager::remove_entities(){
 	auto new_end = std::remove_if(game_entities_.begin(), game_entities_.end(), [](auto& e) {
 		return e->get_remove();
@@ -13,13 +8,18 @@ void game_manager::remove_entities(){
 }
 
 void game_manager::clear_entities(){
-	game_entities_.clear();
+	game_entities_.clear(); // i am so dumb and stupid
+	game_entities_.push_back(player_1_.get_gunman());
+	game_entities_.push_back(player_2_.get_gunman());
 }
 
-
 void game_manager::update_entities(){
+	// the gunman should be in the entity list but not
 	for (auto& e : game_entities_) {
-		e->update(game_entities_);
+		auto gunman_ptr = dynamic_cast<entities::gunman*>(e.get());
+		if (gunman_ptr == nullptr) {
+			e->update(game_entities_);
+		}
 	}
 }
 
@@ -30,19 +30,19 @@ void game_manager::draw_entities(){
 }
 
 void game_manager::update_players(){
-	if (not player_1.update_player(game_entities_)) {
-		player_2.increase_score();
+	if (not player_1_.update_player(game_entities_)) {
+		player_2_.increase_score();
 		end_round();
 	}
-	if (not player_2.update_player(game_entities_)) {
-		player_1.increase_score();
+	if (not player_2_.update_player(game_entities_)) {
+		player_1_.increase_score();
 		end_round();
 	}
 }
 
 void game_manager::draw_players(){
-	player_1.draw_player();
-	player_2.draw_player();
+	player_1_.draw_player();
+	player_2_.draw_player();
 	
 }
 
@@ -76,8 +76,8 @@ bool game_manager::is_round_over(){
 
 void game_manager::build_level(){
 	// reset the players, clear the environment
-	player_1.reset_player();
-	player_2.reset_player();
+	player_1_.reset_player();
+	player_2_.reset_player();
 	clear_entities();
 	// update counters
 	frame_count_ = 0;

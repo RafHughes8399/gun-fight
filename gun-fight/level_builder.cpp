@@ -22,8 +22,6 @@ bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_
 		// max ( |x1 - x2| - (w1 + w2)/2, |y1 - y2| - (h1 + h2) / 2)
 		auto distance = std::fmax(std::abs(insert_centre.x - current_centre.x) - ((insert_rectangle.width + current_rectangle.width) / 2),
 			std::abs(insert_centre.y - current_centre.y) - ((insert_rectangle.height + current_rectangle.height) / 2));
-		std::cout << "current obstacle at " << insert_rectangle.x << ", " << insert_rectangle.y << " " << " is " << distance
-			<< " away from obstacle at " << current_rectangle.x << ", " << current_rectangle.y << std::endl;
 		if (distance < config::MINIMUM_OBSTACLE_DISTANCE) { return false; }
 	}
 	return true;
@@ -36,14 +34,11 @@ void level::level::build_level(){
 		obstacle_categories.insert(util::generate_random_int(config::TUMBLEWEED_CATEGORY, config::BARREL_CATEGORY));
 	}
 	if (obstacle_categories.contains(config::TUMBLEWEED_CATEGORY)) { 
-		std::cout << " build tumbleweeds " << std::endl;
 		build_tumbleweed(); 
 	}
 	if (obstacle_categories.contains(config::CACTUS_CATEGORY)) { 
-		std::cout << "build cacti " << std::endl;
 		build_cacti(); }
 	if (obstacle_categories.contains(config::BARREL_CATEGORY)) {
-		std::cout << "build barrels " << std::endl;
 		build_barrels(); }
 	if (obstacle_categories.contains(config::WAGON_CATEGORY)) { build_wagons(); }
 	// then generate up to level_category unique numbers between 0 and 3 
@@ -63,11 +58,9 @@ void level::level::build_tumbleweed(){
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 
 		while (not can_insert_obstacle(tumbleweed->get_rectangle(), level_entities_)) {
-			std::cout << "try insert tumbleweed at " << tumbleweed->get_x() << ", " << tumbleweed->get_y() << std::endl;
 			tumbleweed->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT));
 		}
-		std::cout << " insert tumbleweed at " << tumbleweed->get_x() << ", " << tumbleweed->get_y() << std::endl;
 
 		level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
 	}
@@ -87,12 +80,10 @@ void level::level::build_cacti(){
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		
 		while (not can_insert_obstacle(cactus->get_rectangle(), level_entities_)) {
-			std::cout << "try insert cactus at " << cactus->get_x() << ", " << cactus->get_y() << std::endl;
 
 			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH)),
 				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
 		}
-		std::cout << " insert cactus at " << cactus->get_x() << ", " << cactus->get_y() << std::endl;
 
 		level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
 	}
@@ -111,12 +102,10 @@ void level::level::build_barrels(){
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 
 		while (not can_insert_obstacle(barrel->get_rectangle(), level_entities_)) {
-			std::cout << "try insert barrel at " << barrel->get_x() << ", " << barrel->get_y() << std::endl;
 
 			barrel->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT));
 		}
-		std::cout << " insert barrel at " << barrel->get_x() << ", " << barrel->get_y() << std::endl;
 		level_entities_.insert(std::make_unique<entities::barrel>(*barrel.get()));
 	}
 }

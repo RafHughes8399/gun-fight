@@ -72,7 +72,7 @@ int entities::gunman::get_direction() const{
 	return direction_;
 }
 // overloaded behaviour
-bool entities::gunman::update(std::vector<std::unique_ptr<entity>>& entities) { // make this a pointer
+bool entities::gunman::update(std::vector<std::shared_ptr<entity>>& entities) { // make this a pointer
 	return health_ > 0;
 }
 bool entities::gunman::collide(entities::entity& other) {
@@ -91,7 +91,7 @@ bool entities::gunman::collide(entities::entity& other) {
 	return true;
 }
 // unique behaviour
-bool entities::gunman::move(Vector2& movement_vector, std::vector<std::unique_ptr<entities::entity>>& entities) {
+bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_ptr<entities::entity>>& entities) {
 	Vector2 new_pos = { position_.x + movement_vector.x, position_.y + movement_vector.y };
 
 	// Create a rectangle for the proposed new position
@@ -101,7 +101,7 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::unique_pt
 
 	// Check if any obstacle interrupts at the new position
 	bool blocked = false;
-	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::shared_ptr<entities::entity>& e)
 		{
 			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
 				// if collide is false then do not move
@@ -146,7 +146,7 @@ int entities::obstacle::get_health(){
 
 // obstacle -- other behaviour
 
-bool entities::obstacle::update(std::vector<std::unique_ptr<entity>>& entities) {
+bool entities::obstacle::update(std::vector<std::shared_ptr<entity>>& entities) {
 	//TODO implement
 	// do a health check
 	if (health_ <= 0) {
@@ -162,7 +162,7 @@ void entities::obstacle::take_damage(int damage) {
 	health_ -= damage;
 }
 
-bool entities::moveable_obstacle::update(std::vector<std::unique_ptr<entity>>& entities){
+bool entities::moveable_obstacle::update(std::vector<std::shared_ptr<entity>>& entities){
 	bool alive = obstacle::update(entities);
 	if (not alive) { return alive; }
 
@@ -176,7 +176,7 @@ bool entities::moveable_obstacle::collide(entity& other){
 	// if collision, change direction 
 	return false;
 }
-bool entities::moveable_obstacle::move(std::vector<std::unique_ptr<entity>>& entities){
+bool entities::moveable_obstacle::move(std::vector<std::shared_ptr<entity>>& entities){
 	Vector2 new_pos = { position_.x + movement_speed_.x, position_.y + movement_speed_.y };
 
 	// Create a rectangle for the proposed new position
@@ -186,7 +186,7 @@ bool entities::moveable_obstacle::move(std::vector<std::unique_ptr<entity>>& ent
 
 	// TODO:: check players and entities
 	bool blocked = false;
-	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::shared_ptr<entities::entity>& e)
 		{
 			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
 				// if collide is false then do not move
@@ -217,7 +217,7 @@ void entities::tumbleweed::change_direction(){
 	movement_speed_.x *= -1;
 }
 
-bool entities::tumbleweed::move(std::vector<std::unique_ptr<entity>>& entities){
+bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities){
 	auto new_y = abs(sin(frames_existed_/15)) * config::TUMBLEWEED_AMPLITUDE + baseline_; // add the baseline not the y
 	Vector2 new_pos{ position_.x + movement_speed_.x, new_y};
 	// Create a rectangle for the proposed new position
@@ -227,7 +227,7 @@ bool entities::tumbleweed::move(std::vector<std::unique_ptr<entity>>& entities){
 
 	// Check if any obstacle interrupts at the new position
 	bool blocked = false;
-	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::unique_ptr<entities::entity>& e)
+	std::for_each(entities.begin(), entities.end(), [this, &blocked, &proposed_rect](std::shared_ptr<entities::entity>& e)
 		{
 			if (this != e.get() and CheckCollisionRecs(proposed_rect, e->get_rectangle())) {
 				// if collide is false then do not move
@@ -252,7 +252,7 @@ bool entities::tumbleweed::move(std::vector<std::unique_ptr<entity>>& entities){
 	return false;
 }
 
-bool entities::tumbleweed::update(std::vector<std::unique_ptr<entity>>& entities){
+bool entities::tumbleweed::update(std::vector<std::shared_ptr<entity>>& entities){
 	// checks if alive, then moves 
 	entities::moveable_obstacle::update(entities);
 	if (frames_existed_ >= lifespan_) { 
@@ -299,18 +299,20 @@ bool entities::projectile::penetrate(const int& obstacle_penetration) {
 	return penetration_ >= obstacle_penetration;
 }
 
-bool entities::projectile::update(std::vector<std::unique_ptr<entity>>& entities) {
+bool entities::projectile::update(std::vector<std::shared_ptr<entity>>& entities) {
 	// TODO collision both players and entities
 	for (auto& e : entities) {
-		if(CheckCollisionRecs(get_rectangle(), e->get_rectangle()) and this != e.get())
-		if (not collide(*e)) {
-			remove_ = true;
-			return false;
+		if(CheckCollisionRecs(get_rectangle(), e->get_rectangle()) and this != e.get()){
+			if (not collide(*e)) {
+				remove_ = true;
+				return false;
+			}
 		}
 	}
 	// then check the gunmen
 	position_.x += (speed_direction_.x * speed_direction_.y);
 	if (position_.x < 0 or position_.x > config::SCREEN_WIDTH) {
+		remove_ = true;
 		return false; // will remove if out of bounds 
 	}
 	return true;
@@ -344,7 +346,7 @@ bool entities::pickup::operator==(const entities::entity& other) {
 	return true;
 }
 // pickup - other behaviour
-bool entities::pickup::update(std::vector<std::unique_ptr<entity>>& entities) {
+bool entities::pickup::update(std::vector<std::shared_ptr<entity>>& entities) {
 	//TODO implement
 	return true;
 }
@@ -438,12 +440,12 @@ entities::weapon& entities::weapon::operator=(const entities::weapon& other) {
 //--------------------- WEAPON OTHER BEHAVIOUR ----------------------------------
 
 //------------------- REVOLVER OVERLOADS ----------------------------------
-std::unique_ptr<entities::projectile> entities::revolver::create_bullet(float x, float y, int direction){
+std::shared_ptr<entities::projectile> entities::revolver::create_bullet(float x, float y, int direction){
 	if (direction == 1) {
-		return std::make_unique<entities::bullet>(entities::bullet(x, y, config::BULLET_LEFT, direction));;
+		return std::make_shared<entities::bullet>(entities::bullet(x, y, config::BULLET_LEFT, direction));;
 	}
 	else {
-		return std::make_unique<entities::bullet>(entities::bullet(x, y, config::BULLET_RIGHT, direction));;
+		return std::make_shared<entities::bullet>(entities::bullet(x, y, config::BULLET_RIGHT, direction));;
 	}
 }
 bool entities::revolver::fire() {
@@ -466,23 +468,15 @@ void entities::revolver::draw(int x, int y) {
 			animation_.next_animation();
 		}
 		animation_.next_frame();
-		animation_.draw_frame(position_);
 	}
+	animation_.draw_frame(position_);
 }
 void entities::revolver::reset_cooldown() {
 	cooldown_ = fire_rate_;
 }
-bool entities::revolver::update(std::vector<std::unique_ptr<entity>>& entities){
+bool entities::revolver::update(std::vector<std::shared_ptr<entity>>& entities){
 	return true;
 }
 bool entities::revolver::collide(entity& other){
 	return false;
-}
-std::unique_ptr<entities::weapon> entities::revolver::clone() const {
-	return std::make_unique<entities::revolver>(*this);
-}
-
-std::unique_ptr<entities::pickup> entities::empty_pickup::clone() const
-{
-	return std::make_unique<entities::empty_pickup>(*this);
 }

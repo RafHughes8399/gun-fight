@@ -56,4 +56,6 @@ do gunman textures for all the weapons
 -> remove gunman dupe code
 -> adjust the update paramters to check players and entities
 
--> issue with cloning i think, not sure, look at the output
+-> issue with cloning i think, not sure, look at the output  
+
+-> pass the players into update, remove entitiesba

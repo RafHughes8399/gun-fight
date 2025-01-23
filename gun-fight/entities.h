@@ -54,7 +54,7 @@ namespace entities {
 		bool operator<(entity& other);
 		// other behaviours
 		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
-		virtual bool update(std::vector<std::unique_ptr<entity>>& entities) = 0;
+		virtual bool update(std::vector<std::shared_ptr<entity>>& entities) = 0;
 
 		virtual bool collide(entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
 	protected:
@@ -77,7 +77,7 @@ namespace entities {
 			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {
 		};
 		// overload the virtual methods
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 		bool operator==(const entity& other) override;
 
@@ -101,9 +101,9 @@ namespace entities {
 			: obstacle(other), movement_speed_(other.movement_speed_), frames_existed_(other.frames_existed_) {
 		};
 		Vector2 get_speed();
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		virtual bool move(std::vector<std::unique_ptr<entity>>& entities);
+		virtual bool move(std::vector<std::shared_ptr<entity>>& entities);
 		virtual void change_direction() = 0;
 	protected:
 		Vector2 movement_speed_;
@@ -158,8 +158,8 @@ namespace entities {
 			: moveable_obstacle(other), baseline_(other.baseline_), lifespan_(other.lifespan_) {
 		};
 		void change_direction() override;
-		bool move(std::vector<std::unique_ptr<entity>>& entities) override;
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool move(std::vector<std::shared_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		void draw() override;
 	private:
 		float baseline_;
@@ -175,11 +175,10 @@ namespace entities {
 			:entity(other) {
 		};
 
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
 		bool operator==(const entity& other) override;
-		virtual std::unique_ptr<pickup> clone() const = 0;
 
 	protected:
 	};
@@ -188,7 +187,6 @@ namespace entities {
 		empty_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		};
-		std::unique_ptr<pickup> clone() const override;
 	private:
 	};
 	class rifle_pickup : public pickup {
@@ -196,8 +194,6 @@ namespace entities {
 		rifle_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		std::unique_ptr<pickup> clone() const override;
-
 	private:
 	};
 	class dynamite_pickup : public pickup {
@@ -205,7 +201,6 @@ namespace entities {
 		dynamite_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		std::unique_ptr<pickup> clone() const override;
 
 	private:
 	};
@@ -214,7 +209,6 @@ namespace entities {
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		std::unique_ptr<pickup> clone() const override;
 
 	private:
 
@@ -224,7 +218,6 @@ namespace entities {
 		ammo_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		std::unique_ptr<pickup> clone() const override;
 
 	private:
 	};
@@ -242,7 +235,7 @@ namespace entities {
 		int get_damage();
 		int get_penetration();
 		// overload collide and update
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override; // this is where projectile movement will occur
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override; // this is where projectile movement will occur
 		bool collide(entity& other) override;
 
 		// operator overloads
@@ -355,8 +348,7 @@ namespace entities {
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
 		virtual void replenish() = 0;
-		virtual std::unique_ptr<entities::projectile> create_bullet(float x, float y, int direction) = 0;
-		virtual std::unique_ptr<weapon> clone() const = 0;
+		virtual std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) = 0;
 		virtual void draw(int x, int y) = 0;
 
 	protected:
@@ -376,16 +368,15 @@ namespace entities {
 		revolver(const revolver& other)
 			: weapon(other) {
 		};
-		std::unique_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
+		std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
 
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		std::unique_ptr<weapon> clone() const override;
 	private:
 	};
 
@@ -399,16 +390,15 @@ namespace entities {
 		rifle(const rifle& other)
 			: weapon(other) {
 		};
-		std::unique_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
+		std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
 
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		std::unique_ptr<weapon> clone() const override;
 	private:
 
 	};
@@ -422,16 +412,15 @@ namespace entities {
 		dynamite(const dynamite& other)
 			: weapon(other) {
 		};
-		std::unique_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
+		std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
 
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		std::unique_ptr<weapon> clone() const override;
 	};
 	// player-controlled entity
 	class gunman : public entity {
@@ -446,19 +435,17 @@ namespace entities {
 			:entity(other), health_(other.health_), direction_(other.direction_) {
 		};
 		// unique accessors and modifiers
-		entities::weapon* get_weapon() const;
 		int get_health() const;
-		int get_score() const;
 		int get_direction() const;
 		// operator overloads 
 		bool operator==(const entity& other) override;
 		// behaviour overloads
-		bool update(std::vector<std::unique_ptr<entity>>& entities) override;
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
 		//unique behaviour 
 		void take_damage(int damage);
-		bool move(Vector2& movement_vector, std::vector<std::unique_ptr<entity>>& entities);
+		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
 		void reset(float x, float y);
 
 	private:

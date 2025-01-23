@@ -26,23 +26,20 @@ int main() {
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
 
 	// make the gunmen and weapons
-	auto gunman_1 = std::make_unique<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, "sprites/gunman-1.png", 1, 1));
+	auto gunman_1 = std::make_shared<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, "sprites/gunman-1.png", 1, 1));
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_1->get_direction();
-	auto weapon_1 = std::make_unique<entities::revolver>(entities::revolver(weapon_x, gunman_1->get_y() + 45, config::REVOLVER_PATH));
-	
-	auto player_1 = player(std::move(gunman_1), std::move(weapon_1), config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING);
-	std::cout << "build p1" << std::endl;
+	auto weapon_1 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_1->get_y() + 45, config::REVOLVER_PATH));
+	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING);
 
-	auto gunman_2 = std::make_unique<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, "sprites/gunman-2.png", 1, -1));
+	auto gunman_2 = std::make_shared<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, "sprites/gunman-2.png", 1, -1));
 	gunamn_centre_x = gunman_2->get_x() + config::GUNMAN_WIDTH / 2;
 	weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_2->get_direction();
-	auto weapon_2 = std::make_unique<entities::revolver>(entities::revolver(weapon_x, gunman_2->get_y() + 45, config::REVOLVER_PATH));
-	auto player_2 = player(std::move(gunman_2), std::move(weapon_2), config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING);
+	auto weapon_2 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_2->get_y() + 45, config::REVOLVER_PATH));
 	
-	std::cout << "build p2" << std::endl;
-	auto manager = game_manager(player_1, player_2);
+	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING);
 
+	auto manager = game_manager(player_1, player_2);
 	init_game(manager);
 	while (not WindowShouldClose()) {
 		if (manager.is_round_over()) {
@@ -66,13 +63,14 @@ void update_game(game_manager& manager) {
 	if (IsKeyPressed(KEY_X)) {
 		manager.end_round();
 	}
-
 	// update players, check they are alive, increase scores, end the round
 	manager.update_players();
 
 	// then update entnties
 	manager.update_entities();
 
+	// and remove them 
+	manager.remove_entities();
 	// then increase frame_count 
 	manager.increment_frame_count();
 }
