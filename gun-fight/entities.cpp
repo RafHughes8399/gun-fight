@@ -27,6 +27,10 @@ Rectangle entities::entity::get_rectangle(){
 	return Rectangle{ position_.x, position_.y, animation_.get_frame_width(), animation_.get_frame_height()};
 }
 
+animation entities::entity::get_animation(){
+	return animation_;
+}
+
 const char* entities::entity::get_path() const {
 	return path_;
 }
@@ -398,7 +402,7 @@ bool entities::weapon::unloaded_state::reload(entities::weapon* w) {
 	if (w->ammo_ == 0) { return false; }
 	w->ammo_ -= 1;
 	w->state_.reset(nullptr);
-	w->state_ = std::make_unique <entities::weapon::loaded_state>(entities::weapon::loaded_state());
+	w->state_ = std::make_unique<entities::weapon::loaded_state>(entities::weapon::loaded_state());
 	w->animation_.play_animation();
 	return true;
 }
@@ -456,20 +460,23 @@ bool entities::revolver::reload() {
 }
 void entities::revolver::replenish() {
 	ammo_ = config::REVOLVER_AMMO;
-	state_.reset(new loaded_state());
-	animation_.reset_animation();
+	state_ = std::make_unique<loaded_state>(loaded_state());
+	animation_.default_frame();
 	cooldown_ = 0;
 
 }
 void entities::revolver::draw(int x, int y) {
+	Vector2 pos = { x,y };
+	animation_.draw_frame(pos);
 	if (animation_.get_play()) {
 		if (not animation_.get_frame_num() < config::REVOLVER_ANIMATION_LENGTH) {
 			animation_.pause_animation();
 			animation_.next_animation();
 		}
-		animation_.next_frame();
+		else {
+			animation_.next_frame();
+		}
 	}
-	animation_.draw_frame(position_);
 }
 void entities::revolver::reset_cooldown() {
 	cooldown_ = fire_rate_;

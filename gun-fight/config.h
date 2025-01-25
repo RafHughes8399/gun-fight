@@ -15,19 +15,21 @@ namespace colours {
 
 namespace config {
 	inline const char* DEFAULT_PATH = "sprites/default.png";
+	inline const char* BACKGROUND_PATH = "sprites/background.png";
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
 	inline const int SCREEN_WIDTH = 1280;
 	inline const int SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2;
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 
-	// player attributes
-	inline const float P1_START_X = 50;
-	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	
-	inline const float P2_START_X = 1150;
-	inline const float P2_START_Y = SCREEN_HEIGHT_HALF;
+	// bounds with hud 
 
-
+	inline const int HUD_WIDTH = SCREEN_WIDTH;
+	inline const int HUD_HEIGHT = 175;
+	inline const int PLAYABLE_X = 0;
+	inline const int PLAYABLE_Y = 50;
+	inline const int PLAYABLE_WIDTH = SCREEN_WIDTH;
+	inline const int PLAYABLE_HEIGHT = SCREEN_HEIGHT - HUD_HEIGHT;
 
 
 	// gunman attributes
@@ -37,6 +39,11 @@ namespace config {
 	inline const int GUNMAN_HEALTH = 1;
 	inline const int GUNMAN_1_X = 50;
 	inline const int GUNMAN_2_X = 1150;
+	// player attributes
+	inline const float P1_START_X = 5;
+	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	
+	inline const float P2_START_X = SCREEN_WIDTH - GUNMAN_WIDTH - 5;
+	inline const float P2_START_Y = SCREEN_HEIGHT_HALF;
 
 	// need a set of movement_keys and directions
 	inline static auto GUNMAN1_MOVEMENT = std::map<int, Vector2>{

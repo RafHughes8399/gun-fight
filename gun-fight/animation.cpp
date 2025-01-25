@@ -34,7 +34,7 @@ int animation::get_num_animations(){
 
 bool animation::get_play()
 {
-	return false;
+	return play_;
 }
 
 void animation::draw_frame(Vector2& pos){

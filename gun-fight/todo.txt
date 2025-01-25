@@ -23,39 +23,20 @@ radius takes damage
 
 
 
--> rethink how it works
-
-
--> refactor projectile, it should not need the weapon 
--> the weapon is merely a means of creating bullets
-
-
-ok refactor weapon to be an entity that is the big next step
-- for now has no texture, nor size but does have position
-- spawns a bullet at  weapon + 5 * direction or s
-
-- then the bullet is created after firing
-simplify the background for now
-do gunman textures for all the weapons
-
-
-
--> implement game manager and player methods
--> incorporate into main 
--> refactor code into their own files like obstacles.cpp, gunman.cpp, weapons.cpp, etc
--> add documentation
--> draw background and gunman, animate gunman
-
--> implement rifle and dynamite
+-> change weapon draw location (lower)
+-> change score display location (more central)
+-> draw hud outline, change screen bounds for collision
+-> draw the background
+-> draw the hud
+-> draw and animate gunmen
 -> implement items
--> draw rifle and dynamite 
+-> draw items
+-> implement rifle 
+-> draw rifle
+-> implement dynamite 
+-> draw 
 
-
--> player constructor 
--> write in main 
--> remove gunman dupe code
--> adjust the update paramters to check players and entities
-
--> issue with cloning i think, not sure, look at the output  
-
--> pass the players into update, remove entitiesba
+-> main menu and navigation
+-> settings and controls menu
+-> game end after score reached
+-> sounds

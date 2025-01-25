@@ -54,6 +54,11 @@ int game_manager::get_frame_count(){
 	return frame_count_;
 }
 
+void game_manager::draw_background() {
+	auto pos = Vector2{ config::PLAYABLE_X, config::PLAYABLE_Y };
+	background_.draw_frame(pos);
+}
+
 void game_manager::increment_round_count(){
 	++round_num_;
 }

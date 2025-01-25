@@ -65,10 +65,15 @@ void player::draw_player(){
 	// draw gunman
 	gunman_->draw();
 	// draw weapon hyd
-	weapon_->draw(player_start_pos_.x + (200 * gunman_->get_direction()), config::SCREEN_HEIGHT - 300);
+	if (gunman_->get_direction() == -1) {
+		weapon_->draw(draw_x_ - weapon_->get_animation().get_frame_width(), config::SCREEN_HEIGHT - 175);
+	}
+	else {
+		weapon_->draw(draw_x_, config::SCREEN_HEIGHT - 175);
+	}
 	// draw item hud
 	item_->draw();
-	DrawText(std::to_string(score_).c_str(), player_start_pos_.x, 50, 36, colours::maize);
+	DrawText(std::to_string(score_).c_str(), draw_x_, 10, 36, colours::maize);
 
 }
 
@@ -89,7 +94,3 @@ void player::reset_player(){
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();
 	weapon_->set_pos(weapon_x, gunman_->get_y() + 45);
 }
-
-
-// some logic to consider, the weapon is at the position where the bullets spawn
-// then the weapon position is used to spawn bullets

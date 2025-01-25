@@ -47,6 +47,7 @@ namespace entities {
 		void set_pos(float x, float y);
 		Vector2 get_position();
 		Rectangle get_rectangle();
+		animation get_animation();
 		const char* get_path() const;
 		// operator overloads
 		entity& operator=(const entity& other);
