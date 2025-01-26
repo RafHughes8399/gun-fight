@@ -51,6 +51,16 @@ void animation::previous_frame(){
 	--current_frame_;
 }
 
+void animation::next_frame_loop(){
+	if (current_frame_ == animation_length_) {
+		select_frame(0);
+	}
+	else {
+		frame_.x += frame_width_;
+	}
+	++current_frame_;
+}
+
 void animation::next_animation(){
 	frame_.x = 0.0;
 	frame_.y += frame_height_;
@@ -67,6 +77,7 @@ void animation::previous_animation(){
 
 void animation::reset_animation(){
 	frame_.x = 0.0;
+	current_frame_ = 0;
 }
 
 void animation::select_animaiton(int index){
@@ -75,11 +86,13 @@ void animation::select_animaiton(int index){
 
 void animation::select_frame(int frame){
 	frame_.x = frame_width_ * frame;
+	current_frame_ = frame;
 }
 
 void animation::end_frame(){
 	frame_.x = frame_width_ * (animation_length_ - 1);
 	frame_.y = frame_height_ * (num_animations_ - 1);
+	current_frame_ = animation_length_;
 }
 
 void animation::default_frame(){

@@ -30,20 +30,21 @@ void game_manager::draw_entities(){
 }
 
 void game_manager::update_players(){
-	if (not player_1_.update_player(game_entities_)) {
+	if (player_1_.is_dead()) {
 		player_2_.increase_score();
 		end_round();
 	}
-	if (not player_2_.update_player(game_entities_)) {
+	if (player_2_.is_dead()) {
 		player_1_.increase_score();
 		end_round();
 	}
+	player_1_.update_player(game_entities_);
+	player_2_.update_player(game_entities_);
 }
 
 void game_manager::draw_players(){
 	player_1_.draw_player();
 	player_2_.draw_player();
-	
 }
 
 int game_manager::get_round_num(){

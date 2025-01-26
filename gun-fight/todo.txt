@@ -25,10 +25,16 @@ radius takes damage
 
 -> change weapon draw location (lower)
 -> change score display location (more central)
--> draw hud outline, change screen bounds for collision
--> draw the background
+-> draw hud outline, change screen bounds for collision x
+-> draw the background x
 -> draw the hud
--> draw and animate gunmen
+-> draw and animate gunmen x 
+-> wagon
+
+-> win condition
+-> hud
+-> menus
+-> wagon
 -> implement items
 -> draw items
 -> implement rifle 

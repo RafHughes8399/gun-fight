@@ -26,13 +26,13 @@ int main() {
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
 
 	// make the gunmen and weapons
-	auto gunman_1 = std::make_shared<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, "sprites/gunman-1.png", 1, 1));
+	auto gunman_1 = std::make_shared<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, config::P1_PATH, 1, 1));
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_1->get_direction();
 	auto weapon_1 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_1->get_y() + 45, config::REVOLVER_PATH));
 	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, 150);
 
-	auto gunman_2 = std::make_shared<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, "sprites/gunman-2.png", 1, -1));
+	auto gunman_2 = std::make_shared<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, config::P2_PATH, 1, -1));
 	gunamn_centre_x = gunman_2->get_x() + config::GUNMAN_WIDTH / 2;
 	weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_2->get_direction();
 	auto weapon_2 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_2->get_y() + 45, config::REVOLVER_PATH));
@@ -76,12 +76,10 @@ void update_game(game_manager& manager) {
 }
 void draw_game(game_manager& manager) {
 	BeginDrawing();
-	ClearBackground(colours::redwood);
 	manager.draw_background();
 	// draw players, and their scores
 	manager.draw_players();
 	manager.draw_entities();
-	DrawRectangleLines(0.0, 50, config::SCREEN_WIDTH, config::SCREEN_HEIGHT - 225, WHITE);
 	EndDrawing();
 }
 

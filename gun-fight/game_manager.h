@@ -17,7 +17,6 @@ public:
 	void remove_entities();
 	void clear_entities();
 
-	void add_gunmen();
 	void update_entities();
 	void draw_entities();
 

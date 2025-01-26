@@ -96,8 +96,9 @@ bool entities::gunman::collide(entities::entity& other) {
 }
 // unique behaviour
 bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_ptr<entities::entity>>& entities) {
+	
+	animation_.next_frame_loop();
 	Vector2 new_pos = { position_.x + movement_vector.x, position_.y + movement_vector.y };
-
 	// Create a rectangle for the proposed new position
 	Rectangle proposed_rect = get_rectangle();
 	proposed_rect.x = new_pos.x;
@@ -118,8 +119,8 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_pt
 	if (blocked) {
 		return false;
 	}
-	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
-		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
 			position_ = new_pos;
 			return true;
 	}
@@ -204,8 +205,8 @@ bool entities::moveable_obstacle::move(std::vector<std::shared_ptr<entity>>& ent
 		change_direction();
 	}
 	// Check screen boundaries based on which half the gunman is in
-	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
-		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
 		position_ = new_pos;
 		return true;
 	}
@@ -245,8 +246,8 @@ bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities){
 		change_direction();
 	}
 	// Check screen boundaries based on which half the gunman is in
-	if (new_pos.x >= 0 and new_pos.x + animation_.get_frame_width() <= config::SCREEN_WIDTH and
-		new_pos.y >= 0 and new_pos.y + animation_.get_frame_height() <= config::SCREEN_HEIGHT) {
+	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
 		position_ = new_pos;
 		return true;
 	}
@@ -315,7 +316,7 @@ bool entities::projectile::update(std::vector<std::shared_ptr<entity>>& entities
 	}
 	// then check the gunmen
 	position_.x += (speed_direction_.x * speed_direction_.y);
-	if (position_.x < 0 or position_.x > config::SCREEN_WIDTH) {
+	if (position_.x < config::PLAYABLE_X or position_.x > config::PLAYABLE_WIDTH) {
 		remove_ = true;
 		return false; // will remove if out of bounds 
 	}

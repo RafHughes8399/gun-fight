@@ -16,6 +16,7 @@ namespace colours {
 namespace config {
 	inline const char* DEFAULT_PATH = "sprites/default.png";
 	inline const char* BACKGROUND_PATH = "sprites/background.png";
+	
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
 	inline const int SCREEN_WIDTH = 1280;
@@ -29,16 +30,19 @@ namespace config {
 	inline const int PLAYABLE_X = 0;
 	inline const int PLAYABLE_Y = 50;
 	inline const int PLAYABLE_WIDTH = SCREEN_WIDTH;
-	inline const int PLAYABLE_HEIGHT = SCREEN_HEIGHT - HUD_HEIGHT;
+	inline const int PLAYABLE_HEIGHT = SCREEN_HEIGHT - HUD_HEIGHT - PLAYABLE_Y;
 
 
 	// gunman attributes
-	inline const float GUNMAN_HEIGHT = 115;
-	inline const float GUNMAN_WIDTH = 99;
+	inline const float GUNMAN_HEIGHT = 111;
+	inline const float GUNMAN_WIDTH = 52;
 	inline const float GUNMAN_SPEED = 2.5;
 	inline const int GUNMAN_HEALTH = 1;
-	inline const int GUNMAN_1_X = 50;
-	inline const int GUNMAN_2_X = 1150;
+	inline const float GUNMAN_ANIMAITON_LENGTH = 15;
+	inline const float GUNMAN_ANIMATIONS = 1;
+
+	inline const char* P1_PATH = "sprites/gunman-left.png";
+	inline const char* P2_PATH = "sprites/gunman-right.png";
 	// player attributes
 	inline const float P1_START_X = 5;
 	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	
@@ -161,10 +165,16 @@ namespace config {
 
 	// obstacle generation bounds 
 	inline const int OBSTACLE_RANGE_X = SCREEN_WIDTH_HALF - 200;
-	inline const int OBSTACLE_RANGE_Y = 0;
+	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
-	inline const int OBSTACLE_RANGE_HEIGHT = SCREEN_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 215; //subject to change
+	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 40; //subject to change
 
+	// score numbers animation info
+	inline const char* SCORE_PATH = "sprites/numbers.png";
+	inline const float SCORE_WIDTH = 40;
+	inline const float SCORE_HEIGHT = 40;
+	inline const float SCORES_LENGTH = 11;
+	inline const float SCORES_ANIMATIONS = 1;
 	
 }

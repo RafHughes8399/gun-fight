@@ -34,6 +34,8 @@ public:
 	void next_frame(); // go to the next frame (should wrap around the same row) in the current animation
 	void previous_frame(); // go to the frame prior
 	
+	void next_frame_loop(); 
+
 	void next_animation(); // go to the next animation
 	void previous_animation(); // go to the previous animation 
 	void reset_animation();

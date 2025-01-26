@@ -430,7 +430,7 @@ namespace entities {
 		// gunman with revolver
 		gunman(float x, float y, const char* path, int health, int direction)
 			: entity(x, y, path), health_(health), direction_(direction) {
-			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, 0, 0);
+			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
 		};
 		gunman(const gunman& other)
 			:entity(other), health_(other.health_), direction_(other.direction_) {

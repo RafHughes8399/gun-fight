@@ -25,12 +25,9 @@ std::shared_ptr<entities::pickup> player::get_item(){
 
 // pass in the entities list
 bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entities) {
-	if (not gunman_->update(entities)) { return false; }
+	gunman_->update(entities);
 	weapon_->update(entities);
-	if (item_ != nullptr) {
-		item_->update(entities);
-	}
-
+	item_->update(entities);
 	// here is where you check for player movement and player firing
 
 	// check gunman movement
@@ -73,12 +70,14 @@ void player::draw_player(){
 	}
 	// draw item hud
 	item_->draw();
-	DrawText(std::to_string(score_).c_str(), draw_x_, 10, 36, colours::maize);
+	auto draw_pos = Vector2{ draw_x_, 10.0 };
+	scores_.draw_frame(draw_pos);
 
 }
 
 void player::increase_score(){
 	++score_;
+	scores_.select_frame(score_);
 }
 
 bool player::is_dead(){
