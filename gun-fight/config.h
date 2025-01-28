@@ -16,6 +16,7 @@ namespace colours {
 namespace config {
 	inline const char* DEFAULT_PATH = "sprites/default.png";
 	inline const char* BACKGROUND_PATH = "sprites/background.png";
+	inline const char* HUD_HEAD_PATH = "sprites/hud-header.png";
 	
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
@@ -81,7 +82,7 @@ namespace config {
 	// bullet attributes;
 	inline const float BULLET_WIDTH = 25;
 	inline const float BULLET_HEIGHT = 12;
-	inline const float BULLET_SPEED = 8.5;
+	inline const float BULLET_SPEED = 12;
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
 	// rifle attributes TODO: put in values 
@@ -128,8 +129,8 @@ namespace config {
 	inline const float TUMBLEWEED_ANIMATION_LENGTH = 19;
 	inline const float TUMBLEWEED_ANIMATIONS = 2;
 	inline const int TUMBLEWEED_SPEED = 4;
-	inline const int TUMBLEWEED_LIFESPAN_LOWER = 600;
-	inline const int TUMBLEWEED_LIFESPAN_UPPER = 900; // how many frames the tumbleweed will last, incorporate into the update method
+	inline const int TUMBLEWEED_LIFESPAN_LOWER = 300;
+	inline const int TUMBLEWEED_LIFESPAN_UPPER = 450; // how many frames the tumbleweed will last, incorporate into the update method
 	inline const int TUMBLEWEED_AMPLITUDE = 25;
 
 	inline const int CACTUS_HEALTH = 2;
@@ -176,7 +177,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 40; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 110; //subject to change
 
 	// score numbers animation info
 	inline const char* SCORE_PATH = "sprites/numbers.png";

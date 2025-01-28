@@ -71,6 +71,9 @@ int game_manager::get_frame_count(){
 void game_manager::draw_background() {
 	auto pos = Vector2{ config::PLAYABLE_X, config::PLAYABLE_Y };
 	background_.draw_frame(pos);
+
+	pos = Vector2{ 0.0,0.0 };
+	header_.draw_frame(pos);
 }
 
 void game_manager::increment_round_count(){
@@ -106,7 +109,7 @@ void game_manager::build_level(){
 	auto category = util::generate_random_num(0.0, 3.0);
 	if (category <= 0.5) { category = 0; }
 	else { category = ceil(category); }
-	auto obstacles_to_generate = 2 * (round_num_ % 4) + 1;
+	auto obstacles_to_generate = 2 * (round_num_ % 3) + 1;
 	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
 	builder->build_level();

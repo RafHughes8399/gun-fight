@@ -124,7 +124,7 @@ void level::level::build_wagons(){
 		while (not can_insert_obstacle(wagon->get_rectangle(), level_entities_)) {
 
 			wagon->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH),
-				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::WAGON_DOWN_HEIGHT + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
+				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
 		}
 		level_entities_.insert(std::make_unique<entities::wagon>(*wagon.get()));
 	}

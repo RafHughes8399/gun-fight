@@ -11,6 +11,7 @@ public:
 		: player_1_(player1), player_2_(player2), game_entities_(std::vector<std::shared_ptr<entities::entity>>{player1.get_gunman(), player2.get_gunman()}) {
 		background_ = animation(config::BACKGROUND_PATH, config::PLAYABLE_WIDTH, config::PLAYABLE_HEIGHT);
 		scores_ = animation(config::SCORE_PATH, config::SCORE_WIDTH, config::SCORE_HEIGHT, config::SCORES_LENGTH, config::SCORES_ANIMATIONS);
+		header_ = animation(config::HUD_HEAD_PATH, config::SCREEN_WIDTH, config::PLAYABLE_Y);
 	};
 
 
@@ -43,5 +44,7 @@ private:
 	bool round_over_ = false;
 	animation scores_;
 	animation background_;
+	animation header_;
+	animation footer_;
 };
 

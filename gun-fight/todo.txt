@@ -29,20 +29,19 @@ radius takes damage
 -> draw the background x
 -> draw and animate gunmen x 
 -> draw the hud
--> wagon
+-> wagon x
 
--> win condition
--> hud
--> menus
--> wagon
--> implement items
--> draw items
--> implement rifle 
--> draw rifle
--> implement dynamite 
--> draw 
 
--> main menu and navigation
--> settings and controls menu
--> game end after score reached
--> sounds
+-> change how scoring works 
+-> players have a set number of lives, when the lives are depleted, the round is over
+-> and the point won
+
+->
+
+
+
+
+base game:
+-> hud 
+-> main menu 
+-> end screen
