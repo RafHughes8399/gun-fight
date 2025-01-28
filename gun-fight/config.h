@@ -150,14 +150,22 @@ namespace config {
 	inline const int BARREL_ANIMATION_LENGTH = 3;
 	inline const int BARREL_ANIMATIONS = 1;
 
-	inline const int WAGON_HEALTH = 3;
+	inline const int WAGON_HEALTH = 5;
 	inline const int WAGON_CATEGORY = 3;
-	inline const char* WAGON_UP_PATH = "sprites/barrel.png";
-	inline const char* WAGON_DOWN_PATH = "sprites/barrel.png";
+	inline const char* WAGON_UP_PATH = "sprites/wagon-up.png";
+	inline const char* WAGON_DOWN_PATH = "sprites/wagon-down.png";
 	inline const int WAGON_PENETRATION = 3;
-	inline const float WAGON_WIDTH = 0;
-	inline const float WAGON_HEIGHT = 0;
-	inline const float WAGON_SPEED = 7;
+	
+	
+	inline const float WAGON_UP_WIDTH = 114;
+	inline const float WAGON_UP_HEIGHT = 134;
+
+	inline const float WAGON_DOWN_WIDTH = 114;
+	inline const float WAGON_DOWN_HEIGHT = 170;
+	inline const float WAGON_SPEED = 3.2;
+
+	inline const int WAGON_ANIMATION_LENGTH = 10;
+	inline const int WAGON_ANIMATIONS = 1;
 
 	inline const int TRAIN_HEALTH = 100;
 	inline const int TRAIN_SPEED = 35;
@@ -175,6 +183,6 @@ namespace config {
 	inline const float SCORE_WIDTH = 40;
 	inline const float SCORE_HEIGHT = 40;
 	inline const float SCORES_LENGTH = 11;
-	inline const float SCORES_ANIMATIONS = 1;
+	inline const float	SCORES_ANIMATIONS = 1;
 	
 }

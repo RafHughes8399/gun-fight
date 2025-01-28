@@ -27,8 +27,8 @@ radius takes damage
 -> change score display location (more central)
 -> draw hud outline, change screen bounds for collision x
 -> draw the background x
--> draw the hud
 -> draw and animate gunmen x 
+-> draw the hud
 -> wagon
 
 -> win condition

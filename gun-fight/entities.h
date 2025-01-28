@@ -140,10 +140,16 @@ namespace entities {
 	public:
 		wagon(float x, float y, float movement_x, float movement_y)
 			: moveable_obstacle(x, y, config::WAGON_UP_PATH, config::WAGON_HEALTH, config::WAGON_CATEGORY, config::WAGON_PENETRATION, movement_x, movement_y) {
+			
+			// animation_ = animation(); depends on direction
+			animation_ = animation(config::WAGON_DOWN_PATH, config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
 		};
+
+		void draw() override;
 		wagon(const wagon& other)
 			: moveable_obstacle(other) {
 		};
+
 		void change_direction() override;
 	private:
 

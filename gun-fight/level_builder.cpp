@@ -31,7 +31,7 @@ void level::level::build_level(){
 	// check level_category
 	auto obstacle_categories = std::set<int>{};
 	for (auto i = 0; i < level_category_; ++i) {
-		obstacle_categories.insert(util::generate_random_int(config::TUMBLEWEED_CATEGORY, config::BARREL_CATEGORY));
+		obstacle_categories.insert(util::generate_random_int(config::TUMBLEWEED_CATEGORY, config::WAGON_CATEGORY));
 	}
 	if (obstacle_categories.contains(config::TUMBLEWEED_CATEGORY)) { 
 		build_tumbleweed(); 
@@ -47,7 +47,7 @@ void level::level::build_level(){
 }
 
 void level::level::build_tumbleweed(){
-	int num_tumbleweed =  ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
+	int num_tumbleweed =  ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.4));
 	obstacles_to_generate_ -= num_tumbleweed;
 	auto tumbleweed_dimensions = Vector2{ config::TUMBLEWEED_WIDTH, config::TUMBLEWEED_HEIGHT };
 	for (auto i = 0; i < num_tumbleweed; ++i) {
@@ -67,7 +67,7 @@ void level::level::build_tumbleweed(){
 }
 
 void level::level::build_cacti(){
-	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
+	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.4));
 	obstacles_to_generate_ -= num_cacti;
 	// if empty, just pick a random position and add the entity there
 	auto cactus_dimensions = Vector2{ config::CACTUS_WIDTH, config::CACTUS_HEIGHT };
@@ -92,7 +92,7 @@ void level::level::build_cacti(){
 }
 
 void level::level::build_barrels(){
-	int num_barrels = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.6));
+	int num_barrels = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.4));
 	obstacles_to_generate_ -= num_barrels;
 	auto barrel_dimensions = Vector2{ config::BARREL_WIDTH, config::BARREL_HEIGHT };
 	for (auto i = 0; i < num_barrels; ++i) {
@@ -111,9 +111,23 @@ void level::level::build_barrels(){
 }
 
 void level::level::build_wagons(){
+	std::cout << "make wagons " << std::endl;
 	int num_wagons = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.3, 0.6));
-
 	obstacles_to_generate_ -= num_wagons;
+	auto barrel_dimensions = Vector2{ config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT };
+	for (auto i = 0; i < num_wagons; ++i) {
+		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH);
+		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT);
+		auto wagon = std::make_unique<entities::wagon>(entities::wagon(
+			static_cast<float>(random_x), static_cast<float>(random_y), 0.0, config::WAGON_SPEED));
+
+		while (not can_insert_obstacle(wagon->get_rectangle(), level_entities_)) {
+
+			wagon->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH),
+				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::WAGON_DOWN_HEIGHT + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
+		}
+		level_entities_.insert(std::make_unique<entities::wagon>(*wagon.get()));
+	}
 }
 
 void level::level::build_train() {

@@ -70,14 +70,11 @@ void player::draw_player(){
 	}
 	// draw item hud
 	item_->draw();
-	auto draw_pos = Vector2{ draw_x_, 10.0 };
-	scores_.draw_frame(draw_pos);
 
 }
 
 void player::increase_score(){
 	++score_;
-	scores_.select_frame(score_);
 }
 
 bool player::is_dead(){
@@ -92,4 +89,12 @@ void player::reset_player(){
 	auto gunamn_centre_x = gunman_->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();
 	weapon_->set_pos(weapon_x, gunman_->get_y() + 45);
+}
+
+int player::get_score(){
+	return score_;
+}
+
+float player::get_draw_x(){
+	return draw_x_;
 }

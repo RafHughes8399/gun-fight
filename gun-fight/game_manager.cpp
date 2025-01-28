@@ -29,17 +29,30 @@ void game_manager::draw_entities(){
 	}
 }
 
+void game_manager::draw_scores(){
+	auto pos = Vector2{ player_1_.get_draw_x(), 10.0};
+	scores_.select_frame(player_1_.get_score());
+	scores_.draw_frame(pos);
+
+	pos = Vector2{ player_2_.get_draw_x(), 10.0};
+	scores_.select_frame(player_2_.get_score());
+	scores_.draw_frame(pos);
+}	
+
 void game_manager::update_players(){
 	if (player_1_.is_dead()) {
 		player_2_.increase_score();
 		end_round();
 	}
-	if (player_2_.is_dead()) {
+	else if (player_2_.is_dead()) {
 		player_1_.increase_score();
 		end_round();
 	}
-	player_1_.update_player(game_entities_);
-	player_2_.update_player(game_entities_);
+	else {
+		player_1_.update_player(game_entities_);
+		player_2_.update_player(game_entities_);
+	
+	}
 }
 
 void game_manager::draw_players(){
@@ -90,7 +103,7 @@ void game_manager::build_level(){
 	++round_num_;
 	round_over_ = false;
 	// generate environment
-	auto category = util::generate_random_num(0.0, 2.0);
+	auto category = util::generate_random_num(0.0, 3.0);
 	if (category <= 0.5) { category = 0; }
 	else { category = ceil(category); }
 	auto obstacles_to_generate = 2 * (round_num_ % 4) + 1;

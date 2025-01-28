@@ -278,8 +278,22 @@ void entities::tumbleweed::draw(){
 	entities::entity::draw();
 }
 
+void entities::wagon::draw(){
+	animation_.draw_frame(position_);
+	animation_.next_frame_loop();
+}
+
 void entities::wagon::change_direction(){
 	movement_speed_.y *= -1;
+	// moving down
+	if (movement_speed_.y > 0) {
+		animation_ = animation(config::WAGON_DOWN_PATH, config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
+	}
+	// moveing up
+	else if (movement_speed_.y < 0) {
+		animation_ = animation(config::WAGON_UP_PATH, config::WAGON_UP_WIDTH, config::WAGON_UP_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
+	
+	}
 }
 
 bool entities::projectile::operator==(const entities::entity& other) {

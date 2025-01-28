@@ -77,6 +77,7 @@ void update_game(game_manager& manager) {
 void draw_game(game_manager& manager) {
 	BeginDrawing();
 	manager.draw_background();
+	manager.draw_scores();
 	// draw players, and their scores
 	manager.draw_players();
 	manager.draw_entities();
