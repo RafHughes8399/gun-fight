@@ -21,7 +21,7 @@ static void draw_game(game_manager& manager);
 static void unload_game();
 static void update_draw_frame(game_manager& manager);
 int main() {	
-	SetTargetFPS(30);
+	SetTargetFPS(50);
 	// initialise the window and the game
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
 

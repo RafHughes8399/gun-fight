@@ -9,12 +9,13 @@ public:
 		: gunman_(gunman), weapon_(std::move(weapon)),
 		item_(std::make_unique<entities::empty_pickup>(entities::empty_pickup(0.0,0.0, config::DEFAULT_PATH))), movement_(movement_keys), fire_reload_(fire_reload_keys), score_(0), draw_x_(draw_x) {
 		player_start_pos_ = gunman_->get_position();
+		heart_ = animation(config::HEART_PATH, config::HEART_WIDTH, config::HEART_HEIGHT);
 
 	};
 	player(const player& other)
 		: gunman_(other.gunman_), weapon_(other.weapon_),
 		item_(other.item_), score_(other.score_), player_start_pos_(other.player_start_pos_),
-		movement_(other.movement_), fire_reload_(other.fire_reload_), draw_x_(other.draw_x_) {};
+		movement_(other.movement_), fire_reload_(other.fire_reload_), draw_x_(other.draw_x_), heart_(other.heart_){};
 
 	player& operator=(const player& other);
 	// get player gunman
@@ -47,5 +48,6 @@ private:
 	// should have the movement keys
 	std::map<int, Vector2>& movement_;
 	std::pair<int, int>& fire_reload_;
+	animation heart_;
 };
 

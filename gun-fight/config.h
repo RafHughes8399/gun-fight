@@ -17,7 +17,13 @@ namespace config {
 	inline const char* DEFAULT_PATH = "sprites/default.png";
 	inline const char* BACKGROUND_PATH = "sprites/background.png";
 	inline const char* HUD_HEAD_PATH = "sprites/hud-header.png";
+	inline const char* HUD_FOOT_PATH = "sprites/hud-footer.png";
+	inline const char* HEART_PATH = "sprites/heart.png";
 	
+
+	inline const float HEART_WIDTH = 40;
+	inline const float HEART_HEIGHT = 40;
+
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
 	inline const int SCREEN_WIDTH = 1280;
@@ -33,7 +39,6 @@ namespace config {
 	inline const int PLAYABLE_WIDTH = SCREEN_WIDTH;
 	inline const int PLAYABLE_HEIGHT = SCREEN_HEIGHT - HUD_HEIGHT - PLAYABLE_Y;
 
-
 	// gunman attributes
 	inline const float GUNMAN_HEIGHT = 111;
 	inline const float GUNMAN_WIDTH = 52;
@@ -42,8 +47,8 @@ namespace config {
 	inline const float GUNMAN_ANIMAITON_LENGTH = 15;
 	inline const float GUNMAN_ANIMATIONS = 1;
 
-	inline const char* P1_PATH = "sprites/gunman-left.png";
-	inline const char* P2_PATH = "sprites/gunman-right.png";
+	inline const char* P1_PATH = "sprites/gunman-revolver-left.png";
+	inline const char* P2_PATH = "sprites/gunman-revolver-right.png";
 	// player attributes
 	inline const float P1_START_X = 5;
 	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	

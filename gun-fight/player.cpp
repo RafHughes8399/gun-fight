@@ -35,7 +35,7 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 	if (IsKeyDown(key_direction.first)) {
 		if (gunman_->move(key_direction.second, entities)) {
 			auto gunamn_centre_x = gunman_->get_x() + config::GUNMAN_WIDTH / 2;
-			auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();
+			auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + 5) * gunman_->get_direction();
 			weapon_->set_pos(weapon_x, gunman_->get_y() + 45);
 		}
 			return true;
@@ -59,18 +59,23 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 	return true;
 }
 void player::draw_player(){
+	auto heart_pos = Vector2{draw_x_,  config::SCREEN_HEIGHT - 175 };
 	// draw gunman
 	gunman_->draw();
 	// draw weapon hyd
 	if (gunman_->get_direction() == -1) {
 		weapon_->draw(draw_x_ - weapon_->get_animation().get_frame_width(), config::SCREEN_HEIGHT - 175);
+		heart_pos.x = weapon_->get_animation().get_frame_width() + 15;
 	}
 	else {
 		weapon_->draw(draw_x_, config::SCREEN_HEIGHT - 175);
+		heart_pos.x = draw_x_ + 15;
 	}
 	// draw item hud
 	item_->draw();
-
+	if (not is_dead()) {
+		heart_.draw_frame(heart_pos);
+	}
 }
 
 void player::increase_score(){

@@ -12,6 +12,7 @@ public:
 		background_ = animation(config::BACKGROUND_PATH, config::PLAYABLE_WIDTH, config::PLAYABLE_HEIGHT);
 		scores_ = animation(config::SCORE_PATH, config::SCORE_WIDTH, config::SCORE_HEIGHT, config::SCORES_LENGTH, config::SCORES_ANIMATIONS);
 		header_ = animation(config::HUD_HEAD_PATH, config::SCREEN_WIDTH, config::PLAYABLE_Y);
+		footer_ = animation(config::HUD_FOOT_PATH, config::SCREEN_WIDTH, config::PLAYABLE_Y + config::HUD_HEIGHT);
 	};
 
 

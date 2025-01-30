@@ -36,8 +36,6 @@ radius takes damage
 -> players have a set number of lives, when the lives are depleted, the round is over
 -> and the point won
 
-->
-
 
 
 
@@ -45,3 +43,7 @@ base game:
 -> hud 
 -> main menu 
 -> end screen
+
+-> fix heart and ammo placement
+-> draw item box
+-> fix horse extending beyond footer bound

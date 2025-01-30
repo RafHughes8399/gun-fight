@@ -74,6 +74,10 @@ void game_manager::draw_background() {
 
 	pos = Vector2{ 0.0,0.0 };
 	header_.draw_frame(pos);
+	pos = Vector2{ 0.0,config::PLAYABLE_HEIGHT};
+	footer_.draw_frame(pos);
+
+
 }
 
 void game_manager::increment_round_count(){
