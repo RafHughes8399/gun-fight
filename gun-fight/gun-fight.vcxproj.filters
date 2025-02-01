@@ -42,6 +42,9 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="projectiles.h">
@@ -71,9 +74,13 @@
     <ClInclude Include="player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="main_menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />

@@ -100,6 +100,10 @@ bool game_manager::is_round_over(){
 	return round_over_;
 }
 
+bool game_manager::game_over(){
+	return player_1_.get_score() == 3 or player_2_.get_score() == 3;
+}
+
 void game_manager::build_level(){
 	// reset the players, clear the environment
 	player_1_.reset_player();

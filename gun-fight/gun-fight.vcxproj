@@ -153,6 +153,7 @@
     <ClCompile Include="game_manager.cpp" />
     <ClCompile Include="level_builder.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="main_menu.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="projectiles.cpp" />
     <ClCompile Include="weapons.cpp" />
@@ -163,12 +164,14 @@
     <ClInclude Include="entities.h" />
     <ClInclude Include="game_manager.h" />
     <ClInclude Include="level_builder.h" />
+    <ClInclude Include="main_menu.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="projectiles.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

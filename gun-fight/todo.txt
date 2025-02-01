@@ -47,3 +47,14 @@ base game:
 -> fix heart and ammo placement
 -> draw item box
 -> fix horse extending beyond footer bound
+
+
+
+-> draw main menu
+-> draw buttons
+-> check if button is pressed
+
+-> a button is defined by a rectangle,
+and if the mouse is within the rectangle, the button is pressed
+
+-> win condition

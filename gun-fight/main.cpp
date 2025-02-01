@@ -11,6 +11,7 @@
 #include "level_builder.h"
 #include "game_manager.h"
 #include "player.h"
+#include "main_menu.h"
 // ---------------- game variables --------------------
 
 
@@ -40,14 +41,36 @@ int main() {
 	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150);
 
 	auto manager = game_manager(player_1, player_2);
-	init_game(manager);
-	while (not WindowShouldClose()) {
-		if (manager.is_round_over()) {
-			init_game(manager);
-		}
-		update_draw_frame(manager);
+
+	auto menu = main_menu();
+	auto exit = false;
+	while (not WindowShouldClose() and not exit) {
+	// draw the main menu
+		auto button = menu.update();
+		switch (button) {
+			case 0: // play
+				init_game(manager);
+				while (not manager.game_over()) {
+					if (manager.is_round_over()) {
+						init_game(manager);
+					}
+					update_draw_frame(manager);
+				}
+				unload_game();
+				//TODO return to main menu
+				break;
+			case 1: // controls
+				exit = true;
+				break;
+			case 2: // exit
+				exit = true;
+				break;
+			default:
+				break;
+				// do nothing
+			}
+		menu.draw();
 	}
-	unload_game();
 	CloseWindow();
 	return 1;
 }

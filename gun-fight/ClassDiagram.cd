@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="animation" Collapsed="true">
+    <Position X="33.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAEAABABhAAAAcAgAGIAQgEEEAAYAgkAIAaBDAAA=</HashCode>
+      <FileName>animation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_manager" Collapsed="true">
+    <Position X="35.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgIISAQCQAAIAAAAAAABACIGgAAAYAAABQQAZAQAxA=</HashCode>
+      <FileName>game_manager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="player" Collapsed="true">
+    <Position X="33.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgCgAAEMAAYAIAIBAAAIAAAAAABgAAgICCRAAA=</HashCode>
+      <FileName>player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::entity" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABBAAAICAACAEAAIAIQAAAABESAAAEAAgAQAEICA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::obstacle" Collapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAgEAAAAAAAAAQQAAAAAEQAAAAAAAEAKEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::moveable_obstacle" Collapsed="true">
+    <Position X="16.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAEAAgEAAAACAAAAAAAAAAAAEAAAACAAAAAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::cactus" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::barrel" Collapsed="true">
+    <Position X="13" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::wagon" Collapsed="true">
+    <Position X="15.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::tumbleweed" Collapsed="true">
+    <Position X="17.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAiAAAAACAAAIAIAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::pickup" Collapsed="true">
+    <Position X="24.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAQAAAAAEAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::empty_pickup" Collapsed="true">
+    <Position X="28.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::rifle_pickup" Collapsed="true">
+    <Position X="19.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::dynamite_pickup" Collapsed="true">
+    <Position X="22" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::armour_pickup" Collapsed="true">
+    <Position X="24.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::ammo_pickup" Collapsed="true">
+    <Position X="26.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::projectile" Collapsed="true">
+    <Position X="31" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAABAAgAAgAABAAAAAQAAAAAEQAAIAAAAEAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::bullet" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::rifle_bullet" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::dynamite_stick" Collapsed="true">
+    <Position X="3" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAEAAAAAAAAAAAAAAAAAAIAAAAAg=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::weapon" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACIIAAEEAADAAAIAAQAACCAJAAAEBAQhAAAAAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::revolver" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAACAAAIAAAAAAAANAAAABAAIAAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::rifle" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAACAAAIAAAAAAAANAAAABAAAAAAEAAE=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::dynamite" Collapsed="true">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAACAAAIAAQAAAAANAAAABAAAAAAEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="entities::gunman" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAEQAACAAAAAQQAAAAAEAAAACEAAAACEAAA=</HashCode>
+      <FileName>entities.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="level::level_builder" Collapsed="true">
+    <Position X="1.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAkAAAEAAIAAAAACAAAAAQIAEAIQAAAEgAQAAAAA=</HashCode>
+      <FileName>level_builder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="level::train_level" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAIAAAAAAAAAAAQAAEAACAAAEAAQAAAAA=</HashCode>
+      <FileName>level_builder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="level::level" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAIAAAAAAAAAAAQAEEAAAAAAEAAQAAAAA=</HashCode>
+      <FileName>level_builder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="proj::projectile" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAIA=</HashCode>
+      <FileName>projectiles.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="proj::bullet" Collapsed="true">
+    <Position X="7.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>projectiles.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

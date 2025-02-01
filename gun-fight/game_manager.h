@@ -36,6 +36,9 @@ public:
 	void build_level();
 	void end_round();
 	bool is_round_over();
+
+	bool game_over();
+	
 private:
 	player player_1_;
 	player player_2_;
