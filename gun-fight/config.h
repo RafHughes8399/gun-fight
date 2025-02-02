@@ -38,7 +38,6 @@ namespace config {
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 
 	// bounds with hud 
-
 	inline const int HUD_WIDTH = SCREEN_WIDTH;
 	inline const int HUD_HEIGHT = 175;
 	inline const int PLAYABLE_X = 0;
@@ -56,12 +55,19 @@ namespace config {
 
 	inline const char* P1_PATH = "sprites/gunman-revolver-left.png";
 	inline const char* P2_PATH = "sprites/gunman-revolver-right.png";
+
 	// player attributes
 	inline const float P1_START_X = 5;
 	inline const float P1_START_Y = SCREEN_HEIGHT_HALF;	
 	inline const float P2_START_X = SCREEN_WIDTH - GUNMAN_WIDTH - 5;
 	inline const float P2_START_Y = SCREEN_HEIGHT_HALF;
+	inline const int MAX_SCORE = 4;
 
+	inline const char* P1_WIN_PATH = "sprites/p1-win.png";
+	inline const char* P2_WIN_PATH = "sprites/p2-win.png";
+	inline const float WIN_WIDTH = 650;
+	inline const float WIN_HEIGHT= 100;
+	
 	// need a set of movement_keys and directions
 	inline static auto GUNMAN1_MOVEMENT = std::map<int, Vector2>{
 		{KEY_W, Vector2{0,-GUNMAN_SPEED}},

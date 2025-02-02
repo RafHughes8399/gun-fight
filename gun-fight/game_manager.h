@@ -38,7 +38,7 @@ public:
 	bool is_round_over();
 
 	bool game_over();
-	
+	void draw_win();
 private:
 	player player_1_;
 	player player_2_;

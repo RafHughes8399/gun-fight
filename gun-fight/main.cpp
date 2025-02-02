@@ -31,14 +31,14 @@ int main() {
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_1->get_direction();
 	auto weapon_1 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_1->get_y() + 45, config::REVOLVER_PATH));
-	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, 150);
+	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, 150, config::P1_WIN_PATH);
 
 	auto gunman_2 = std::make_shared<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, config::P2_PATH, 1, -1));
 	gunamn_centre_x = gunman_2->get_x() + config::GUNMAN_WIDTH / 2;
 	weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_2->get_direction();
 	auto weapon_2 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_2->get_y() + 45, config::REVOLVER_PATH));
 	
-	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150);
+	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150, config::P2_WIN_PATH);
 
 	auto manager = game_manager(player_1, player_2);
 
@@ -48,7 +48,7 @@ int main() {
 	// draw the main menu
 		auto button = menu.update();
 		switch (button) {
-			case 0: // play
+			case 0: {// play
 				init_game(manager);
 				while (not manager.game_over()) {
 					if (manager.is_round_over()) {
@@ -56,19 +56,30 @@ int main() {
 					}
 					update_draw_frame(manager);
 				}
+				auto start_time = GetTime();
+				while (GetTime() - start_time < 3.5) {
+					BeginDrawing();
+					manager.draw_background();
+					manager.draw_win();
+					EndDrawing();
+				}
 				unload_game();
 				//TODO return to main menu
 				break;
-			case 1: // controls
-				exit = true;
-				break;
-			case 2: // exit
-				exit = true;
-				break;
-			default:
-				break;
-				// do nothing
 			}
+			case 1: {// controls
+				exit = true;
+				break;
+			}
+			case 2: { // exit
+				exit = true;
+				break;
+			}
+			default: {
+				// do nothing
+				break;
+			}
+		}
 		menu.draw();
 	}
 	CloseWindow();

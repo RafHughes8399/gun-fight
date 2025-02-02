@@ -58,3 +58,11 @@ base game:
 and if the mouse is within the rectangle, the button is pressed
 
 -> win condition
+
+
+-> win condition 10 points
+-> p1 and p2 win prompt
+-> game title on main menu
+-> button hover animations ?
+-> control screen
+

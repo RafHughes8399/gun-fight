@@ -101,7 +101,16 @@ bool game_manager::is_round_over(){
 }
 
 bool game_manager::game_over(){
-	return player_1_.get_score() == 3 or player_2_.get_score() == 3;
+	return player_1_.get_score() == config::MAX_SCORE or player_2_.get_score() == config::MAX_SCORE;
+}
+
+void game_manager::draw_win(){
+	if (player_1_.get_score() == config::MAX_SCORE) {
+		player_1_.draw_win();
+	}
+	else if (player_2_.get_score() == config::MAX_SCORE) {
+		player_2_.draw_win();
+	}
 }
 
 void game_manager::build_level(){
@@ -117,7 +126,7 @@ void game_manager::build_level(){
 	auto category = util::generate_random_num(0.0, 3.0);
 	if (category <= 0.5) { category = 0; }
 	else { category = ceil(category); }
-	auto obstacles_to_generate = 2 * (round_num_ % 3) + 1;
+	auto obstacles_to_generate = 2 * (round_num_ % 3);
 	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
 	builder->build_level();

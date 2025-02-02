@@ -78,6 +78,12 @@ void player::draw_player(){
 	}
 }
 
+void player::draw_win(){
+	// make it last 10 frames
+	auto win_pos = Vector2{ config::SCREEN_WIDTH_HALF - (config::WIN_WIDTH / 2), config::SCREEN_HEIGHT_HALF - (config::WIN_HEIGHT / 2) };
+	win_.draw_frame(win_pos);
+}
+
 void player::increase_score(){
 	++score_;
 }
