@@ -12,6 +12,7 @@
 #include "game_manager.h"
 #include "player.h"
 #include "main_menu.h"
+#include "control_screen.h"
 // ---------------- game variables --------------------
 
 
@@ -43,6 +44,7 @@ int main() {
 	auto manager = game_manager(player_1, player_2);
 
 	auto menu = main_menu();
+	auto control = control_screen();
 	auto exit = false;
 	while (not WindowShouldClose() and not exit) {
 	// draw the main menu
@@ -73,9 +75,15 @@ int main() {
 				}
 				//TODO return to main menu
 				break;
-			}
+			} 
 			case 1: {// controls
-				exit = true;
+				while (not WindowShouldClose()) {
+					control.draw();
+					auto button = control.update();
+					if (button == 1) {
+						break;
+					}
+				}
 				break;
 			}
 			case 2: { // exit

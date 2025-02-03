@@ -16,6 +16,7 @@ namespace colours {
 namespace config {
 	// menu, background and hud paths
 	inline const char* DEFAULT_PATH = "sprites/default.png";
+	inline const char* CONTROL_SCREEN_PATH = "sprites/control-screen.png";
 	inline const char* BACKGROUND_PATH = "sprites/background.png";
 	inline const char* MENU_PATH = "sprites/background-full.png";
 	inline const char* HUD_HEAD_PATH = "sprites/hud-header.png";
@@ -28,6 +29,10 @@ namespace config {
 	inline const float BUTTON_WIDTH = 300;
 	inline const float BUTTON_HEIGHT = 100.0;
 	inline const float BUTTONS_START_Y = 350;
+	
+	inline const char* RETURN_PATH = "sprites/return.png";
+	inline const float RETURN_WIDTH = 40;
+	inline const float RETURN_HEIGHT = 40;
 
 	// heart attributes
 	inline const float HEART_WIDTH = 40;

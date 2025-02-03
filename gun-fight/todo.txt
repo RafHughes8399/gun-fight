@@ -67,14 +67,21 @@ and if the mouse is within the rectangle, the button is pressed
 -> control screen
 
 
--> control screen
--> button animations
+-> control screen x 
+-> button animations x 
 -> hud - heart and item frame
 -> sounds
--> obstacle spawning
+-> combine main menu and control into one class
+-> make menu and control instances of the one overachring class
 
 
--> button class, has the animation, and the rectangle	
+-> button class, has the animation, and the rectangle x 
 
--> shoot bug with o2, they shoot themselves sometimes (check the direction of the gunman and bullet)
--> reset the scores after winning
+-> shoot bug with o2, they shoot themselves sometimes (check the direction of the gunman and bullet) x 
+-> reset the scores after winning x 
+
+-> merge main menu and control screen into one class that has a background and buttons 
+
+
+-> button text contrast hard to read on main menu
+-> brighter blue colour p2 controls

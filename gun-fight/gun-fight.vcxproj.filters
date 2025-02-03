@@ -48,6 +48,12 @@
     <ClCompile Include="button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="control_screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="projectiles.h">
@@ -81,6 +87,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="control_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

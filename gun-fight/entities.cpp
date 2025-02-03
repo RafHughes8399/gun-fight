@@ -224,8 +224,7 @@ Vector2 entities::moveable_obstacle::get_speed(){
 }
 void entities::tumbleweed::change_direction(){
 	movement_speed_.x *= -1;
-	if (movement_speed_.x > 0) { movement_speed_.x += 2; }
-	else {movement_speed_.x -= 2;}
+	position_.x += movement_speed_.x;
 }
 
 bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities){
@@ -291,8 +290,7 @@ void entities::wagon::draw(){
 
 void entities::wagon::change_direction(){
 	movement_speed_.y *= -1;
-	if (movement_speed_.y < 0) { movement_speed_.y -= 2; }
-	else { movement_speed_.y += 2; }
+	position_.y += movement_speed_.y;
 	// moving down
 	if (movement_speed_.y > 0) {
 		animation_ = animation(config::WAGON_DOWN_PATH, config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
