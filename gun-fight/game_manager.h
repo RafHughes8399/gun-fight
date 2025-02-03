@@ -33,6 +33,7 @@ public:
 	void increment_round_count();
 	void increment_frame_count();
 	void reset_level();
+	void reset_scores();
 	void build_level();
 	void end_round();
 	bool is_round_over();

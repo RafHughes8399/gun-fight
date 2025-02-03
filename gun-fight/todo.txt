@@ -66,3 +66,15 @@ and if the mouse is within the rectangle, the button is pressed
 -> button hover animations ?
 -> control screen
 
+
+-> control screen
+-> button animations
+-> hud - heart and item frame
+-> sounds
+-> obstacle spawning
+
+
+-> button class, has the animation, and the rectangle	
+
+-> shoot bug with o2, they shoot themselves sometimes (check the direction of the gunman and bullet)
+-> reset the scores after winning

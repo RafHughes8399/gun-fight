@@ -37,6 +37,7 @@ public:
 	void reset_player();
 
 	int get_score();
+	void set_score(int score);
 	float get_draw_x();
 private:
 // a tuple of gunman, weapon, item

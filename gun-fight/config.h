@@ -22,7 +22,9 @@ namespace config {
 	inline const char* HUD_FOOT_PATH = "sprites/hud-footer.png";
 	inline const char* HEART_PATH = "sprites/heart.png";
 	
-	inline const char* BUTTONS_PATH = "sprites/buttons.png";
+	inline const char* PLAY_PATH = "sprites/play.png";
+	inline const char* CONTROLS_PATH = "sprites/controls.png";
+	inline const char* QUIT_PATH = "sprites/quit.png";
 	inline const float BUTTON_WIDTH = 300;
 	inline const float BUTTON_HEIGHT = 100.0;
 	inline const float BUTTONS_START_Y = 350;

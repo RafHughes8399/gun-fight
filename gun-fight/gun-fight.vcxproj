@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="crf.cpp" />
     <ClCompile Include="entities.cpp" />
     <ClCompile Include="game_manager.cpp" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
     <ClInclude Include="game_manager.h" />

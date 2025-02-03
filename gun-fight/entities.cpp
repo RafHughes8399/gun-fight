@@ -179,7 +179,11 @@ bool entities::moveable_obstacle::update(std::vector<std::shared_ptr<entity>>& e
 
 bool entities::moveable_obstacle::collide(entity& other){
 	// if collision, change direction 
-	return false;
+	auto projectile_ptr = dynamic_cast<entities::projectile*>(&other);
+	if (projectile_ptr != nullptr) { return true; }
+	else {
+		return false;
+	}
 }
 bool entities::moveable_obstacle::move(std::vector<std::shared_ptr<entity>>& entities){
 	Vector2 new_pos = { position_.x + movement_speed_.x, position_.y + movement_speed_.y };
@@ -220,6 +224,8 @@ Vector2 entities::moveable_obstacle::get_speed(){
 }
 void entities::tumbleweed::change_direction(){
 	movement_speed_.x *= -1;
+	if (movement_speed_.x > 0) { movement_speed_.x += 2; }
+	else {movement_speed_.x -= 2;}
 }
 
 bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities){
@@ -285,6 +291,8 @@ void entities::wagon::draw(){
 
 void entities::wagon::change_direction(){
 	movement_speed_.y *= -1;
+	if (movement_speed_.y < 0) { movement_speed_.y -= 2; }
+	else { movement_speed_.y += 2; }
 	// moving down
 	if (movement_speed_.y > 0) {
 		animation_ = animation(config::WAGON_DOWN_PATH, config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
@@ -339,7 +347,7 @@ bool entities::projectile::update(std::vector<std::shared_ptr<entity>>& entities
 bool entities::projectile::collide(entities::entity& other) {
 	// if gunman
 	auto gunman = dynamic_cast<entities::gunman*>(&other);
-	if (gunman != nullptr) {
+	if (gunman != nullptr and gunman->get_direction() != speed_direction_.y) {
 		gunman->take_damage(damage_);
 		return false; // cannot move
 	}

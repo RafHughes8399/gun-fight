@@ -50,20 +50,27 @@ int main() {
 		switch (button) {
 			case 0: {// play
 				init_game(manager);
-				while (not manager.game_over()) {
+				while (not WindowShouldClose() and not manager.game_over()) {
 					if (manager.is_round_over()) {
 						init_game(manager);
 					}
 					update_draw_frame(manager);
 				}
-				auto start_time = GetTime();
-				while (GetTime() - start_time < 3.5) {
-					BeginDrawing();
-					manager.draw_background();
-					manager.draw_win();
-					EndDrawing();
+				if (WindowShouldClose()) {
+					break;
+					CloseWindow();
 				}
-				unload_game();
+				else {
+					auto start_time = GetTime();
+					while (GetTime() - start_time < 3.5) {
+						BeginDrawing();
+						manager.draw_background();
+						manager.draw_win();
+						EndDrawing();
+					}
+					manager.reset_scores();
+					unload_game();
+				}
 				//TODO return to main menu
 				break;
 			}

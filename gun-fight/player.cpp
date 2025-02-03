@@ -106,6 +106,10 @@ int player::get_score(){
 	return score_;
 }
 
+void player::set_score(int score){
+	score_ = score;
+}
+
 float player::get_draw_x(){
 	return draw_x_;
 }

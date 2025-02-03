@@ -92,6 +92,11 @@ void game_manager::reset_level(){
 	game_entities_.clear();
 }
 
+void game_manager::reset_scores(){
+	player_1_.set_score(0);
+	player_2_.set_score(0);
+}
+
 void game_manager::end_round() {
 	round_over_ = true;
 }
@@ -112,6 +117,7 @@ void game_manager::draw_win(){
 		player_2_.draw_win();
 	}
 }
+
 
 void game_manager::build_level(){
 	// reset the players, clear the environment
