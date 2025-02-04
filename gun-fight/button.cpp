@@ -30,3 +30,7 @@ bool button::is_hovered(){
 		return true;
 	}
 }
+
+Vector2 button::get_position(){
+	return position_;
+}

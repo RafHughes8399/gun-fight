@@ -59,23 +59,35 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 	return true;
 }
 void player::draw_player(){
-	auto heart_pos = Vector2{draw_x_,  config::SCREEN_HEIGHT - 175 };
 	// draw gunman
 	gunman_->draw();
-	// draw weapon hyd
+	// draw weapon hud
 	if (gunman_->get_direction() == -1) {
-		weapon_->draw(draw_x_ - weapon_->get_animation().get_frame_width(), config::SCREEN_HEIGHT - 175);
-		heart_pos.x = weapon_->get_animation().get_frame_width() + 15;
+		float x = config::SCREEN_WIDTH - 115 - weapon_->get_animation().get_frame_width() - 160;
+		weapon_->draw(x, config::SCREEN_HEIGHT - 185);
+		// draw hearts
+		x += weapon_->get_animation().get_frame_width() + 5;
+		auto heart_pos = Vector2{x, config::SCREEN_HEIGHT - 185};
+		for (auto i = 0; i < gunman_->get_health(); ++i) {
+			heart_.draw_frame(heart_pos);
+			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
+		}
+		// draw item frame
 	}
 	else {
-		weapon_->draw(draw_x_, config::SCREEN_HEIGHT - 175);
-		heart_pos.x = draw_x_ + 15;
+		float x = 115;
+		weapon_->draw(x, config::SCREEN_HEIGHT - 185);
+		x += weapon_->get_animation().get_frame_width() + 5;
+		auto heart_pos = Vector2{x, config::SCREEN_HEIGHT - 185};
+		for (auto i = 0; i < gunman_->get_health(); ++i) {
+			heart_.draw_frame(heart_pos);
+			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
+		}
+		// draw hearts
+		// draw item frame
 	}
 	// draw item hud
 	item_->draw();
-	if (not is_dead()) {
-		heart_.draw_frame(heart_pos);
-	}
 }
 
 void player::draw_win(){

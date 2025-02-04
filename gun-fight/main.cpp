@@ -5,17 +5,13 @@
 
 #include "raylib.h"
 #include "entities.h"
-#include "weapon.h"
 #include "config.h"
 #include "utility.h"
 #include "level_builder.h"
 #include "game_manager.h"
 #include "player.h"
-#include "main_menu.h"
-#include "control_screen.h"
-// ---------------- game variables --------------------
-
-
+#include "screen.h"
+#include "button.h"
 // ------------ function declarations --------------
 static void init_game(game_manager& manager);
 static void update_game(game_manager& manager);
@@ -42,13 +38,20 @@ int main() {
 	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150, config::P2_WIN_PATH);
 
 	auto manager = game_manager(player_1, player_2);
-
-	auto menu = main_menu();
-	auto control = control_screen();
+	auto menu_buttons = std::vector<button>{
+		button(config::PLAY_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y),
+		button(config::CONTROLS_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y + config::BUTTON_HEIGHT + 50),
+		button(config::QUIT_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y + (config::BUTTON_HEIGHT + 50) * 2)
+	};
+	auto control_buttons = std::vector<button>{
+		button(config::RETURN_PATH, config::RETURN_WIDTH, config::RETURN_HEIGHT, 10, 10)
+	};
+	auto main_menu = screen(config::MENU_PATH, config::SCREEN_WIDTH, config::SCREEN_HEIGHT, 1, 0, 50, menu_buttons.begin(), menu_buttons.end(), std::make_unique<main_menu_strategy>(main_menu_strategy()));
+	auto control_screen  = screen(config::CONTROL_SCREEN_PATH, config::SCREEN_WIDTH, config::SCREEN_HEIGHT, 1, 0, 0, control_buttons.begin(), control_buttons.end(), std::make_unique<return_strategy>(return_strategy()));
 	auto exit = false;
 	while (not WindowShouldClose() and not exit) {
 	// draw the main menu
-		auto button = menu.update();
+		auto button = main_menu.update();
 		switch (button) {
 			case 0: {// play
 				init_game(manager);
@@ -78,9 +81,9 @@ int main() {
 			} 
 			case 1: {// controls
 				while (not WindowShouldClose()) {
-					control.draw();
-					auto button = control.update();
-					if (button == 1) {
+					control_screen.draw();
+					auto button = control_screen.update();
+					if (button == 0) {
 						break;
 					}
 				}
@@ -95,7 +98,7 @@ int main() {
 				break;
 			}
 		}
-		menu.draw();
+		main_menu.draw();
 	}
 	CloseWindow();
 	return 1;

@@ -35,8 +35,9 @@ namespace config {
 	inline const float RETURN_HEIGHT = 40;
 
 	// heart attributes
-	inline const float HEART_WIDTH = 40;
-	inline const float HEART_HEIGHT = 40;
+	inline const float HEART_WIDTH = 60;
+	inline const float HEART_HEIGHT = 60;
+	inline const float HEART_SPACING = 10;
 
 	// screen attributes
 	inline const int SCREEN_HEIGHT = 1024;
