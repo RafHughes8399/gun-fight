@@ -19,7 +19,7 @@ static void draw_game(game_manager& manager);
 static void unload_game();
 static void update_draw_frame(game_manager& manager);
 int main() {	
-	SetTargetFPS(50);
+	SetTargetFPS(60);
 	// initialise the window and the game
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
 
@@ -57,6 +57,7 @@ int main() {
 				init_game(manager);
 				while (not WindowShouldClose() and not manager.game_over()) {
 					if (manager.is_round_over()) {
+						manager.post_round();
 						init_game(manager);
 					}
 					update_draw_frame(manager);
@@ -70,6 +71,7 @@ int main() {
 					while (GetTime() - start_time < 3.5) {
 						BeginDrawing();
 						manager.draw_background();
+						manager.draw_players();
 						manager.draw_win();
 						EndDrawing();
 					}
@@ -107,6 +109,7 @@ int main() {
 // --------------------- game updating, drawing and initalisation--------------------------------
 void init_game(game_manager& manager) {
 	manager.build_level();
+	manager.pre_round();
 }
 
 // update the game by one frame
@@ -128,11 +131,7 @@ void update_game(game_manager& manager) {
 }
 void draw_game(game_manager& manager) {
 	BeginDrawing();
-	manager.draw_background();
-	manager.draw_scores();
-	// draw players, and their scores
-	manager.draw_players();
-	manager.draw_entities();
+	manager.draw_game();
 	EndDrawing();
 }
 

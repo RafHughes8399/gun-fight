@@ -66,9 +66,19 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_pt
 void entities::gunman::take_damage(int damage) {
 	// return true if still alive, return false if not
 	health_ -= damage;
+	// if dead, swap the animation, check bounds positioning too
+
 }
 void entities::gunman::reset(float x, float y) {
 	position_.x = x;
 	position_.y = y;
 	health_ = config::GUNMAN_HEALTH;
+	// reset the animation
+	if (direction_ == 1) {
+		animation_ = animation(config::P1_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
+	
+	}
+	else {
+		animation_ = animation(config::P2_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
+	}
 }

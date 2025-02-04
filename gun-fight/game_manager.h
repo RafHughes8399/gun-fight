@@ -21,6 +21,7 @@ public:
 	void clear_entities();
 
 	void update_entities();
+	void draw_game();
 	void draw_entities();
 	void draw_scores();
 	void update_players();
@@ -38,6 +39,8 @@ public:
 	void end_round();
 	bool is_round_over();
 
+	void pre_round();
+	void post_round();
 	bool game_over();
 	void draw_win();
 private:

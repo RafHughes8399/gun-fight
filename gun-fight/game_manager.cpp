@@ -23,6 +23,13 @@ void game_manager::update_entities(){
 	}
 }
 
+void game_manager::draw_game(){
+	draw_background();
+	draw_players();
+	draw_scores();
+	draw_entities();
+}
+
 void game_manager::draw_entities(){
 	for (auto& e : game_entities_) {
 		e->draw();
@@ -51,7 +58,6 @@ void game_manager::update_players(){
 	else {
 		player_1_.update_player(game_entities_);
 		player_2_.update_player(game_entities_);
-	
 	}
 }
 
@@ -76,8 +82,6 @@ void game_manager::draw_background() {
 	header_.draw_frame(pos);
 	pos = Vector2{ 0.0,config::PLAYABLE_HEIGHT};
 	footer_.draw_frame(pos);
-
-
 }
 
 void game_manager::increment_round_count(){
@@ -98,11 +102,34 @@ void game_manager::reset_scores(){
 }
 
 void game_manager::end_round() {
+	// wait a few seconds to let the dead animation appears	
 	round_over_ = true;
 }
 
 bool game_manager::is_round_over(){
 	return round_over_;
+}
+
+void game_manager::pre_round(){
+	auto start = GetTime();
+	auto draw = LoadTexture(config::DRAW_PATH);
+	while (GetTime() - start < 1.1) {
+		BeginDrawing();
+		draw_game();
+		auto draw_x = config::SCREEN_WIDTH_HALF - (config::DRAW_WIDTH / 2);
+		auto draw_y = config::SCREEN_HEIGHT_HALF - (config::DRAW_HEIGHT / 2);
+		DrawTexture(draw, draw_x, draw_y, WHITE);	
+		EndDrawing();
+	}
+}
+
+void game_manager::post_round(){
+	auto start = GetTime();
+	while (GetTime() - start < 1.5) {
+		BeginDrawing();
+		draw_game();
+		EndDrawing();
+	}
 }
 
 bool game_manager::game_over(){

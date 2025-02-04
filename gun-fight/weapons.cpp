@@ -25,7 +25,11 @@ bool entities::weapon::unloaded_state::fire(entities::weapon* w) {
 	return false;
 }
 bool entities::weapon::unloaded_state::reload(entities::weapon* w) {
-	if (w->ammo_ == 0) { return false; }
+	if (w->ammo_ == 0) { 
+		w->animation_.end_frame();
+		w->animation_.pause_animation();
+		return false; 
+	}
 	w->ammo_ -= 1;
 	w->state_.reset(nullptr);
 	w->state_ = std::make_unique<entities::weapon::loaded_state>(entities::weapon::loaded_state());
@@ -100,9 +104,9 @@ void entities::revolver::draw(int x, int y) {
 			animation_.next_animation();
 		}
 		else {
-			animation_.next_frame();
+			animation_.next_frame();			
 		}
-	}
+	}	
 }
 void entities::revolver::reset_cooldown() {
 	cooldown_ = fire_rate_;

@@ -90,8 +90,8 @@ void animation::select_frame(int frame){
 }
 
 void animation::end_frame(){
-	frame_.x = frame_width_ * (animation_length_ - 1);
-	frame_.y = frame_height_ * (num_animations_ - 1);
+	frame_.x = frame_width_ * (animation_length_);
+	frame_.y = frame_height_ * (num_animations_);
 	current_frame_ = animation_length_;
 }
 

@@ -48,6 +48,7 @@ namespace entities {
 		Vector2 get_position();
 		Rectangle get_rectangle();
 		animation get_animation();
+		void set_animation(animation anim);
 		const char* get_path() const;
 		// operator overloads
 		entity& operator=(const entity& other);
@@ -452,7 +453,7 @@ namespace entities {
 			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
 		};
 		gunman(const gunman& other)
-			:entity(other), health_(other.health_), direction_(other.direction_) {
+			:entity(other), health_(other.health_), direction_(other.direction_){
 		};
 		// unique accessors and modifiers
 		int get_health() const;
@@ -471,7 +472,6 @@ namespace entities {
 	private:
 		int health_;
 		const int direction_; // left facing is 1, right facing is -1 
-
 	};
 
 }

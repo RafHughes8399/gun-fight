@@ -74,7 +74,7 @@ and if the mouse is within the rectangle, the button is pressed
 -> combine main menu and control into one class x 
 -> make menu and control instances of the one overarching class x 
 -> gunman death animation
--> revolver empty animation
+-> revolver empty animation -- chin scratch
 -> documentation
 -> file restructure x 
 -> obstacle placement

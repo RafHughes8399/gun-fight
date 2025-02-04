@@ -101,7 +101,25 @@ void player::increase_score(){
 }
 
 bool player::is_dead(){
-	return gunman_->get_health() <= 0;
+	if (gunman_->get_health() <= 0) {
+		// change anim, check the position
+		if (gunman_->get_direction() == 1) {
+			auto y = gunman_->get_y() + gunman_->get_animation().get_frame_height();
+			gunman_->set_animation(animation(config::P1_DEAD_PATH, config::GUNMAN_DEAD_WIDTH, config::GUNMAN_DEAD_HEIGHT));
+			gunman_->set_pos(gunman_->get_x(), gunman_->get_y());
+		}
+		else{
+			gunman_->set_animation(animation(config::P2_DEAD_PATH, config::GUNMAN_DEAD_WIDTH, config::GUNMAN_DEAD_HEIGHT));
+			auto x = gunman_->get_x();
+			auto y = gunman_->get_y() + gunman_->get_animation().get_frame_height();
+			gunman_->set_pos(gunman_->get_x(), y);
+			if (x + gunman_->get_animation().get_frame_width() > config::SCREEN_WIDTH) {
+				gunman_->set_pos(config::SCREEN_WIDTH - gunman_->get_animation().get_frame_width(), gunman_->get_y());
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 void player::reset_player(){
@@ -112,6 +130,8 @@ void player::reset_player(){
 	auto gunamn_centre_x = gunman_->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();
 	weapon_->set_pos(weapon_x, gunman_->get_y() + 45);
+
+
 }
 
 int player::get_score(){

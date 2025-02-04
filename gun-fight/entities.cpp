@@ -31,6 +31,10 @@ animation entities::entity::get_animation(){
 	return animation_;
 }
 
+void entities::entity::set_animation(animation anim){
+	animation_ = anim;
+}
+
 const char* entities::entity::get_path() const {
 	return path_;
 }
