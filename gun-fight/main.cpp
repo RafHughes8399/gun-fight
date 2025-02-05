@@ -1,8 +1,14 @@
+/*****************************************************************//**
+ * \file   main.cpp
+ * \brief  main game loop logic, the executable file
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <algorithm>
-
 #include "raylib.h"
 #include "entities.h"
 #include "config.h"
@@ -12,18 +18,18 @@
 #include "player.h"
 #include "screen.h"
 #include "button.h"
-// ------------ function declarations --------------
+
 static void init_game(game_manager& manager);
 static void update_game(game_manager& manager);
 static void draw_game(game_manager& manager);
 static void unload_game();
 static void update_draw_frame(game_manager& manager);
 int main() {	
+	/**  initalise the window */
 	SetTargetFPS(60);
-	// initialise the window and the game
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
 
-	// make the gunmen and weapons
+	/** make the gunman and weapon for both players */
 	auto gunman_1 = std::make_shared<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, config::P1_PATH, 1, 1));
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_1->get_direction();
@@ -37,35 +43,50 @@ int main() {
 	
 	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150, config::P2_WIN_PATH);
 
+	/**  create the game manager */
 	auto manager = game_manager(player_1, player_2);
+	/**  create the main menu buttons TODO add credits button */
 	auto menu_buttons = std::vector<button>{
 		button(config::PLAY_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y),
 		button(config::CONTROLS_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y + config::BUTTON_HEIGHT + 50),
 		button(config::QUIT_PATH, config::BUTTON_WIDTH, config::BUTTON_HEIGHT, config::SCREEN_WIDTH_HALF - (config::BUTTON_WIDTH / 2), config::BUTTONS_START_Y + (config::BUTTON_HEIGHT + 50) * 2)
 	};
+	/**  create the return button for the keyboard controls screen */
 	auto control_buttons = std::vector<button>{
 		button(config::RETURN_PATH, config::RETURN_WIDTH, config::RETURN_HEIGHT, 10, 10)
 	};
+	/**  create the main menu and controls screens */
 	auto main_menu = screen(config::MENU_PATH, config::SCREEN_WIDTH, config::SCREEN_HEIGHT, 1, 0, 50, menu_buttons.begin(), menu_buttons.end(), std::make_unique<main_menu_strategy>(main_menu_strategy()));
 	auto control_screen  = screen(config::CONTROL_SCREEN_PATH, config::SCREEN_WIDTH, config::SCREEN_HEIGHT, 1, 0, 0, control_buttons.begin(), control_buttons.end(), std::make_unique<return_strategy>(return_strategy()));
+	/**  prevents abrupt exiting of the game with an exception */
 	auto exit = false;
+	/**  main game loop */
 	while (not WindowShouldClose() and not exit) {
-	// draw the main menu
+		/** check if a button on the main menu is prsesed */
 		auto button = main_menu.update();
 		switch (button) {
-			case 0: {// play
+			/**  the play button */
+			case 0: {
+				/**  primary gameplay loop */
+				/**  initialise the game  */
 				init_game(manager);
 				while (not WindowShouldClose() and not manager.game_over()) {
 					if (manager.is_round_over()) {
+						/**  reset the round if finished */
 						manager.post_round();
 						init_game(manager);
 					}
+					/**  update and draw the current frame */
 					update_draw_frame(manager);
 				}
 				if (WindowShouldClose()) {
 					break;
 					CloseWindow();
 				}
+				/**
+				 * after the game is over, play a game over screen
+				 * go back to the main menu. 
+				 */
 				else {
 					auto start_time = GetTime();
 					while (GetTime() - start_time < 3.5) {
@@ -78,11 +99,12 @@ int main() {
 					manager.reset_scores();
 					unload_game();
 				}
-				//TODO return to main menu
 				break;
 			} 
+			/**  keyboard controls screen */
 			case 1: {// controls
 				while (not WindowShouldClose()) {
+					/**  check if the return button is pressed */
 					control_screen.draw();
 					auto button = control_screen.update();
 					if (button == 0) {
@@ -91,12 +113,12 @@ int main() {
 				}
 				break;
 			}
+			/**  quit button */
 			case 2: { // exit
 				exit = true;
 				break;
 			}
 			default: {
-				// do nothing
 				break;
 			}
 		}
@@ -107,6 +129,7 @@ int main() {
 }
 
 // --------------------- game updating, drawing and initalisation--------------------------------
+
 void init_game(game_manager& manager) {
 	manager.build_level();
 	manager.pre_round();

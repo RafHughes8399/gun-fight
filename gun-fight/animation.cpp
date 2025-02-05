@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   animation.cpp
+ * \brief  cpp file for spritesheet animation
+ * 
+ * \author raffaele hughes
+ * \date   February 2025
+ *********************************************************************/
 #include "animation.h"
 
 Texture2D animation::get_sheet(){

@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   obstacles.cpp
+ * \brief  implementation file for obstacles
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include "entities.h"
 bool entities::obstacle::operator==(const entities::entity& other) {
 	return true;
@@ -48,6 +55,7 @@ bool entities::moveable_obstacle::collide(entity& other) {
 		return false;
 	}
 }
+/**  basic movement for obstacles, similar logic to gunman movement */
 bool entities::moveable_obstacle::move(std::vector<std::shared_ptr<entity>>& entities) {
 	Vector2 new_pos = { position_.x + movement_speed_.x, position_.y + movement_speed_.y };
 
@@ -89,7 +97,7 @@ void entities::tumbleweed::change_direction() {
 	movement_speed_.x *= -1;
 	position_.x += movement_speed_.x;
 }
-
+/**  override tumbleweed movement so it can bounce, essentially sine movement function */
 bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities) {
 	auto new_y = abs(sin(frames_existed_ / 15)) * config::TUMBLEWEED_AMPLITUDE + baseline_; // add the baseline not the y
 	Vector2 new_pos{ position_.x + movement_speed_.x, new_y };

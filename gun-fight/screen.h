@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   screen.h
+ * \brief  header file for screens in the game
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
 #include "raylib.h"
 #include "animation.h"
@@ -7,7 +14,7 @@
 #include <utility>
 #include <memory>
 
-//TODO implement draw strategies
+/**  strategy for drawing each screen */
 class draw_strategy {
 public:
     virtual ~draw_strategy() = default;
@@ -20,6 +27,7 @@ public:
     virtual std::unique_ptr<draw_strategy> clone() = 0;
 };
 
+/**  strategy for drawing the main menu */
 class main_menu_strategy : public draw_strategy {
 public:
     ~main_menu_strategy() override = default;
@@ -36,7 +44,7 @@ public:
 
     
 };
-
+/**  strategy for drawing the return button on the keyboard control screen */
 class return_strategy : public draw_strategy {
 public:
     ~return_strategy() override = default;
@@ -53,6 +61,7 @@ public:
 
 };
 
+/**  definition for the screen class, contains buttons, the background and the draw strategy */
 class screen {
 public:
     ~screen() = default;

@@ -73,8 +73,39 @@ and if the mouse is within the rectangle, the button is pressed
 -> sounds
 -> combine main menu and control into one class x 
 -> make menu and control instances of the one overarching class x 
--> gunman death animation
--> revolver empty animation -- chin scratch
+-> gunman death animation x 
+-> revolver empty animation -- chin scratch, might change weapon animations
 -> documentation
 -> file restructure x 
 -> obstacle placement
+
+
+-> sound file like animation, figure out hte fields
+-> gunman has death sound, walk sound
+
+-> weapon has fire sound and reload sound
+-> bullet has hit sound
+-> button clicking sound 
+
+-> win sound 
+-> draw sound
+
+this town aint big enough for the two of us partner
+like shooting fish in a barrel
+best get back to the shooting range boy
+i coulda done that blindfolded 
+best get to stepping son, i dont like repeating myself here
+boy you are the slowest dang shooter i ever done seen
+you sure you got bullets in there boy
+the hogs gon eat well tonight 
+come on now son give me a challenge here
+you aint even wanted boy i did this for free
+
+you couldnt knock my hat off if you tried
+tell you what, next time ill tie one hand to my back
+jumping around like a damn jack rabbit
+best stick to card counting son, you aint made for this
+
+i done the hangman's job for him
+
+

@@ -1,3 +1,12 @@
+/*****************************************************************//**
+ * \file   config.h
+ * \brief  config file that defines constant values for the game 
+ * defines things like movement speed, screen dimension, controls, 
+ * and other attributes for entities within the game
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
 #include "raylib.h"
 #include <map>

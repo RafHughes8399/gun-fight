@@ -1,19 +1,27 @@
+/*****************************************************************//**
+ * \file   level_builder.h
+ * \brief  header file for level builder class that constructs and positions the obstacles
+ * in the levle for the current round
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
 #include "entities.h"
 #include "utility.h"
 #include <random>
 #include <set>
 namespace level {
-
-	// abstract base class for the bulding interface
 	class level_builder {
 	public:
+		/** constructors and destructors */
 		virtual ~level_builder() = default;
 		level_builder(level_builder&& other) = default;
 		level_builder& operator=(level_builder&& other) = default;
 
 		level_builder(int level_category, int obstacles_to_generate)
 			: level_category_(level_category), obstacles_to_generate_(obstacles_to_generate) {};
+		/** virtual definitions for generating different obstacles types */
 		virtual void build_level() = 0;
 		virtual void build_tumbleweed() = 0;
 		virtual void build_cacti() = 0;
@@ -29,6 +37,7 @@ namespace level {
 		int obstacles_to_generate_;
 	};
 
+	/** TODO maybe, builds train level */
 	class train_level : public level_builder {
 	public:
 		train_level(int level_category, int obstacles_to_generate)

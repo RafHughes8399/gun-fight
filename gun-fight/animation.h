@@ -1,7 +1,16 @@
+/*****************************************************************//**
+ * \file   animation.h
+ * \brief  header file for handling spritesheet animations with raylib
+ * 
+ * \author raffaele hughes
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
 #include "raylib.h"
+
 class animation {
 public:
+	/** constructors and destructors */
 	~animation() = default;
 	animation() = default;
 	animation(const char* path, float frame_width, float frame_height, int animation_length, int num_animations)
@@ -20,6 +29,7 @@ public:
 		num_animations_(other.num_animations_), play_(other.play_) {
 	};
 	
+	/** accessors */
 	Texture2D get_sheet();
 	Rectangle get_current_frame();
 	float get_frame_width();
@@ -30,21 +40,26 @@ public:
 	int get_animation_num();
 	bool get_play();
 
+	/** draw the current frame of the spritesheet */
 	void draw_frame(Vector2& pos); // draw the texture at the current frame
+	
+	/** navigate frames in the current animation*/
 	void next_frame(); // go to the next frame (should wrap around the same row) in the current animation
 	void previous_frame(); // go to the frame prior
-	
 	void next_frame_loop(); 
-
+	
+	/** navigate animations in the spritesheet*/
 	void next_animation(); // go to the next animation
 	void previous_animation(); // go to the previous animation 
 	void reset_animation();
 
+	/** select a frame or animation */
 	void select_animaiton(int index); // choose an animation index to position at
 	void select_frame(int frame);
-
 	void end_frame(); // goto the final frame
 	void default_frame(); // go to the default frame pos
+	
+	/**  play or pause the current animation */
 	void play_animation();
 	void pause_animation();
 private:

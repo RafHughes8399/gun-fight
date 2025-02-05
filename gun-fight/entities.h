@@ -1,17 +1,12 @@
+/*****************************************************************//**
+ * \file   entities.h
+ * \brief  header file for entities - all objects that exist in the game. Defines the inheritance 
+ * relationships between different types of entities in the game
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
-// entities is the paretn class for all objects within the game apart from the gunmen, they operate
-// independently since they are player-managed
-
-// the entity parent class handles rendering, updating and collision of an entity
-
-
-// sub classes of entities describe different types of entity
-
-// so an entity has the following
-// a position 
-// a width and height
-// an image source
-// 
 #include "raylib.h"
 #include "raymath.h"
 #include "animation.h"
@@ -24,9 +19,10 @@
 #include <iostream>
 
 namespace entities {
+	/**  entity super class, contains posiiton, animation  */
 	class entity {
 	public:
-		// inheritance overhead
+		/** constructors and destructors*/
 		virtual ~entity() = default;
 		entity(entity&& other) = default;
 		entity& operator=(entity&& other) = default;
@@ -38,39 +34,41 @@ namespace entities {
 		entity(const entity& other)
 			: position_(other.position_), path_(other.path_), remove_(other.remove_), animation_(other.animation_) {
 		};
-		// accessors and modifiers
+		
+		/**  accessors */
 		bool get_remove();
 		void set_remove(bool b);
 		float get_x() const;
 		float get_y() const;
+		const char* get_path() const;
 
-		void set_pos(float x, float y);
 		Vector2 get_position();
 		Rectangle get_rectangle();
 		animation get_animation();
+
+		/**  modifiers */
 		void set_animation(animation anim);
-		const char* get_path() const;
-		// operator overloads
+		void set_pos(float x, float y);
+		
+		/**  operator overloads */
 		entity& operator=(const entity& other);
 		virtual bool operator==(const entity& other);
 		bool operator<(entity& other);
-		// other behaviours
-		virtual void draw(); // all entities would be drawn the same, with the same raylib method??
+		
+		/**  other behaivours */
+		virtual void draw(); 
 		virtual bool update(std::vector<std::shared_ptr<entity>>& entities) = 0;
-
-		virtual bool collide(entity& other) = 0; // likewise with collision i think better handled by the next level of inheritance
+		virtual bool collide(entity& other) = 0;
 	protected:
 		Vector2 position_; // x, y position coords using float, necessary for drawing
 		animation animation_ = animation();
 		const char* path_;
-		bool remove_ = false;
+		bool remove_ = false; // should the entity be removed from the game
 	};
-
-	// a stationary entity that blocks projectiles
+	/**  definition of super class for obstacles within the game */
 	class obstacle : public entity {
 	public:
-
-		// overload the custom constructor
+		/**  constructors and destructors */
 		obstacle(float x, float y, const char* path, int health, int category, int penetration)
 			: entity(x, y, path), health_(health), obstacle_category_(category), penetration_(penetration) {
 		};
@@ -78,40 +76,47 @@ namespace entities {
 		obstacle(const obstacle& other)
 			:entity(other), health_(other.health_), obstacle_category_(other.obstacle_category_), penetration_(other.penetration_) {
 		};
-		// overload the virtual methods
+		/** method overrides */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 		bool operator==(const entity& other) override;
 
-		// unqiue accessors and modifiers
+		/**  unique accessrs and other behaviour */
 		int get_penetration();
 		int get_category();
 		int get_health();
 		virtual void take_damage(int damage); // returns true if health > 0
 	protected:
 		int health_;
-		int obstacle_category_;
+		int obstacle_category_; // for randomized obstacle generation in each level
 		int penetration_;
-		// an obstacle has health
 	};
+	/**  definition of super class for moveable obstacles */
 	class moveable_obstacle : public obstacle {
 	public:
+		/** constructors and destructors */
 		moveable_obstacle(float x, float y, const char* path, int health, int category, int penetration, float movement_x, float movement_y)
 			: obstacle(x, y, path, health, category, penetration), movement_speed_(Vector2{ movement_x, movement_y }) {
 		}
 		moveable_obstacle(const moveable_obstacle& other)
 			: obstacle(other), movement_speed_(other.movement_speed_), frames_existed_(other.frames_existed_) {
 		};
-		Vector2 get_speed();
+		/**  virtual behaviour */
+		virtual bool move(std::vector<std::shared_ptr<entity>>& entities);
+		/**  overriden behaviours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
-		virtual bool move(std::vector<std::shared_ptr<entity>>& entities);
+
+		/**  unique accessors and other behaviour */
+		Vector2 get_speed();
 		virtual void change_direction() = 0;
+		
 	protected:
 		Vector2 movement_speed_;
-		int frames_existed_ = 0;
+		int frames_existed_ = 0; // for tumbleweed lifespan
 
 	};
+	/**  definition of cactus obstacle class */
 	class cactus : public obstacle {
 	public:
 		cactus(float x, float y)
@@ -124,6 +129,7 @@ namespace entities {
 		void take_damage(int damage) override;
 	private:
 	};
+	/**  definition of barrel obstacle class */
 	class barrel : public obstacle {
 	public:
 		barrel(float x, float y)
@@ -137,6 +143,7 @@ namespace entities {
 	private:
 
 	};
+	/** definition of wagon obstacle class, can move vertically on the y-axis */
 	class wagon : public moveable_obstacle {
 	public:
 		wagon(float x, float y, float movement_x, float movement_y)
@@ -145,12 +152,12 @@ namespace entities {
 			// animation_ = animation(); depends on direction
 			animation_ = animation(config::WAGON_DOWN_PATH, config::WAGON_DOWN_WIDTH, config::WAGON_DOWN_HEIGHT, config::WAGON_ANIMATION_LENGTH, config::WAGON_ANIMATIONS);
 		};
-
-		void draw() override;
 		wagon(const wagon& other)
 			: moveable_obstacle(other) {
 		};
 
+		/**  overridden behaviours  */
+		void draw() override;
 		void change_direction() override;
 	private:
 
@@ -165,15 +172,17 @@ namespace entities {
 		tumbleweed(const tumbleweed& other)
 			: moveable_obstacle(other), baseline_(other.baseline_), lifespan_(other.lifespan_) {
 		};
-		void change_direction() override;
+
+		/**  overridden behaviours  */
 		bool move(std::vector<std::shared_ptr<entity>>& entities) override;
+		void change_direction() override;
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		void draw() override;
 	private:
-		float baseline_;
+		float baseline_; // for sine wave movement
 		int lifespan_;
 	};
-
+	/**  superclass definition for items that can be picked up and used by the player */
 	class pickup : public entity {
 	public:
 		pickup(float x, float y, const char* path)
@@ -243,8 +252,11 @@ namespace entities {
 		}
 	private:
 	};
+	
+	/** super class definition for projectiles in the game */
 	class projectile : public entity {
 	public:
+		/**  constructors and destructors  */
 		projectile(float x, float y, const char* path, float speed, float direction, int damage, int penetration)
 			: entity(x, y, path), speed_direction_({ speed, direction }), damage_(damage), penetration_(penetration) {
 		};
@@ -253,27 +265,28 @@ namespace entities {
 			: entity(other), speed_direction_(other.speed_direction_), damage_(other.damage_), penetration_(other.penetration_) {
 		};
 
+		/**  accessors  and unique behaviour*/
 		int get_damage();
 		int get_penetration();
-		// overload collide and update
+		Vector2 get_speed_direction() const;
+		bool penetrate(const int& obstacle_penetration);
+		
+		/**  overridden behaviours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override; // this is where projectile movement will occur
 		bool collide(entity& other) override;
 
-		// operator overloads
+		/**  operator overloads */
 		bool operator==(const entity& other) override;
-
-		// unique accessors and modifiers
-		Vector2 get_speed_direction() const;
-		bool penetrate(const int& obstacle_penetration);
 
 	protected:
 		int damage_;
 		int penetration_;
-		Vector2 speed_direction_; // add this to the position each tick to get movement
+		Vector2 speed_direction_; 
 	};
-
+	/** class definition for revolver bullets */
 	class bullet : public projectile {
 	public:
+		/**  constructors and destructors */
 		bullet(float x, float y, const char* path, float direction)
 			: projectile(x, y, path, config::BULLET_SPEED, direction, config::REVOLVER_DAMAGE, config::REVOLVER_PENETRATION) {
 			animation_ = animation(path, config::BULLET_WIDTH, config::BULLET_HEIGHT);
@@ -283,13 +296,10 @@ namespace entities {
 			: projectile(other) {
 		};
 
-		// overloads
-		// operator overloads
 		bool operator==(const entity& other) override;
-		// unique accessors 
 	private:
 	};
-
+	/**  class definition for rifle bullets - TODO implement */
 	class rifle_bullet : public projectile {
 	public:
 		rifle_bullet(float x, float y, const char* path, float direction)
@@ -302,6 +312,7 @@ namespace entities {
 
 	private:
 	};
+	/**  class definition for dynamite sticks = TODO implement */
 	class dynamite_stick : public projectile {
 	public:
 		dynamite_stick(float x, float y, const char* path, float direction, int throw_power)
@@ -318,8 +329,13 @@ namespace entities {
 		int det_timer_ = config::DYNAMITE_TIMER; // in frames 
 		int throw_power_; // essentially a speed coefficient that affects movement
 	};
+	/**  super class definition for weapons */
 	class weapon : public entity {
 	public:
+		/**
+		 * weapon state pattern for firing and reloading, state reflects whether the weapon is currently
+		 loaded or unloaded. 
+		 */
 		class weapon_state {
 		public:
 			virtual ~weapon_state() = default;
@@ -348,6 +364,8 @@ namespace entities {
 			std::unique_ptr<weapon_state> clone() override;
 		private:
 		};
+
+		/**  constructors and destructors */
 		weapon(float x, float y, const char* path, int ammo, int fire_rate)
 			:entity(x, y, path), ammo_(ammo), fire_rate_(fire_rate) {
 		};
@@ -356,6 +374,7 @@ namespace entities {
 			fire_rate_(other.fire_rate_), state_(other.state_->clone()) {
 		};
 
+		/**  unique accessors and behaviours */
 		int get_ammo();
 		bool is_loaded();
 		int get_fire_rate();
@@ -363,9 +382,11 @@ namespace entities {
 		void decrement_cooldown();
 		virtual void reset_cooldown() = 0;
 
+		/**  operator overloads */
 		weapon& operator=(const weapon& other);
 		bool operator==(const weapon& other);
 
+		/**  virtual definitions */
 		virtual bool fire() = 0;
 		virtual bool reload() = 0;
 		virtual void replenish() = 0;
@@ -378,9 +399,10 @@ namespace entities {
 		int fire_rate_;
 		std::unique_ptr<weapon_state> state_ = std::make_unique<loaded_state>(loaded_state());
 	};
-
+	/**  class definition for revolver, the default weapon*/
 	class revolver : public weapon {
 	public:
+		/** constructors and destructors */
 		revolver(float x, float y, const char* path)
 			: weapon(x, y, path, config::REVOLVER_AMMO, config::REVOLVER_FIRE_RATE) {
 			animation_ = animation(config::REVOLVER_PATH, config::REVOLVER_WIDTH, config::REVOLVER_HEIGHT,
@@ -389,6 +411,7 @@ namespace entities {
 		revolver(const revolver& other)
 			: weapon(other) {
 		};
+		/**  weapon overridden behaviuors  */
 		std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) override;
 		bool fire() override;
 		bool reload() override;
@@ -396,11 +419,12 @@ namespace entities {
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
 
+		/**  entitiy overridden behaivours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 	private:
 	};
-
+	/**  class definition for rifle weapon, TODO implement */
 	class rifle : public weapon {
 	public:
 		rifle(float x, float y, const char* path)
@@ -423,7 +447,7 @@ namespace entities {
 	private:
 
 	};
-
+	/**  class definition for dynamite weapon TODO implement */
 	class dynamite : public weapon {
 		dynamite(float x, float y, const char* path)
 			: weapon(x, y, path, config::DYNAMITE_AMMO, config::DYNAMITE_FIRE_RATE) {
@@ -443,11 +467,12 @@ namespace entities {
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 	};
-	// player-controlled entity
+	
+
+	/**  class definition for the gunman, the character controlled by the player */
 	class gunman : public entity {
 	public:
-		// constructors
-		// gunman with revolver
+		/**  constructors and destructors */
 		gunman(float x, float y, const char* path, int health, int direction)
 			: entity(x, y, path), health_(health), direction_(direction) {
 			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
@@ -455,19 +480,20 @@ namespace entities {
 		gunman(const gunman& other)
 			:entity(other), health_(other.health_), direction_(other.direction_){
 		};
-		// unique accessors and modifiers
+		/**  unique accessors and behaviours */
 		int get_health() const;
 		int get_direction() const;
-		// operator overloads 
-		bool operator==(const entity& other) override;
-		// behaviour overloads
-		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
-		bool collide(entity& other) override;
-
-		//unique behaviour 
 		void take_damage(int damage);
 		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
 		void reset(float x, float y);
+
+		/**  operator overloads */
+		bool operator==(const entity& other) override;
+		
+		/**  entity overridden methods */
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
+		bool collide(entity& other) override;
+
 
 	private:
 		int health_;

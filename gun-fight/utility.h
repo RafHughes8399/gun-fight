@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   utility.h
+ * \brief  utility functions used throughout the game
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #pragma once
 #include <random>
 #include <type_traits>

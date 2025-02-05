@@ -1,11 +1,18 @@
+/*****************************************************************//**
+ * \file   weapons.cpp
+ * \brief  implementation file for weapons
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include "entities.h"
 
-// ----------------------- WEAPON LOADED STATE ------------------
+/**  firing when the weapon is loaded */
 bool entities::weapon::loaded_state::fire(entities::weapon* w) {
 	if (w->cooldown_ == 0) {
 		w->state_.reset(nullptr);
 		w->state_ = std::make_unique<unloaded_state>(unloaded_state());
-		w->animation_.play_animation(); // in draw check if you are the end of the animation
+		w->animation_.play_animation();
 		w->reset_cooldown();
 
 		return true;
@@ -13,17 +20,20 @@ bool entities::weapon::loaded_state::fire(entities::weapon* w) {
 	return false;
 
 }
+/**  reloading when the weapon is loaded */
 bool entities::weapon::loaded_state::reload(entities::weapon* w) {
 	return true;
 }
+/**  clone the state, for weapon copying */
 std::unique_ptr<entities::weapon::weapon_state> entities::weapon::loaded_state::clone() {
 	return std::make_unique<entities::weapon::loaded_state>(*this);
 }
 
-// ----------------------- WEAPON UNLOADED STATE ------------------
+/**  firing when the weapon is unloaded, unsuccessful */
 bool entities::weapon::unloaded_state::fire(entities::weapon* w) {
 	return false;
 }
+/**  reloading when the weapon is unloaded */
 bool entities::weapon::unloaded_state::reload(entities::weapon* w) {
 	if (w->ammo_ == 0) { 
 		w->animation_.end_frame();
@@ -42,7 +52,6 @@ std::unique_ptr<entities::weapon::weapon_state> entities::weapon::unloaded_state
 
 }
 
-// ----------------------- WEAPON ACCESSORS -------------------------
 int entities::weapon::get_ammo() {
 	return ammo_;
 }
@@ -60,7 +69,7 @@ int entities::weapon::get_cooldown() {
 void entities::weapon::decrement_cooldown() {
 	--cooldown_;
 }
-// ------------------- WEAPON OPERATOR OVERLOADS ------------------------------
+
 entities::weapon& entities::weapon::operator=(const entities::weapon& other) {
 	//TODO call the entity version of the operator=
 	//entities::entity::operator=(other);
@@ -71,9 +80,7 @@ entities::weapon& entities::weapon::operator=(const entities::weapon& other) {
 	return *this;
 }
 
-//--------------------- WEAPON OTHER BEHAVIOUR ----------------------------------
-
-//------------------- REVOLVER OVERLOADS ----------------------------------
+/**  create revolver bullets when fired successfully */
 std::shared_ptr<entities::projectile> entities::revolver::create_bullet(float x, float y, int direction) {
 	if (direction == 1) {
 		return std::make_shared<entities::bullet>(entities::bullet(x, y, config::BULLET_LEFT, direction));;

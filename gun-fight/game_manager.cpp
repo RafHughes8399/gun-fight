@@ -1,5 +1,13 @@
+/*****************************************************************//**
+ * \file   game_manager.cpp
+ * \brief  implementation file for the game_manager class. 
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include "game_manager.h"
 
+/**  erase entities that should be removed */
 void game_manager::remove_entities(){
 	auto new_end = std::remove_if(game_entities_.begin(), game_entities_.end(), [](auto& e) {
 		return e->get_remove();
@@ -7,12 +15,14 @@ void game_manager::remove_entities(){
 	game_entities_.erase(new_end, game_entities_.end());
 }
 
+/**  remove all entities apart from the player characters */
 void game_manager::clear_entities(){
-	game_entities_.clear(); // i am so dumb and stupid
+	game_entities_.clear(); 
 	game_entities_.push_back(player_1_.get_gunman());
 	game_entities_.push_back(player_2_.get_gunman());
 }
 
+/**  update all entities */
 void game_manager::update_entities(){
 	// the gunman should be in the entity list but not
 	for (auto& e : game_entities_) {
@@ -23,6 +33,7 @@ void game_manager::update_entities(){
 	}
 }
 
+/**  draw elemenets of the game */
 void game_manager::draw_game(){
 	draw_background();
 	draw_players();
@@ -74,6 +85,7 @@ int game_manager::get_frame_count(){
 	return frame_count_;
 }
 
+/**  draw the background and the hud frame */
 void game_manager::draw_background() {
 	auto pos = Vector2{ config::PLAYABLE_X, config::PLAYABLE_Y };
 	background_.draw_frame(pos);
@@ -113,6 +125,7 @@ bool game_manager::is_round_over(){
 void game_manager::pre_round(){
 	auto start = GetTime();
 	auto draw = LoadTexture(config::DRAW_PATH);
+	/** before each round, draw the round intro texture */
 	while (GetTime() - start < 1.1) {
 		BeginDrawing();
 		draw_game();
@@ -125,6 +138,7 @@ void game_manager::pre_round(){
 
 void game_manager::post_round(){
 	auto start = GetTime();
+	/** draw only the gunmen and the background, makes time for voicelines */
 	while (GetTime() - start < 1.5) {
 		BeginDrawing();
 		draw_game();
@@ -145,26 +159,31 @@ void game_manager::draw_win(){
 	}
 }
 
-
+/**  build the level for each round */
 void game_manager::build_level(){
-	// reset the players, clear the environment
+	/** reset the players, remove obstacles */
 	player_1_.reset_player();
 	player_2_.reset_player();
 	clear_entities();
-	// update counters
+	
+	/** reset counters  */
 	frame_count_ = 0;
 	++round_num_;
 	round_over_ = false;
-	// generate environment
+
+	/**  pick random types of obstacles to generate, 0 is no obstalces */
 	auto category = util::generate_random_num(0.0, 3.0);
 	if (category <= 0.5) { category = 0; }
 	else { category = ceil(category); }
+	/**  determine the number of obstacles to generate */
 	auto obstacles_to_generate = 2 * (round_num_ % 3);
 	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
+	/**  build the environment by placing obstacles randomly */
 	builder->build_level();
 	auto& level_entities = builder->get_level_entities();
 
+	/**  transfer obstacles to game manager */
 	while (not level_entities.empty()) {
 		auto it = level_entities.extract(level_entities.begin());
 		game_entities_.push_back(std::move(it.value()));

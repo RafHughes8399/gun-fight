@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * \file   level_builder.cpp
+ * \brief  implementation file for the level builder class
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include "level_builder.h"
 #include "utility.h"
 #include <iostream>
@@ -7,6 +14,7 @@
 float clamp(float value, float min, float max) {
 	return std::fmax(min, std::fmin(value, max));
 }
+/** checks if the obstacle can be added at the proposed position, some bugs persist, TODO change */
 bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_ptr<entities::entity>, decltype(util::cmp)>& entities) {
 	// this should caclulate the distance between the squares, not the points
 
@@ -27,8 +35,7 @@ bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_
 	return true;
 }
 void level::level::build_level(){
-	// generate up to 2 random numbers between 0 and 3 inclusive
-	// check level_category
+	/**  generate two numbers between 1 and 3, to determine which obstacles to generate */
 	auto obstacle_categories = std::set<int>{};
 	for (auto i = 0; i < level_category_; ++i) {
 		obstacle_categories.insert(util::generate_random_int(config::TUMBLEWEED_CATEGORY, config::WAGON_CATEGORY));
@@ -64,28 +71,28 @@ void level::level::build_tumbleweed(){
 		level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
 	}
 }
-
+/**  the following methods have the same logic, just are separated by the obstacle that they place in the level */
 void level::level::build_cacti(){
+	/**  the number of the obstacle to generate */
 	int num_cacti = ceil(obstacles_to_generate_ * util::generate_random_num<double>(0.2, 0.4));
 	obstacles_to_generate_ -= num_cacti;
 	// if empty, just pick a random position and add the entity there	
 	for (auto i = 0; i < num_cacti; ++i) {
-		
+		/**  generate a random position within the bounds defined in the config file  */
 		auto random_x = util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH);
 		auto random_y = util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT);
 		auto cactus = std::make_unique<entities::cactus>(entities::cactus(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		
+		/**  until it can be inserted, generate a random position  */
 		while (not can_insert_obstacle(cactus->get_rectangle(), level_entities_)) {
 
 			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH)),
 				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
 		}
-
+		/**  if it can be inserted in the level, do so */
 		level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
 	}
-
-// otherwise pick a random distance that is at least, the minimum distance away
 }
 
 void level::level::build_barrels(){

@@ -1,9 +1,20 @@
+/*****************************************************************//**
+ * \file   button.cpp
+ * \brief  implementation file for button class
+ * 
+ * \author raffa
+ * \date   February 2025
+ *********************************************************************/
 #include "button.h"
 
 void button::draw(Vector2& pos) {
 	button_anim_.draw_frame(pos);
 }
 
+/**.
+ * checks if the button is pressed or hovered over
+ * \return 
+ */
 bool button::update(){
 	if (is_pressed() or is_hovered()) {
 		button_anim_.select_frame(1);
