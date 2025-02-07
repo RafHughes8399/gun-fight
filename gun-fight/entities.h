@@ -397,7 +397,7 @@ namespace entities {
 		int ammo_;
 		int cooldown_ = 0;
 		int fire_rate_;
-		std::unique_ptr<weapon_state> state_ = std::make_unique<loaded_state>(loaded_state());
+		std::unique_ptr<weapon_state> state_ = std::make_unique<loaded_state>(loaded_state());		
 	};
 	/**  class definition for revolver, the default weapon*/
 	class revolver : public weapon {
@@ -418,11 +418,16 @@ namespace entities {
 		void replenish() override;
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
-
+			
 		/**  entitiy overridden behaivours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
+
+		static Sound fire_sound_;
+		static Sound reload_sound_;
+
 	private:
+
 	};
 	/**  class definition for rifle weapon, TODO implement */
 	class rifle : public weapon {
@@ -444,11 +449,14 @@ namespace entities {
 
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
+
 	private:
+		static std::pair<Sound, Sound> fire_reload_sounds_;
 
 	};
 	/**  class definition for dynamite weapon TODO implement */
 	class dynamite : public weapon {
+	public:
 		dynamite(float x, float y, const char* path)
 			: weapon(x, y, path, config::DYNAMITE_AMMO, config::DYNAMITE_FIRE_RATE) {
 			animation_ = animation(config::DYNAMITE_PATH, config::DYNAMITE_WIDTH, config::DYNAMITE_HEIGHT,
@@ -466,6 +474,8 @@ namespace entities {
 
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
+	private:
+		static std::pair<Sound, Sound> fire_reload_sounds_;
 	};
 	
 

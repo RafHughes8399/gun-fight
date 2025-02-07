@@ -59,10 +59,14 @@ void game_manager::draw_scores(){
 
 void game_manager::update_players(){
 	if (player_1_.is_dead()) {
+		Sound s = LoadSound(config::DEATH_SOUND);
+		PlaySound(s);
 		player_2_.increase_score();
 		end_round();
 	}
 	else if (player_2_.is_dead()) {
+		Sound s = LoadSound(config::DEATH_SOUND);
+		PlaySound(s);
 		player_1_.increase_score();
 		end_round();
 	}

@@ -7,6 +7,10 @@
  *********************************************************************/
 #include "entities.h"
 
+
+/** initialising static variables */
+Sound entities::revolver::fire_sound_ = LoadSound(config::REVOLVER_FIRE_SOUND);
+Sound entities::revolver::reload_sound_ = LoadSound(config::REVOLVER_RELOAD_SOUND);
 /**  firing when the weapon is loaded */
 bool entities::weapon::loaded_state::fire(entities::weapon* w) {
 	if (w->cooldown_ == 0) {
@@ -90,9 +94,16 @@ std::shared_ptr<entities::projectile> entities::revolver::create_bullet(float x,
 	}
 }
 bool entities::revolver::fire() {
-	return state_->fire(this);
+	if (state_->fire(this)) {
+		Sound s = LoadSound(config::REVOLVER_FIRE_SOUND);
+		PlaySound(s);
+		return true;
+	}
+	return false;
 }
 bool entities::revolver::reload() {
+	Sound s = LoadSound(config::REVOLVER_RELOAD_SOUND);
+	PlaySound(s);
 	return state_->reload(this);
 }
 void entities::revolver::replenish() {

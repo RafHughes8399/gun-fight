@@ -112,7 +112,6 @@ namespace config {
 	inline static auto GUNMAN1_FIRING = std::pair<int, int>{ KEY_F, KEY_R };
 	inline static auto GUNMAN2_FIRING = std::pair<int, int>{ KEY_COMMA, KEY_PERIOD};
 
-
 	//revolver attributes
 	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
@@ -230,5 +229,29 @@ namespace config {
 	inline const float SCORE_HEIGHT = 40;
 	inline const float SCORES_LENGTH = 11;
 	inline const float	SCORES_ANIMATIONS = 1;
+
+
+	// sounds
+	inline const char* DEATH_SOUND = "sounds/player-death.wav";
+	inline const char* REVOLVER_FIRE_SOUND = "sounds/revolver-shoot.wav";
+	inline const char* REVOLVER_RELOAD_SOUND = "sounds/revolver-reload.wav";
+	inline const char* BULLET_HIT_SOUND = "sounds/bullet-hit.wav";
+	inline std::vector<const char*> VOICE_LINES = {
+		"sounds/this-town.wav",
+		"sounds/fish-in-a-barrel.wav",
+		"sounds/shooting-range.wav",
+		"sounds/blindfolded.wav", 
+		"sounds/no-repeating.wav",
+		"sounds/slowest-shooter",
+		"sounds/got-bullets.wav",
+		"sounds/hogs.wav",
+		 "sounds/for-free.wav",
+		 "sounds/challenge.wav",
+		 "sounds/hats-off.wav",
+		 "sounds/one-handed.wav",
+		 "sounds/jack-rabbit",
+		 "sounds/card-counting.wav",
+		 "sounds/hangman.wav"
+	};
 	
 }

@@ -28,7 +28,7 @@ int main() {
 	/**  initalise the window */
 	SetTargetFPS(60);
 	InitWindow(config::SCREEN_WIDTH, config::SCREEN_HEIGHT, "gun_fight.exe");
-
+	InitAudioDevice();
 	/** make the gunman and weapon for both players */
 	auto gunman_1 = std::make_shared<entities::gunman>(entities::gunman(config::P1_START_X, config::P1_START_Y, config::P1_PATH, 1, 1));
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
@@ -124,6 +124,7 @@ int main() {
 		}
 		main_menu.draw();
 	}
+	CloseAudioDevice();
 	CloseWindow();
 	return 1;
 }
@@ -139,6 +140,8 @@ void init_game(game_manager& manager) {
 void update_game(game_manager& manager) {
 	// temp for quickly cycling through rounds to test environment generation
 	if (IsKeyPressed(KEY_X)) {
+		Sound s = LoadSound(config::REVOLVER_FIRE_SOUND);
+		PlaySound(s);
 		manager.end_round();
 	}
 	// update players, check they are alive, increase scores, end the round
