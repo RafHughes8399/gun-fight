@@ -70,10 +70,3 @@ bool entities::entity::operator<(entity& other){
 	return Vector2Length(get_position()) < Vector2Length(other.get_position());
 }
 
-
-
-
-
-
-
-

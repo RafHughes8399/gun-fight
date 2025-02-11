@@ -16,21 +16,26 @@ float clamp(float value, float min, float max) {
 }
 /** checks if the obstacle can be added at the proposed position, some bugs persist, TODO change */
 bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_ptr<entities::entity>, decltype(util::cmp)>& entities) {
-	// this should caclulate the distance between the squares, not the points
+	// find the center point of the insert rectangle
+	Vector2 insert_centre = { insert_rectangle.x + (insert_rectangle.width / 2),
+							 insert_rectangle.y + (insert_rectangle.height / 2) };
 
-	// find the centre point of the insert rectangle
-	Vector2 insert_centre = {insert_rectangle.x + insert_rectangle.x + (insert_rectangle.width /2), 
-							 insert_rectangle.y + insert_rectangle.y + (insert_rectangle.height / 2)};	// find the centre point of the insert rectangle
 	for (auto& e : entities) {
-		// find the centre point of the current rectangle
+		// find the center point of the current rectangle
 		Rectangle current_rectangle = e->get_rectangle();
-		Vector2 current_centre = { current_rectangle.x + current_rectangle.x + (current_rectangle.width / 2),
-								current_rectangle.y + current_rectangle.y + (current_rectangle.height / 2) };
-		// then apply the formula being
-		// max ( |x1 - x2| - (w1 + w2)/2, |y1 - y2| - (h1 + h2) / 2)
-		auto distance = std::fmax(std::abs(insert_centre.x - current_centre.x) - ((insert_rectangle.width + current_rectangle.width) / 2),
-			std::abs(insert_centre.y - current_centre.y) - ((insert_rectangle.height + current_rectangle.height) / 2));
-		if (distance < config::MINIMUM_OBSTACLE_DISTANCE) { return false; }
+		Vector2 current_centre = { current_rectangle.x + (current_rectangle.width / 2),
+								  current_rectangle.y + (current_rectangle.height / 2) };
+
+		// calculate the Euclidean distance between the centers
+		float distance = std::sqrt(std::pow(insert_centre.x - current_centre.x, 2) + std::pow(insert_centre.y - current_centre.y, 2));
+
+		// calculate the minimum required distance
+		float min_distance = std::sqrt(std::pow((insert_rectangle.width + current_rectangle.width) / 2, 2) + std::pow((insert_rectangle.height + current_rectangle.height) / 2, 2)) + config::MINIMUM_OBSTACLE_DISTANCE;
+
+		// check if the distance is less than the minimum required distance
+		if (distance < min_distance) {
+			return false;
+		}
 	}
 	return true;
 }
@@ -59,13 +64,13 @@ void level::level::build_tumbleweed(){
 	for (auto i = 0; i < num_tumbleweed; ++i) {
 		
 		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH);
-		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT);
+		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT);
 		auto tumbleweed = std::make_unique<entities::tumbleweed>(entities::tumbleweed(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 
 		while (not can_insert_obstacle(tumbleweed->get_rectangle(), level_entities_)) {
 			tumbleweed->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH),
-				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT));
+				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT,config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT));
 		}
 
 		level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
@@ -80,7 +85,7 @@ void level::level::build_cacti(){
 	for (auto i = 0; i < num_cacti; ++i) {
 		/**  generate a random position within the bounds defined in the config file  */
 		auto random_x = util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH);
-		auto random_y = util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT);
+		auto random_y = util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT);
 		auto cactus = std::make_unique<entities::cactus>(entities::cactus(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		
@@ -88,7 +93,7 @@ void level::level::build_cacti(){
 		while (not can_insert_obstacle(cactus->get_rectangle(), level_entities_)) {
 
 			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH)),
-				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
+				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
 		}
 		/**  if it can be inserted in the level, do so */
 		level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
@@ -100,14 +105,14 @@ void level::level::build_barrels(){
 	obstacles_to_generate_ -= num_barrels;
 	for (auto i = 0; i < num_barrels; ++i) {
 		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH);
-		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT);
+		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT);
 		auto barrel = std::make_unique<entities::barrel>(entities::barrel(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 
 		while (not can_insert_obstacle(barrel->get_rectangle(), level_entities_)) {
 
 			barrel->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH),
-				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT));
+				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT));
 		}
 		level_entities_.insert(std::make_unique<entities::barrel>(*barrel.get()));
 	}
@@ -118,14 +123,14 @@ void level::level::build_wagons(){
 	obstacles_to_generate_ -= num_wagons;
 	for (auto i = 0; i < num_wagons; ++i) {
 		auto random_x = util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH);
-		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT);
+		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT);
 		auto wagon = std::make_unique<entities::wagon>(entities::wagon(
 			static_cast<float>(random_x), static_cast<float>(random_y), 0.0, config::WAGON_SPEED));
 
 		while (not can_insert_obstacle(wagon->get_rectangle(), level_entities_)) {
 
 			wagon->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH),
-				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_Y + config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
+				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
 		}
 		level_entities_.insert(std::make_unique<entities::wagon>(*wagon.get()));
 	}

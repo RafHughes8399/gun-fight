@@ -109,4 +109,56 @@ best stick to card counting son, you aint made for this
 i done the hangman's job for him
 
 
-maybe make the sounds and textures     n         
+maybe make the sounds and textures     n        
+
+
+sprint meter
+
+increse bullet speed x 
+
+-> item implementation
+-> item spawning
+-> obstacle distances
+-> item interaction
+-> item hud display
+
+start with an easy one like the health pickup
+
+
+basic logic, when the gunman collides with an item
+the item is removed from the environment and added to player item slot
+
+the item is displayed on the player's hud, upon using the item, the item is removed from the hud
+and the effects are executed
+
+
+the item update checks if the use key is pressed, if so then the item is used
+
+might need to distinguish between items that affect the gunman and items that affect the environment
+
+
+item spawning
+
+item art:
+general ammo pickup - bullets
+health pickup - spaghetti
+dynamite - dynamite stick
+rifle - rifle bullet
+revolver - revolver bullet
+strawman - silhoutte
+
+
+item has state
+either in the inventory or on the ground, changes how update works
+
+item spawning:
+
+every 6 seconds an item is spawned on both sides of the screen,
+use the parts of the screen that are not used for the obstacle spawning
+
+-> gunman collides with item, add to inventory
+
+
+-> check if the player collides with an item, if it does, add to the inventory
+
+-> 

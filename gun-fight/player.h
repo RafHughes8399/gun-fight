@@ -26,6 +26,7 @@ public:
 	std::shared_ptr<entities::pickup> get_item();
 	// update player
 	bool update_player(std::vector<std::shared_ptr<entities::entity>>& entities);
+	void pickup_item(std::vector<std::shared_ptr<entities::entity>>& entities);
 	// draw player
 	void draw_player();
 	void draw_win();
@@ -40,7 +41,6 @@ public:
 	void set_score(int score);
 	float get_draw_x();
 private:
-// a tuple of gunman, weapon, item
 	std::shared_ptr<entities::gunman> gunman_;
 	std::shared_ptr<entities::weapon> weapon_;
 	std::shared_ptr<entities::pickup> item_;

@@ -81,7 +81,7 @@ bool entities::moveable_obstacle::move(std::vector<std::shared_ptr<entity>>& ent
 	}
 	// Check screen boundaries based on which half the gunman is in
 	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
-		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT) {
 		position_ = new_pos;
 		return true;
 	}
@@ -123,7 +123,7 @@ bool entities::tumbleweed::move(std::vector<std::shared_ptr<entity>>& entities) 
 	}
 	// Check screen boundaries based on which half the gunman is in
 	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
-		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT) {
 		position_ = new_pos;
 		return true;
 	}

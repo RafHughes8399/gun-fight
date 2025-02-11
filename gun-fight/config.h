@@ -32,9 +32,11 @@ namespace config {
 	inline const char* HUD_FOOT_PATH = "sprites/hud-footer.png";
 	inline const char* HEART_PATH = "sprites/heart.png";
 	
+	// button attributes
 	inline const char* PLAY_PATH = "sprites/play.png";
 	inline const char* CONTROLS_PATH = "sprites/controls.png";
 	inline const char* QUIT_PATH = "sprites/quit.png";
+	inline const char* BUTTON_SOUND_PATH = "sounds/button-press.wav";
 	inline const float BUTTON_WIDTH = 300;
 	inline const float BUTTON_HEIGHT = 100.0;
 	inline const float BUTTONS_START_Y = 350;
@@ -126,7 +128,7 @@ namespace config {
 	// bullet attributes;
 	inline const float BULLET_WIDTH = 25;
 	inline const float BULLET_HEIGHT = 12;
-	inline const float BULLET_SPEED = 12;
+	inline const float BULLET_SPEED = 13.6;
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
 	// rifle attributes TODO: put in values 
@@ -221,7 +223,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 110; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 10.0; //subject to change
 
 	// score numbers animation info
 	inline const char* SCORE_PATH = "sprites/numbers.png";
@@ -229,6 +231,36 @@ namespace config {
 	inline const float SCORE_HEIGHT = 40;
 	inline const float SCORES_LENGTH = 11;
 	inline const float	SCORES_ANIMATIONS = 1;
+
+	//item spawn bounds, don't forget to subtract the item width and height when spawning
+	inline const float P1_ITEM_SPAWN_X = 0;
+	inline const float P1_ITEM_SPAWN_WIDTH = OBSTACLE_RANGE_X;
+	inline const float P1_ITEM_SPAWN_Y = PLAYABLE_Y;
+	inline const float P1_ITEM_SPAWN_HEIGHT = PLAYABLE_HEIGHT;
+	
+	inline const float P2_ITEM_SPAWN_X = OBSTACLE_RANGE_X + OBSTACLE_RANGE_WIDTH;
+	inline const float P2_ITEM_SPAWN_WIDTH = SCREEN_WIDTH - P2_ITEM_SPAWN_X;
+	inline const float P2_ITEM_SPAWN_Y = PLAYABLE_Y;
+	inline const float P2_ITEM_SPAWN_HEIGHT = PLAYABLE_HEIGHT;
+
+	// item pickup attributes
+	inline const float ITEM_WIDTH = 50;
+	inline const float ITEM_HEIGHT = 50;
+	inline const char* HEALTH_PICKUP_PATH = "sprites/health-pickup.png";
+	inline const char* RIFLE_PICKUP_PATH = "sprites/rifle-pickup.png";
+	inline const char* DYNAMITE_PICKUP_PATH = "sprites/dynamite-pickup.png";
+	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour-pickup.png";
+	inline const char* AMMO_PICKUP_PATH = "sprites/ammo-pickup.png";
+	inline const double ITEM_SPAWN_DELAY = 6.5; // in seconds.
+	
+	enum item_codes : int{
+		HEALTH = 0,
+		RIFLE = 1,
+		DYNAMITE = 2,
+		ARMOUR = 3,
+		AMMO = 4
+		// add more as needed
+	};
 
 
 	// sounds
@@ -239,17 +271,13 @@ namespace config {
 	inline std::vector<const char*> VOICE_LINES = {
 		"sounds/this-town.wav",
 		"sounds/fish-in-a-barrel.wav",
-		"sounds/shooting-range.wav",
 		"sounds/blindfolded.wav", 
-		"sounds/no-repeating.wav",
 		"sounds/slowest-shooter",
 		"sounds/got-bullets.wav",
-		"sounds/hogs.wav",
 		 "sounds/for-free.wav",
 		 "sounds/challenge.wav",
 		 "sounds/hats-off.wav",
 		 "sounds/one-handed.wav",
-		 "sounds/jack-rabbit",
 		 "sounds/card-counting.wav",
 		 "sounds/hangman.wav"
 	};

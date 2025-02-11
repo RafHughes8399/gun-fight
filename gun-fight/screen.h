@@ -68,9 +68,10 @@ public:
     template <typename InputIt>
     screen(const char* path, float width, float height, int anim_length, int anims, int button_offset, InputIt first, InputIt last, std::unique_ptr<draw_strategy> draw_strat)
         : background_(animation(path, width, height, anim_length, anims)), buttons_(first, last), button_offset_(button_offset), draw_strategy_(std::move(draw_strat)) {
+        button_sound_ = LoadSound(config::BUTTON_SOUND_PATH);
     }
     screen(const screen& other)
-        : background_(other.background_), buttons_(other.buttons_), button_offset_(other.button_offset_) {
+        : background_(other.background_), buttons_(other.buttons_), button_offset_(other.button_offset_), button_sound_(other.button_sound_) {
 		draw_strategy_ = other.draw_strategy_->clone();
     }
     int update();
@@ -80,4 +81,5 @@ private:
     std::vector<button> buttons_;
     int button_offset_;
     std::unique_ptr<draw_strategy> draw_strategy_;
+    Sound button_sound_;
 };

@@ -65,6 +65,36 @@ namespace entities {
 		const char* path_;
 		bool remove_ = false; // should the entity be removed from the game
 	};
+	/**  class definition for the gunman, the character controlled by the player */
+	class gunman : public entity {
+	public:
+		/**  constructors and destructors */
+		gunman(float x, float y, const char* path, int health, int direction)
+			: entity(x, y, path), health_(health), direction_(direction) {
+			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
+		};
+		gunman(const gunman& other)
+			:entity(other), health_(other.health_), direction_(other.direction_) {
+		};
+		/**  unique accessors and behaviours */
+		int get_health() const;
+		int get_direction() const;
+		void take_damage(int damage);
+		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
+		void reset(float x, float y);
+
+		/**  operator overloads */
+		bool operator==(const entity& other) override;
+
+		/**  entity overridden methods */
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
+		bool collide(entity& other) override;
+
+
+	private:
+		int health_;
+		const int direction_; // left facing is 1, right facing is -1 
+	};
 	/**  definition of super class for obstacles within the game */
 	class obstacle : public entity {
 	public:
@@ -185,25 +215,70 @@ namespace entities {
 	/**  superclass definition for items that can be picked up and used by the player */
 	class pickup : public entity {
 	public:
-		pickup(float x, float y, const char* path)
-			: entity(x, y, path) {
+		/**
+		 * pickup state - alters update behaviour based on whether the item is on the ground or
+		 * picked up by the player
+		 */
+		class pickup_state {
+		public:
+			pickup_state() = default;
+			~pickup_state() = default;
+			pickup_state(const pickup_state& other) = default;
+			virtual std::unique_ptr<pickup_state>  clone() = 0;
+			virtual bool update(pickup* p) = 0;
+		private:
 		};
-		pickup(const pickup& other)
-			:entity(other) {
+		class on_ground : public pickup_state {
+		public:
+			~on_ground() = default;
+			on_ground() = default;
+			on_ground(const on_ground& other) = default;
+			std::unique_ptr<pickup_state> clone() override;
+			bool update(pickup* p) override;
+		private:
+		};
+		class in_inventory : public pickup_state {
+		public:
+			~in_inventory() = default;
+			in_inventory() = default;
+			in_inventory(const in_inventory& other) = default;
+			std::unique_ptr<pickup_state> clone() override;	
+			bool update(pickup* p) override;
+		private:
+
 		};
 
+		pickup(float x, float y, const char* path)
+			: entity(x, y, path), state_(std::make_unique<on_ground>(on_ground())) {
+		};
+		pickup(const pickup& other)
+			:entity(other), state_(other.state_->clone()) {
+		};
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
+		virtual void use(gunman& gunman) = 0;
 		bool operator==(const entity& other) override;
 
 	protected:
+		std::unique_ptr<pickup_state> state_;
+	};
+	class health_pickup : public pickup {
+	public:
+		health_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
+		}
+		void use(gunman& gunman) override;
+
+	private:
 	};
 	class empty_pickup : public pickup {
 	public:
 		empty_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		};
+		void use(gunman& gunman) override;
 	private:
 	};
 	class rifle_pickup : public pickup {
@@ -211,6 +286,7 @@ namespace entities {
 		rifle_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		void use(gunman& gunman) override;
 	private:
 	};
 	class dynamite_pickup : public pickup {
@@ -218,7 +294,7 @@ namespace entities {
 		dynamite_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-
+		void use(gunman& gunamn) override;
 	private:
 	};
 	class armour_pickup : public pickup {
@@ -226,6 +302,7 @@ namespace entities {
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
+		void use(gunman& gunman) override;
 
 	private:
 
@@ -235,7 +312,7 @@ namespace entities {
 		ammo_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-
+		void use(gunman& gunman) override;
 	private:
 	};
 
@@ -245,14 +322,6 @@ namespace entities {
 
 	};
 
-	class health_pickup : public pickup {
-	public:
-		health_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		}
-	private:
-	};
-	
 	/** super class definition for projectiles in the game */
 	class projectile : public entity {
 	public:
@@ -479,35 +548,5 @@ namespace entities {
 	};
 	
 
-	/**  class definition for the gunman, the character controlled by the player */
-	class gunman : public entity {
-	public:
-		/**  constructors and destructors */
-		gunman(float x, float y, const char* path, int health, int direction)
-			: entity(x, y, path), health_(health), direction_(direction) {
-			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
-		};
-		gunman(const gunman& other)
-			:entity(other), health_(other.health_), direction_(other.direction_){
-		};
-		/**  unique accessors and behaviours */
-		int get_health() const;
-		int get_direction() const;
-		void take_damage(int damage);
-		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
-		void reset(float x, float y);
-
-		/**  operator overloads */
-		bool operator==(const entity& other) override;
-		
-		/**  entity overridden methods */
-		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
-		bool collide(entity& other) override;
-
-
-	private:
-		int health_;
-		const int direction_; // left facing is 1, right facing is -1 
-	};
 
 }

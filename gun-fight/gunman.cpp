@@ -32,8 +32,15 @@ bool entities::gunman::collide(entities::entity& other) {
 	/**  collide with pickup, pick it up if able to */
 	auto pickup = dynamic_cast<entities::pickup*>(&other);
 	if (pickup != nullptr) {
-		/** TODO implement */
-		return true; // the gunman can move
+		/**
+		 * 
+		 * no non on on on n on o, write a player move and collide that use the gunman 
+		 * methods
+		 * 
+		 * then that gives you access to the player and the ability to update their item slot
+		 * 
+		 */
+		return true; // this is how you tell
 	}
 	return true;
 }
@@ -64,7 +71,7 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_pt
 	}
 	/**  if not blocked by an obstacle, check that movement is not out of bounds  */
 	if (new_pos.x >= config::PLAYABLE_X and new_pos.x + animation_.get_frame_width() <= config::PLAYABLE_WIDTH and
-		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT + config::PLAYABLE_Y) {
+		new_pos.y >= config::PLAYABLE_Y and new_pos.y + animation_.get_frame_height() <= config::PLAYABLE_HEIGHT) {
 		position_ = new_pos;
 		return true;
 	}

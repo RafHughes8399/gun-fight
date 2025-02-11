@@ -23,6 +23,10 @@ public:
 		scores_ = animation(config::SCORE_PATH, config::SCORE_WIDTH, config::SCORE_HEIGHT, config::SCORES_LENGTH, config::SCORES_ANIMATIONS);
 		header_ = animation(config::HUD_HEAD_PATH, config::SCREEN_WIDTH, config::PLAYABLE_Y);
 		footer_ = animation(config::HUD_FOOT_PATH, config::SCREEN_WIDTH, config::PLAYABLE_Y + config::HUD_HEIGHT);
+		
+		for (auto& path : config::VOICE_LINES) {
+			voicelines_.push_back(LoadSound(path));
+		}
 	};
 
 
@@ -30,6 +34,7 @@ public:
 	void remove_entities();
 	void clear_entities();
 	void build_level();
+	void spawn_items();
 
 	/**  update game entities */
 	void update_entities();
@@ -59,12 +64,16 @@ public:
 	void post_round();
 	bool game_over();
 	void draw_win();
+	void play_voiceline();
 private:
-	/**  the two players */
+	/**  the two players and entities*/
 	player player_1_;
 	player player_2_;
 	std::vector<std::shared_ptr<entities::entity>> game_entities_;
+
+	/**  game info */
 	int frame_count_ = 0;
+	double last_spawn_time = 0.0;
 	int round_num_ = 1;
 	bool round_over_ = false;
 
@@ -73,5 +82,11 @@ private:
 	animation background_;
 	animation header_;
 	animation footer_;
+
+	/**  voice lines */
+	std::vector<Sound> voicelines_;
 };
+
+
+
 

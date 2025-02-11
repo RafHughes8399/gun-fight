@@ -3,6 +3,7 @@
 int screen::update(){
 	for (auto i = 0; i < buttons_.size(); ++i) {
 		if (buttons_.at(i).update()) {
+			PlaySound(button_sound_);
 			return i;
 		}
 	}

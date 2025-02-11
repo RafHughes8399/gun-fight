@@ -51,8 +51,11 @@ bool entities::projectile::collide(entities::entity& other) {
 	if (obstacle != nullptr) {
 		obstacle->take_damage(damage_);
 		// check penetration for tumbleweeds
-		Sound s = LoadSound(config::BULLET_HIT_SOUND);
-		PlaySound(s);
+		auto tumbleweed = dynamic_cast<entities::tumbleweed*>(&other);
+		if (tumbleweed == nullptr) {
+			Sound s = LoadSound(config::BULLET_HIT_SOUND);
+			PlaySound(s);
+		}
 		return penetrate(obstacle->get_penetration()); // a revolver can penetrate a tumbleweed but not a cactus
 	}
 	return true;

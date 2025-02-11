@@ -55,9 +55,22 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 	if (IsKeyPressed(fire_reload_.second)) {
 		weapon_->reload();
 	}
-	// check item usage 
+	// check if gunman is colliding with an item, then pick it up
 	return true;
 }
+
+void player::pickup_item(std::vector<std::shared_ptr<entities::entity>>& entities){
+	// check gunman collision with items
+	for (auto& e : entities) {
+		// try to cast to pickup
+		auto pickup = std::dynamic_pointer_cast<entities::pickup>(e);
+		if (pickup != nullptr and CheckCollisionRecs(gunman_->get_rectangle(), e->get_rectangle())) {
+			item_ = pickup;
+			e->set_remove(true);
+		}
+	}
+}
+
 void player::draw_player(){
 	// draw gunman
 	gunman_->draw();
@@ -68,23 +81,22 @@ void player::draw_player(){
 		// draw hearts
 		x += weapon_->get_animation().get_frame_width() + 5;
 		auto heart_pos = Vector2{x, config::SCREEN_HEIGHT - 185};
+		// draw hearts
 		for (auto i = 0; i < gunman_->get_health(); ++i) {
 			heart_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
 		}
-		// draw item frame
 	}
 	else {
 		float x = 115;
 		weapon_->draw(x, config::SCREEN_HEIGHT - 185);
 		x += weapon_->get_animation().get_frame_width() + 5;
 		auto heart_pos = Vector2{x, config::SCREEN_HEIGHT - 185};
+		// draw hearts
 		for (auto i = 0; i < gunman_->get_health(); ++i) {
 			heart_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
 		}
-		// draw hearts
-		// draw item frame
 	}
 	// draw item hud
 	item_->draw();

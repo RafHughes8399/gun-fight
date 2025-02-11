@@ -89,7 +89,10 @@ int main() {
 				 */
 				else {
 					auto start_time = GetTime();
-					while (GetTime() - start_time < 3.5) {
+					// wait a second 
+					WaitTime(1);
+					manager.play_voiceline();
+					while (GetTime() - start_time < 3.8) {
 						BeginDrawing();
 						manager.draw_background();
 						manager.draw_players();
@@ -140,13 +143,14 @@ void init_game(game_manager& manager) {
 void update_game(game_manager& manager) {
 	// temp for quickly cycling through rounds to test environment generation
 	if (IsKeyPressed(KEY_X)) {
-		Sound s = LoadSound(config::REVOLVER_FIRE_SOUND);
-		PlaySound(s);
 		manager.end_round();
 	}
+
 	// update players, check they are alive, increase scores, end the round
 	manager.update_players();
 
+	// check and spawn items if enough time has elapsed
+	manager.spawn_items();
 	// then update entnties
 	manager.update_entities();
 
