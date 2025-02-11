@@ -65,6 +65,12 @@ namespace entities {
 		const char* path_;
 		bool remove_ = false; // should the entity be removed from the game
 	};
+
+
+
+
+
+
 	/**  class definition for the gunman, the character controlled by the player */
 	class gunman : public entity {
 	public:
@@ -95,6 +101,12 @@ namespace entities {
 		int health_;
 		const int direction_; // left facing is 1, right facing is -1 
 	};
+
+
+
+
+
+
 	/**  definition of super class for obstacles within the game */
 	class obstacle : public entity {
 	public:
@@ -121,6 +133,7 @@ namespace entities {
 		int obstacle_category_; // for randomized obstacle generation in each level
 		int penetration_;
 	};
+
 	/**  definition of super class for moveable obstacles */
 	class moveable_obstacle : public obstacle {
 	public:
@@ -212,115 +225,7 @@ namespace entities {
 		float baseline_; // for sine wave movement
 		int lifespan_;
 	};
-	/**  superclass definition for items that can be picked up and used by the player */
-	class pickup : public entity {
-	public:
-		/**
-		 * pickup state - alters update behaviour based on whether the item is on the ground or
-		 * picked up by the player
-		 */
-		class pickup_state {
-		public:
-			pickup_state() = default;
-			~pickup_state() = default;
-			pickup_state(const pickup_state& other) = default;
-			virtual std::unique_ptr<pickup_state>  clone() = 0;
-			virtual bool update(pickup* p) = 0;
-		private:
-		};
-		class on_ground : public pickup_state {
-		public:
-			~on_ground() = default;
-			on_ground() = default;
-			on_ground(const on_ground& other) = default;
-			std::unique_ptr<pickup_state> clone() override;
-			bool update(pickup* p) override;
-		private:
-		};
-		class in_inventory : public pickup_state {
-		public:
-			~in_inventory() = default;
-			in_inventory() = default;
-			in_inventory(const in_inventory& other) = default;
-			std::unique_ptr<pickup_state> clone() override;	
-			bool update(pickup* p) override;
-		private:
 
-		};
-
-		pickup(float x, float y, const char* path)
-			: entity(x, y, path), state_(std::make_unique<on_ground>(on_ground())) {
-		};
-		pickup(const pickup& other)
-			:entity(other), state_(other.state_->clone()) {
-		};
-		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
-		bool collide(entity& other) override;
-
-		virtual void use(gunman& gunman) = 0;
-		bool operator==(const entity& other) override;
-
-	protected:
-		std::unique_ptr<pickup_state> state_;
-	};
-	class health_pickup : public pickup {
-	public:
-		health_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
-		}
-		void use(gunman& gunman) override;
-
-	private:
-	};
-	class empty_pickup : public pickup {
-	public:
-		empty_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		};
-		void use(gunman& gunman) override;
-	private:
-	};
-	class rifle_pickup : public pickup {
-	public:
-		rifle_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		}
-		void use(gunman& gunman) override;
-	private:
-	};
-	class dynamite_pickup : public pickup {
-	public:
-		dynamite_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		}
-		void use(gunman& gunamn) override;
-	private:
-	};
-	class armour_pickup : public pickup {
-	public:
-		armour_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		}
-		void use(gunman& gunman) override;
-
-	private:
-
-	};
-	class ammo_pickup : public pickup {
-	public:
-		ammo_pickup(float x, float y, const char* path)
-			: pickup(x, y, path) {
-		}
-		void use(gunman& gunman) override;
-	private:
-	};
-
-	class strawman_pickup :public pickup {
-	public:
-	private:
-
-	};
 
 	/** super class definition for projectiles in the game */
 	class projectile : public entity {
@@ -339,7 +244,7 @@ namespace entities {
 		int get_penetration();
 		Vector2 get_speed_direction() const;
 		bool penetrate(const int& obstacle_penetration);
-		
+
 		/**  overridden behaviours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override; // this is where projectile movement will occur
 		bool collide(entity& other) override;
@@ -350,7 +255,7 @@ namespace entities {
 	protected:
 		int damage_;
 		int penetration_;
-		Vector2 speed_direction_; 
+		Vector2 speed_direction_;
 	};
 	/** class definition for revolver bullets */
 	class bullet : public projectile {
@@ -398,12 +303,17 @@ namespace entities {
 		int det_timer_ = config::DYNAMITE_TIMER; // in frames 
 		int throw_power_; // essentially a speed coefficient that affects movement
 	};
+
+
+
+
+
 	/**  super class definition for weapons */
 	class weapon : public entity {
 	public:
 		/**
 		 * weapon state pattern for firing and reloading, state reflects whether the weapon is currently
-		 loaded or unloaded. 
+		 loaded or unloaded.
 		 */
 		class weapon_state {
 		public:
@@ -466,7 +376,7 @@ namespace entities {
 		int ammo_;
 		int cooldown_ = 0;
 		int fire_rate_;
-		std::unique_ptr<weapon_state> state_ = std::make_unique<loaded_state>(loaded_state());		
+		std::unique_ptr<weapon_state> state_ = std::make_unique<loaded_state>(loaded_state());
 	};
 	/**  class definition for revolver, the default weapon*/
 	class revolver : public weapon {
@@ -487,7 +397,7 @@ namespace entities {
 		void replenish() override;
 		void draw(int x, int y) override;
 		void reset_cooldown() override;
-			
+
 		/**  entitiy overridden behaivours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
@@ -546,7 +456,139 @@ namespace entities {
 	private:
 		static std::pair<Sound, Sound> fire_reload_sounds_;
 	};
-	
 
+
+
+
+
+
+
+	/**  superclass definition for items that can be picked up and used by the player */
+	class pickup : public entity {
+	public:
+		/**
+		 * pickup state - alters update behaviour based on whether the item is on the ground or
+		 * picked up by the player
+		 */
+		class pickup_state {
+		public:
+			pickup_state() = default;
+			~pickup_state() = default;
+			pickup_state(const pickup_state& other) = default;
+			virtual std::unique_ptr<pickup_state>  clone() = 0;
+			virtual bool update(pickup* p) = 0;
+		private:
+		};
+		class on_ground : public pickup_state {
+		public:
+			~on_ground() = default;
+			on_ground() = default;
+			on_ground(const on_ground& other) = default;
+			std::unique_ptr<pickup_state> clone() override;
+			bool update(pickup* p) override;
+		private:
+		};
+		class in_inventory : public pickup_state {
+		public:
+			~in_inventory() = default;
+			in_inventory() = default;
+			in_inventory(const in_inventory& other) = default;
+			std::unique_ptr<pickup_state> clone() override;	
+			bool update(pickup* p) override;
+
+		private:
+
+		};
+
+		pickup(float x, float y, const char* path)
+			: entity(x, y, path), state_(std::make_unique<on_ground>(on_ground())) {
+		};
+		pickup(const pickup& other)
+			:entity(other), state_(other.state_->clone()) {
+		};
+		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
+		bool collide(entity& other) override;
+		void draw(float x, float y);
+		virtual void use(std::shared_ptr<gunman> gunman) = 0; // for health changes
+		virtual void use(std::shared_ptr<weapon> weapon) = 0; // for ammo and weapon changes
+		virtual void use(std::vector<std::shared_ptr<entity>>& entities) = 0; // for  strawman
+
+		bool operator==(const entity& other) override;
+
+	protected:
+		std::unique_ptr<pickup_state> state_;
+	};
+	class health_pickup : public pickup {
+	public:
+		health_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
+		}
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+	};
+	class empty_pickup : public pickup {
+	public:
+		empty_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		};
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+	};
+	class rifle_pickup : public pickup {
+	public:
+		rifle_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		}
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+	};
+	class dynamite_pickup : public pickup {
+	public:
+		dynamite_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		}
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+	};
+	class armour_pickup : public pickup {
+	public:
+		armour_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		}
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+
+	};
+	class ammo_pickup : public pickup {
+	public:
+		ammo_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		}
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	private:
+	};
+
+	class strawman_pickup :public pickup {
+	public:
+	private:
+		void use(std::shared_ptr<gunman> gunman) override; // for health changes
+		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
+		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+	};
+
+		
 
 }

@@ -34,14 +34,14 @@ int main() {
 	auto gunamn_centre_x = gunman_1->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_1->get_direction();
 	auto weapon_1 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_1->get_y() + 45, config::REVOLVER_PATH));
-	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, 150, config::P1_WIN_PATH);
+	auto player_1 = player(gunman_1, weapon_1, config::GUNMAN1_MOVEMENT, config::GUNMAN1_FIRING, config::P1_ITEM_KEY,  150, config::P1_WIN_PATH);
 
 	auto gunman_2 = std::make_shared<entities::gunman>(entities::gunman(config::P2_START_X, config::P2_START_Y, config::P2_PATH, 1, -1));
 	gunamn_centre_x = gunman_2->get_x() + config::GUNMAN_WIDTH / 2;
 	weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_2->get_direction();
 	auto weapon_2 = std::make_shared<entities::revolver>(entities::revolver(weapon_x, gunman_2->get_y() + 45, config::REVOLVER_PATH));
 	
-	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::SCREEN_WIDTH - 150, config::P2_WIN_PATH);
+	auto player_2 = player(gunman_2, weapon_2, config::GUNMAN2_MOVEMENT, config::GUNMAN2_FIRING, config::P2_ITEM_KEY, config::SCREEN_WIDTH - 150, config::P2_WIN_PATH);
 
 	/**  create the game manager */
 	auto manager = game_manager(player_1, player_2);
@@ -92,7 +92,7 @@ int main() {
 					// wait a second 
 					WaitTime(1);
 					manager.play_voiceline();
-					while (GetTime() - start_time < 3.8) {
+					while (GetTime() - start_time < 4.05) {
 						BeginDrawing();
 						manager.draw_background();
 						manager.draw_players();

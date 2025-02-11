@@ -56,21 +56,32 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 		weapon_->reload();
 	}
 	// check if gunman is colliding with an item, then pick it up
+	pickup_item(entities);
+
+	// check if an item is used
+	if (IsKeyPressed(item_use_)) {
+		// use the item
+		auto health_item = dynamic_cast<entities::health_pickup*>(item_.get());
+		if (health_item != nullptr) {
+			health_item->use(gunman_);
+		}
+		// remove the item from the slot 
+		std::cout << "remove item" << std::endl;
+		item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));
+	}
 	return true;
 }
 
-void player::pickup_item(std::vector<std::shared_ptr<entities::entity>>& entities){
+void player::pickup_item(std::vector<std::shared_ptr<entities::entity>>& entities) {
 	// check gunman collision with items
 	for (auto& e : entities) {
-		// try to cast to pickup
-		auto pickup = std::dynamic_pointer_cast<entities::pickup>(e);
-		if (pickup != nullptr and CheckCollisionRecs(gunman_->get_rectangle(), e->get_rectangle())) {
-			item_ = pickup;
+		auto pickup = dynamic_cast<entities::pickup*>(e.get());
+		if (pickup != nullptr and CheckCollisionRecs(e->get_rectangle(), gunman_->get_rectangle())) {
 			e->set_remove(true);
+			item_ = std::dynamic_pointer_cast<entities::pickup>(e);
 		}
 	}
 }
-
 void player::draw_player(){
 	// draw gunman
 	gunman_->draw();
@@ -85,7 +96,14 @@ void player::draw_player(){
 		for (auto i = 0; i < gunman_->get_health(); ++i) {
 			heart_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
+		
 		}
+		// draw item hud, underneath the heart
+		x += item_->get_animation().get_frame_width();
+		auto y = heart_pos.y + (item_->get_animation().get_frame_height() * 1.5);
+		item_->draw(x, y);
+
+
 	}
 	else {
 		float x = 115;
@@ -97,9 +115,13 @@ void player::draw_player(){
 			heart_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
 		}
+
+
+		// draw item hud, underneath the heart
+		x += item_->get_animation().get_frame_width();
+		auto y = heart_pos.y + (item_->get_animation().get_frame_height() * 1.5);
+		item_->draw(x, y);
 	}
-	// draw item hud
-	item_->draw();
 }
 
 void player::draw_win(){
@@ -138,6 +160,7 @@ void player::reset_player(){
 	// reset the position
 	gunman_->reset(player_start_pos_.x, player_start_pos_.y);
 	weapon_->replenish();
+	item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));
 	// reset the gun position
 	auto gunamn_centre_x = gunman_->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();

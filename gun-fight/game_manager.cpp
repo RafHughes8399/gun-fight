@@ -118,6 +118,7 @@ void game_manager::end_round() {
 	Sound s = LoadSound(config::DEATH_SOUND);
 	PlaySound(s);
 	round_over_ = true;
+	last_spawn_time  = 0;
 }
 
 bool game_manager::is_round_over(){
@@ -183,7 +184,7 @@ void game_manager::build_level(){
 	if (category <= 0.5) { category = 0; }
 	else { category = ceil(category); }
 	/**  determine the number of obstacles to generate */
-	auto obstacles_to_generate = 2 * (util::generate_random_int(0, 3));
+	auto obstacles_to_generate = 2 * (util::generate_random_int(0, 4));
 	auto builder = std::make_unique<level::level>(level::level(category, obstacles_to_generate));
 
 	/**  build the environment by placing obstacles randomly */
@@ -203,9 +204,8 @@ void game_manager::spawn_items(){
 	if (time - last_spawn_time >= config::ITEM_SPAWN_DELAY) {
 		last_spawn_time = time;
 		// pick two random items (use an enum)
-		auto item_1_type = util::generate_random_int(0, 4);
-		auto item_2_type = util::generate_random_int(0, 4);
-
+		auto item_1_type = 0;// util::generate_random_int(0, 4); - pending implementation of other items 
+		auto item_2_type = 0;// util::generate_random_int(0, 4); - pending implementation of other items
 
 		// generate the two positions
 		auto item_1_x = util::generate_random_num<float>(config::P1_ITEM_SPAWN_X + config::ITEM_WIDTH, config::P1_ITEM_SPAWN_WIDTH - config::ITEM_WIDTH);

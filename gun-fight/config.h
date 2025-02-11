@@ -114,6 +114,9 @@ namespace config {
 	inline static auto GUNMAN1_FIRING = std::pair<int, int>{ KEY_F, KEY_R };
 	inline static auto GUNMAN2_FIRING = std::pair<int, int>{ KEY_COMMA, KEY_PERIOD};
 
+
+	inline static int P1_ITEM_KEY = KEY_E;
+	inline static int P2_ITEM_KEY = KEY_SEMICOLON;
 	//revolver attributes
 	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
@@ -223,7 +226,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 10.0; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 8.5; //subject to change
 
 	// score numbers animation info
 	inline const char* SCORE_PATH = "sprites/numbers.png";
@@ -251,7 +254,7 @@ namespace config {
 	inline const char* DYNAMITE_PICKUP_PATH = "sprites/dynamite-pickup.png";
 	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour-pickup.png";
 	inline const char* AMMO_PICKUP_PATH = "sprites/ammo-pickup.png";
-	inline const double ITEM_SPAWN_DELAY = 6.5; // in seconds.
+	inline const double ITEM_SPAWN_DELAY = 10.5; // in seconds.
 	
 	enum item_codes : int{
 		HEALTH = 0,

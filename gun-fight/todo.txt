@@ -161,4 +161,31 @@ use the parts of the screen that are not used for the obstacle spawning
 
 -> check if the player collides with an item, if it does, add to the inventory
 
--> 
+-> item update, draw and use
+
+-> check the cactus 
+
+item use needs the player and the entities not the gunman
+-> draw the item in the hud, then use the item, 
+-> limit extra health to 3
+
+-> draw the strawmaan and the ammo 
+
+
+-> make 
+
+
+
+
+
+
+-> draw the item furhter down, more of a gap between it and the hearts x 
+
+
+-> use isnt removing the item, double check the jey  x
+-> reduce the spawn rate x
+-> reset the item and timer on round reset x
+-> gunman needs an armour field and animation 
+-> itme use, just do dynamic cast and check each isntance
+
+-> max two lives not three
