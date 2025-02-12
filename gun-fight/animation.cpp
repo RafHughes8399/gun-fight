@@ -105,6 +105,7 @@ void animation::end_frame(){
 void animation::default_frame(){
 	frame_.x = 0.0;
 	frame_.y = 0.0;
+	current_frame_ = 0;
 }
 
 void animation::play_animation(){

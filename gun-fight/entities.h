@@ -76,11 +76,11 @@ namespace entities {
 	public:
 		/**  constructors and destructors */
 		gunman(float x, float y, const char* path, int health, int direction)
-			: entity(x, y, path), health_(health), direction_(direction) {
+			: entity(x, y, path), health_(health), direction_(direction), armour_(0) {
 			animation_ = animation(path, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
 		};
 		gunman(const gunman& other)
-			:entity(other), health_(other.health_), direction_(other.direction_) {
+			:entity(other), health_(other.health_), direction_(other.direction_), armour_(0) {
 		};
 		/**  unique accessors and behaviours */
 		int get_health() const;
@@ -88,7 +88,8 @@ namespace entities {
 		void take_damage(int damage);
 		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
 		void reset(float x, float y);
-
+		int get_armour();
+		void increase_armour(int value);
 		/**  operator overloads */
 		bool operator==(const entity& other) override;
 
@@ -100,6 +101,7 @@ namespace entities {
 	private:
 		int health_;
 		const int direction_; // left facing is 1, right facing is -1 
+		int armour_;
 	};
 
 
@@ -184,7 +186,22 @@ namespace entities {
 		};
 		void take_damage(int damage) override;
 	private:
+		
+	};
 
+	class strawman : public obstacle {
+	public:
+		strawman(float x, float y, const char* path, int direction)
+			: obstacle(x, y, path, config::STRAWMAN_HEALTH, config::STRAWMAN_CATEGORY, config::STRAWMAN_PENETRATION), direction_(direction) {
+			animation_ = animation(path, config::STRAWMAN_WIDTH, config::STRAWMAN_HEIGHT);
+		};
+		strawman(const strawman& other)
+			: obstacle(other), direction_(other.direction_) {
+		};
+
+		int get_direction();
+	private:
+		int direction_;
 	};
 	/** definition of wagon obstacle class, can move vertically on the y-axis */
 	class wagon : public moveable_obstacle {
@@ -509,9 +526,7 @@ namespace entities {
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 		void draw(float x, float y);
-		virtual void use(std::shared_ptr<gunman> gunman) = 0; // for health changes
-		virtual void use(std::shared_ptr<weapon> weapon) = 0; // for ammo and weapon changes
-		virtual void use(std::vector<std::shared_ptr<entity>>& entities) = 0; // for  strawman
+		virtual void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) = 0; // for health changes
 
 		bool operator==(const entity& other) override;
 
@@ -524,9 +539,7 @@ namespace entities {
 			: pickup(x, y, path) {
 			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
 		}
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 	};
 	class empty_pickup : public pickup {
@@ -534,9 +547,7 @@ namespace entities {
 		empty_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		};
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 	};
 	class rifle_pickup : public pickup {
@@ -544,9 +555,7 @@ namespace entities {
 		rifle_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 	};
 	class dynamite_pickup : public pickup {
@@ -554,9 +563,7 @@ namespace entities {
 		dynamite_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 	};
 	class armour_pickup : public pickup {
@@ -564,9 +571,7 @@ namespace entities {
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 
 	};
@@ -575,18 +580,14 @@ namespace entities {
 		ammo_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
 		}
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
 	};
 
 	class strawman_pickup :public pickup {
 	public:
 	private:
-		void use(std::shared_ptr<gunman> gunman) override; // for health changes
-		void use(std::shared_ptr<weapon> weapon) override; // for ammo and weapon changes
-		void use(std::vector<std::shared_ptr<entity>>& entities) override; // for  strawman
+		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	};
 
 		

@@ -111,7 +111,6 @@ void entities::revolver::replenish() {
 	state_ = std::make_unique<loaded_state>(loaded_state());
 	animation_.default_frame();
 	cooldown_ = 0;
-
 }
 void entities::revolver::draw(int x, int y) {
 	Vector2 pos = { x,y };

@@ -46,86 +46,53 @@ void entities::pickup::draw(float x, float y) {
 }
 
 /** empty pickup use */
-void entities::empty_pickup::use(std::shared_ptr<gunman> gunman)
-{
+void entities::empty_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
+	return;
 }
 
-void entities::empty_pickup::use(std::shared_ptr<weapon> weapon)
-{
-}
-void entities::empty_pickup::use(std::vector<std::shared_ptr<entities::entity>>& entities) {}
-
-
-/** health pickup use */
-void entities::health_pickup::use(std::shared_ptr<entities::gunman> gunman) {
-	// can have a max health of 3
-	if (gunman->get_health() < 3) {
+/** increase player health to a max of two */
+void entities::health_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) {
+	// can have a max health of 2
+	if (gunman->get_health() < 2) {
 		gunman->take_damage(-1);
 	}
 }
-
-void entities::health_pickup::use(std::shared_ptr<entities::weapon> weapon) {
+/** change the player's weapon to a rifle */
+void entities::rifle_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
 	return;
 }
 
-
-void entities::health_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
+/**  change the player's weapon to dynamite */
+void entities::dynamite_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
 	return;
 }
 
-void entities::rifle_pickup::use(std::shared_ptr<gunman> gunman){
+/**  give the player armour if not wearing */
+void entities::armour_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) {
+	if (gunman->get_armour() < 1) {
+		gunman->increase_armour(1);
+	}
 	return;
 }
 
-void entities::rifle_pickup::use(std::shared_ptr<weapon> weapon){
+/** replenish the player's ammo */
+void entities::ammo_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
+	weapon->replenish();
 	return;
 }
 
-void entities::rifle_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
-	return;
-}
+/**  create a 1 health strawman obstacle in front of the player  */
+void entities::strawman_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
+	// left facing gunman
+	if (gunman->get_direction() == 1) {
+		float x = gunman->get_x() + (gunman->get_animation().get_frame_width() * 1.5);
+		entities.push_back(std::make_shared<entities::strawman>(strawman(x, gunman->get_y(), config::STRAWMAN_LEFT_PATH, gunman->get_direction())));
+	}
 
-void entities::dynamite_pickup::use(std::shared_ptr<gunman> gunman){
-	return;
-}
-
-void entities::dynamite_pickup::use(std::shared_ptr<weapon> weapon){
-	return;
-}
-
-void entities::dynamite_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
-	return;
-}
-
-void entities::armour_pickup::use(std::shared_ptr<gunman> gunman){
-	return;
-}
-
-void entities::armour_pickup::use(std::shared_ptr<weapon> weapon){
-	return;
-}
-
-void entities::armour_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
-	return;
-}
-
-void entities::ammo_pickup::use(std::shared_ptr<gunman> gunman){
-	return;
-}
-void entities::ammo_pickup::use(std::shared_ptr<weapon> weapon){
-	return;
-}
-void entities::ammo_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
-	return;
-}
-
-void entities::strawman_pickup::use(std::shared_ptr<gunman> gunman){
-	return;
-}
-
-void entities::strawman_pickup::use(std::shared_ptr<weapon> weapon){
-	return;
-}
-void entities::strawman_pickup::use(std::vector<std::shared_ptr<entity>>& entities){
+	// right facing gunman
+	else {
+		float x = gunman->get_x() - (gunman->get_animation().get_frame_width() / 2);
+		entities.push_back(std::make_shared<entities::strawman>(strawman(x, gunman->get_y(), config::STRAWMAN_RIGHT_PATH, gunman->get_direction())));
+	}
 	return;
 }

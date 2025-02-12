@@ -186,3 +186,8 @@ void entities::barrel::take_damage(int damage) {
 	}
 
 }
+
+
+int entities::strawman::get_direction(){
+	return direction_;
+}

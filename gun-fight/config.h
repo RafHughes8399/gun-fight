@@ -168,7 +168,10 @@ namespace config {
 	
 	inline const float DYNAMITE_DET_RADIUS = 0.0;
 	inline const float DYNAMITE_TIMER = 0.0; 
+
 	// obstacle attributes
+
+	// tumbleweed 
 	inline const int TUMBLEWEED_HEALTH = 1;
 	inline const int TUMBLEWEED_CATEGORY = 0;
 	inline const char* TUMBLEWEED_PATH = "sprites/tumbleweed.png";
@@ -182,6 +185,9 @@ namespace config {
 	inline const int TUMBLEWEED_LIFESPAN_UPPER = 450; // how many frames the tumbleweed will last, incorporate into the update method
 	inline const int TUMBLEWEED_AMPLITUDE = 25;
 
+
+	// cactus 
+
 	inline const int CACTUS_HEALTH = 2;
 	inline const int CACTUS_CATEGORY = 1;
 	inline const char* CACTUS_PATH = "sprites/cactus.png";
@@ -191,6 +197,8 @@ namespace config {
 	inline const int CACTUS_ANIMATION_LENGTH = 2;
 	inline const int CACTUS_ANIMATIONS = 1;
 
+
+	// barrel
 	inline const int BARREL_HEALTH = 3;
 	inline const int BARREL_CATEGORY = 2;
 	inline const char* BARREL_PATH = "sprites/barrel.png";
@@ -200,26 +208,37 @@ namespace config {
 	inline const int BARREL_ANIMATION_LENGTH = 3;
 	inline const int BARREL_ANIMATIONS = 1;
 
+
+	// wagon
 	inline const int WAGON_HEALTH = 5;
 	inline const int WAGON_CATEGORY = 3;
 	inline const char* WAGON_UP_PATH = "sprites/wagon-up.png";
 	inline const char* WAGON_DOWN_PATH = "sprites/wagon-down.png";
 	inline const int WAGON_PENETRATION = 3;
-	
-	
 	inline const float WAGON_UP_WIDTH = 114;
 	inline const float WAGON_UP_HEIGHT = 134;
-
 	inline const float WAGON_DOWN_WIDTH = 114;
 	inline const float WAGON_DOWN_HEIGHT = 170;
 	inline const float WAGON_SPEED = 3.2;
-
 	inline const int WAGON_ANIMATION_LENGTH = 10;
 	inline const int WAGON_ANIMATIONS = 1;
 
+
+	// train 
 	inline const int TRAIN_HEALTH = 100;
 	inline const int TRAIN_SPEED = 35;
 	inline const int TRAIN_DELAY = 150; // the delay between trains travelling across the screen
+
+
+	// strawman
+	
+	inline const int STRAWMAN_HEALTH = 1;
+	inline const int STRAWMAN_CATEGORY = -1; // so it cannot be accidentally generated 
+	inline const char*  STRAWMAN_LEFT_PATH = "sprites/strawman-left.png";
+	inline const char*  STRAWMAN_RIGHT_PATH = "sprites/strawman-right.png";
+	inline const int STRAWMAN_PENETRATION = 3;
+	inline const float STRAWMAN_WIDTH = GUNMAN_WIDTH;
+	inline const float STRAWMAN_HEIGHT = GUNMAN_HEIGHT;
 
 	// obstacle generation bounds 
 	inline const int OBSTACLE_RANGE_X = SCREEN_WIDTH_HALF - 200;

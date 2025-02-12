@@ -182,10 +182,39 @@ item use needs the player and the entities not the gunman
 -> draw the item furhter down, more of a gap between it and the hearts x 
 
 
--> use isnt removing the item, double check the jey  x
+-> use isnt removing the item, double check the key  x
 -> reduce the spawn rate x
 -> reset the item and timer on round reset x
 -> gunman needs an armour field and animation 
 -> itme use, just do dynamic cast and check each isntance
 
 -> max two lives not three
+
+-> armour - max one
+-> strawman
+-> ammo
+
+-> gave gunman armour
+-> gunman reset and gunman animation change when gets armour, and gunman take damage 
+-> created strawman class
+-> changed how item.use handles paramters
+-> implemented health, armour, ammo and strawman use
+
+
+-> do i draw armour icons ???
+
+TODO:
+ -> draw strawman, armour and ammo icons
+ -> draw gunman armour animation (ned kelly vibes)
+ -> test these items
+
+ -> implement rifle and rifle bullet
+ -> implement the rifle item
+
+ -> draw the rifle ammo hud component, rifle reticle rifle bullet and rifle item
+ -> test rifle pickup, firing, reloading penetration and drawing
+ 
+ -> do the same for dynamite
+
+ -> fix the revolver ammo display bug
+ 

@@ -61,10 +61,7 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 	// check if an item is used
 	if (IsKeyPressed(item_use_)) {
 		// use the item
-		auto health_item = dynamic_cast<entities::health_pickup*>(item_.get());
-		if (health_item != nullptr) {
-			health_item->use(gunman_);
-		}
+		item_->use(gunman_, weapon_, entities);
 		// remove the item from the slot 
 		std::cout << "remove item" << std::endl;
 		item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));

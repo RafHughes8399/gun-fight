@@ -21,6 +21,7 @@ int entities::gunman::get_direction() const {
 	return direction_;
 }
 bool entities::gunman::update(std::vector<std::shared_ptr<entity>>& entities) { // make this a pointer
+	// likewise switch back to the regular if the gunman has no armour
 	return health_ > 0;
 }
 bool entities::gunman::collide(entities::entity& other) {
@@ -78,7 +79,18 @@ bool entities::gunman::move(Vector2& movement_vector, std::vector<std::shared_pt
 	return false;
 }
 void entities::gunman::take_damage(int damage) {
-	health_ -= damage;
+	/**  if the player has armour it absorbs the entirety of the damage */
+	if (armour_ > 0) {
+		armour_ -= damage;
+		/**  switch the animation back if the armour is depleted */
+		if (armour_ == 0) {
+			animation_.select_animaiton(0);
+		}
+	}
+	else {
+		/**  otherwise the damage is directed to the player health */
+		health_ -= damage;
+	}
 
 }
 void entities::gunman::reset(float x, float y) {
@@ -86,12 +98,18 @@ void entities::gunman::reset(float x, float y) {
 	position_.x = x;
 	position_.y = y;
 	health_ = config::GUNMAN_HEALTH;
-	// reset the animation
-	if (direction_ == 1) {
-		animation_ = animation(config::P1_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
-	
-	}
-	else {
-		animation_ = animation(config::P2_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
-	}
+	armour_ = 0;
+	animation_.default_frame();
 }
+
+int entities::gunman::get_armour(){
+	return armour_;
+}
+
+void entities::gunman::increase_armour(int value){
+	armour_ += value;
+	// switch to the armour animation
+	animation_.select_animaiton(1);
+}
+
+
