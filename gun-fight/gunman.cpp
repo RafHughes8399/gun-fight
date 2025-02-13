@@ -99,7 +99,12 @@ void entities::gunman::reset(float x, float y) {
 	position_.y = y;
 	health_ = config::GUNMAN_HEALTH;
 	armour_ = 0;
-	animation_.default_frame();
+	if (direction_ == 1) {
+		animation_ = animation(config::P1_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);
+	}
+	else {
+		animation_ = animation(config::P2_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS);	
+	}
 }
 
 int entities::gunman::get_armour(){

@@ -205,7 +205,7 @@ item use needs the player and the entities not the gunman
 
 TODO:
  -> draw strawman, armour and ammo icons
- -> draw gunman armour animation (ned kelly vibes)
+ -> draw gunman armour animation (ned kelly vibes) - done p1, need to do p2 
  -> test these items
 
  -> implement rifle and rifle bullet
@@ -217,4 +217,6 @@ TODO:
  -> do the same for dynamite
 
  -> fix the revolver ammo display bug
- 
+
+
+ -> issue with the drawing of armour

@@ -72,7 +72,7 @@ namespace config {
 	inline const float GUNMAN_SPEED = 2.5;
 	inline const int GUNMAN_HEALTH = 1;
 	inline const float GUNMAN_ANIMAITON_LENGTH = 15;
-	inline const float GUNMAN_ANIMATIONS = 1;
+	inline const float GUNMAN_ANIMATIONS = 2;
 
 	inline const char* P1_PATH = "sprites/gunman-revolver-left.png";
 	inline const char* P2_PATH = "sprites/gunman-revolver-right.png";
@@ -269,18 +269,18 @@ namespace config {
 	inline const float ITEM_WIDTH = 50;
 	inline const float ITEM_HEIGHT = 50;
 	inline const char* HEALTH_PICKUP_PATH = "sprites/health-pickup.png";
+	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour_pickup.png";
 	inline const char* RIFLE_PICKUP_PATH = "sprites/rifle-pickup.png";
 	inline const char* DYNAMITE_PICKUP_PATH = "sprites/dynamite-pickup.png";
-	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour-pickup.png";
 	inline const char* AMMO_PICKUP_PATH = "sprites/ammo-pickup.png";
-	inline const double ITEM_SPAWN_DELAY = 10.5; // in seconds.
+	inline const double ITEM_SPAWN_DELAY = 10.5; // in seconds, 10.5 for testing purposes, should be longer in reality
 	
 	enum item_codes : int{
 		HEALTH = 0,
-		RIFLE = 1,
-		DYNAMITE = 2,
-		ARMOUR = 3,
-		AMMO = 4
+		ARMOUR = 1,
+		AMMO = 2,
+		RIFLE = 3,
+		DYNAMITE = 4
 		// add more as needed
 	};
 

@@ -204,9 +204,12 @@ void game_manager::spawn_items(){
 	if (time - last_spawn_time >= config::ITEM_SPAWN_DELAY) {
 		last_spawn_time = time;
 		// pick two random items (use an enum)
-		auto item_1_type = 0;// util::generate_random_int(0, 4); - pending implementation of other items 
-		auto item_2_type = 0;// util::generate_random_int(0, 4); - pending implementation of other items
+		auto item_1_type = util::generate_random_int(0, 1);  // currently either health or armour 
+		auto item_2_type = util::generate_random_int(0, 1); // currently either health or armour
 
+
+		std::cout << "item 1 " << item_1_type << std::endl;
+		std::cout << "item 2 " << item_2_type << std::endl;
 		// generate the two positions
 		auto item_1_x = util::generate_random_num<float>(config::P1_ITEM_SPAWN_X + config::ITEM_WIDTH, config::P1_ITEM_SPAWN_WIDTH - config::ITEM_WIDTH);
 		auto item_1_y = util::generate_random_num<float>(config::P1_ITEM_SPAWN_Y + config::ITEM_WIDTH, config::P1_ITEM_SPAWN_HEIGHT - config::ITEM_HEIGHT);
@@ -216,46 +219,40 @@ void game_manager::spawn_items(){
 		switch (item_1_type) {
 			case config::item_codes::HEALTH:
 				game_entities_.push_back(std::make_shared<entities::health_pickup>(item_1_x, item_1_y, config::HEALTH_PICKUP_PATH));
-				std::cout << "spawn health 1 " << std::endl;
-				break;
-			case config::item_codes::RIFLE:
-				game_entities_.push_back(std::make_shared<entities::rifle_pickup>(item_1_x, item_1_y, config::RIFLE_PICKUP_PATH));
-				std::cout << "spawn rifle 1 " << std::endl;
-				break;
-			case config::item_codes::DYNAMITE:
-				game_entities_.push_back(std::make_shared<entities::dynamite_pickup>(item_1_x, item_1_y, config::DYNAMITE_PICKUP_PATH));
-				std::cout << "spawn rifle 1 " << std::endl;
+				std::cout << "item 1 heath " << std::endl;
 				break;
 			case config::item_codes::ARMOUR:
 				game_entities_.push_back(std::make_shared<entities::armour_pickup>(item_1_x, item_1_y, config::ARMOUR_PICKUP_PATH));
-				std::cout << "spawn armour 1 " << std::endl;
+				std::cout << "item 1 armour " << std::endl;
 				break;
 			case config::item_codes::AMMO:
 				game_entities_.push_back(std::make_shared<entities::ammo_pickup>(item_1_x, item_1_y, config::AMMO_PICKUP_PATH));
-				std::cout << "spawn ammo 1 " << std::endl;
+				break;
+			case config::item_codes::RIFLE:
+				game_entities_.push_back(std::make_shared<entities::rifle_pickup>(item_1_x, item_1_y, config::RIFLE_PICKUP_PATH));
+				break;
+			case config::item_codes::DYNAMITE:
+				game_entities_.push_back(std::make_shared<entities::dynamite_pickup>(item_1_x, item_1_y, config::DYNAMITE_PICKUP_PATH));
 				break;
 		}
 		// spawn an item for p2
 		switch (item_2_type) {
 			case config::item_codes::HEALTH:
 				game_entities_.push_back(std::make_shared<entities::health_pickup>(item_2_x, item_2_y, config::HEALTH_PICKUP_PATH));
-				std::cout << "spawn health 2 " << std::endl;
-				break;
-			case config::item_codes::RIFLE:
-				game_entities_.push_back(std::make_shared<entities::rifle_pickup>(item_2_x, item_2_y, config::RIFLE_PICKUP_PATH));
-				std::cout << "spawn rifle 2 " << std::endl;
-				break;
-			case config::item_codes::DYNAMITE:
-				game_entities_.push_back(std::make_shared<entities::dynamite_pickup>(item_2_x, item_2_y, config::DYNAMITE_PICKUP_PATH));
-				std::cout << "spawn dynamite 2 " << std::endl;
+				std::cout << "item 2 health" << std::endl;
 				break;
 			case config::item_codes::ARMOUR:
 				game_entities_.push_back(std::make_shared<entities::armour_pickup>(item_2_x, item_2_y, config::ARMOUR_PICKUP_PATH));
-				std::cout << "spawn armour 2 " << std::endl;
+				std::cout << "item 2 armour" << std::endl;
 				break;
 			case config::item_codes::AMMO:
 				game_entities_.push_back(std::make_shared<entities::ammo_pickup>(item_2_x, item_2_y, config::AMMO_PICKUP_PATH));
-				std::cout << "spawn ammo 2 " << std::endl;
+				break;
+			case config::item_codes::RIFLE:
+				game_entities_.push_back(std::make_shared<entities::rifle_pickup>(item_2_x, item_2_y, config::RIFLE_PICKUP_PATH));
+				break;
+			case config::item_codes::DYNAMITE:
+				game_entities_.push_back(std::make_shared<entities::dynamite_pickup>(item_2_x, item_2_y, config::DYNAMITE_PICKUP_PATH));
 				break;
 		}
 	}

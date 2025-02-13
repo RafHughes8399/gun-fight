@@ -570,6 +570,7 @@ namespace entities {
 	public:
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
+			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
 		}
 		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
