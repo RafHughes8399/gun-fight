@@ -69,7 +69,7 @@ namespace config {
 	inline const int PLAYABLE_HEIGHT = SCREEN_HEIGHT - HUD_HEIGHT - PLAYABLE_Y;
 
 	// gunman attributes
-	inline const float GUNMAN_SPEED = 2.5;
+	inline const float GUNMAN_SPEED = 2.2;
 	inline const int GUNMAN_HEALTH = 1;
 	inline const float GUNMAN_ANIMAITON_LENGTH = 15;
 	inline const float GUNMAN_ANIMATIONS = 2;
@@ -131,7 +131,7 @@ namespace config {
 	// bullet attributes;
 	inline const float BULLET_WIDTH = 25;
 	inline const float BULLET_HEIGHT = 12;
-	inline const float BULLET_SPEED = 13.6;
+	inline const float BULLET_SPEED = 14;
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
 	// rifle attributes TODO: put in values 
@@ -245,7 +245,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 8.5; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 110; //subject to change
 
 	// score numbers animation info
 	inline const char* SCORE_PATH = "sprites/numbers.png";
@@ -269,7 +269,7 @@ namespace config {
 	inline const float ITEM_WIDTH = 50;
 	inline const float ITEM_HEIGHT = 50;
 	inline const char* HEALTH_PICKUP_PATH = "sprites/health-pickup.png";
-	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour_pickup.png";
+	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour-pickup.png";
 	inline const char* RIFLE_PICKUP_PATH = "sprites/rifle-pickup.png";
 	inline const char* DYNAMITE_PICKUP_PATH = "sprites/dynamite-pickup.png";
 	inline const char* AMMO_PICKUP_PATH = "sprites/ammo-pickup.png";

@@ -29,11 +29,9 @@ bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_
 		// calculate the Euclidean distance between the centers
 		float distance = std::sqrt(std::pow(insert_centre.x - current_centre.x, 2) + std::pow(insert_centre.y - current_centre.y, 2));
 
-		// calculate the minimum required distance
-		float min_distance = std::sqrt(std::pow((insert_rectangle.width + current_rectangle.width) / 2, 2) + std::pow((insert_rectangle.height + current_rectangle.height) / 2, 2)) + config::MINIMUM_OBSTACLE_DISTANCE;
 
 		// check if the distance is less than the minimum required distance
-		if (distance < min_distance) {
+		if (distance < config::MINIMUM_OBSTACLE_DISTANCE) {
 			return false;
 		}
 	}

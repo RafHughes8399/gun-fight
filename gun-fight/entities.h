@@ -519,6 +519,7 @@ namespace entities {
 
 		pickup(float x, float y, const char* path)
 			: entity(x, y, path), state_(std::make_unique<on_ground>(on_ground())) {
+			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
 		};
 		pickup(const pickup& other)
 			:entity(other), state_(other.state_->clone()) {
@@ -537,7 +538,6 @@ namespace entities {
 	public:
 		health_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
-			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
 		}
 		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
@@ -570,7 +570,6 @@ namespace entities {
 	public:
 		armour_pickup(float x, float y, const char* path)
 			: pickup(x, y, path) {
-			animation_ = animation(path, config::ITEM_WIDTH, config::ITEM_HEIGHT);
 		}
 		void use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	private:
