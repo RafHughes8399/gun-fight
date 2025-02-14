@@ -249,7 +249,7 @@ namespace config {
 	inline const int OBSTACLE_RANGE_Y = PLAYABLE_Y;
 	inline const int OBSTACLE_RANGE_WIDTH = 400;
 	inline const int OBSTACLE_RANGE_HEIGHT = PLAYABLE_HEIGHT;
-	inline const float MINIMUM_OBSTACLE_DISTANCE = 110; //subject to change
+	inline const float MINIMUM_OBSTACLE_DISTANCE = 6; //subject to change
 
 	// score numbers animation info
 	inline const char* SCORE_PATH = "sprites/numbers.png";

@@ -136,10 +136,10 @@ bool entities::revolver::collide(entity& other) {
 /**  rifle implementation */
 std::shared_ptr<entities::projectile> entities::rifle::create_bullet(float x, float y, int direction){
 	if (direction == 1) {
-		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_LEFT_PATH, direction));
+		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_LEFT, direction));
 	}
 	else {
-		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_RIGHT_PATH, direction));
+		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_RIGHT, direction));
 	}
 }
 

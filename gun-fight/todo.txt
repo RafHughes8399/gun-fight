@@ -235,3 +235,11 @@ TODO:
  -> figure out how to draw the reticle
  -> give the player a reticle when they pickup the rifel, take it away when they no longer have it 
  -> draw until it 
+
+
+
+
+
+
+ -> test rifle 
+ -> redo ammo hud

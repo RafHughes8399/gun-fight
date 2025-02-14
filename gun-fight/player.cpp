@@ -157,7 +157,8 @@ void player::reset_player(){
 	// reset the position
 	gunman_->reset(player_start_pos_.x, player_start_pos_.y);
 	
-	// reset the weapon to a revolver
+	// reset the weapon to a revolver, the animation is reset in gunman_->reset()
+	weapon_ = std::make_shared<entities::revolver>(entities::revolver(weapon_->get_x(), weapon_->get_y(), config::REVOLVER_PATH));
 	weapon_->replenish();
 	
 	// reset the gun position

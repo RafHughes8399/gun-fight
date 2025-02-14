@@ -16,22 +16,16 @@ float clamp(float value, float min, float max) {
 }
 /** checks if the obstacle can be added at the proposed position, some bugs persist, TODO change */
 bool can_insert_obstacle(Rectangle insert_rectangle, const std::set<std::unique_ptr<entities::entity>, decltype(util::cmp)>& entities) {
-	// find the center point of the insert rectangle
-	Vector2 insert_centre = { insert_rectangle.x + (insert_rectangle.width / 2),
-							 insert_rectangle.y + (insert_rectangle.height / 2) };
-
 	for (auto& e : entities) {
-		// find the center point of the current rectangle
+		// Get the current rectangle
 		Rectangle current_rectangle = e->get_rectangle();
-		Vector2 current_centre = { current_rectangle.x + (current_rectangle.width / 2),
-								  current_rectangle.y + (current_rectangle.height / 2) };
 
-		// calculate the Euclidean distance between the centers
-		float distance = std::sqrt(std::pow(insert_centre.x - current_centre.x, 2) + std::pow(insert_centre.y - current_centre.y, 2));
+		// Calculate the distances between the edges of the rectangles
+		float deltaX = std::max(insert_rectangle.x, current_rectangle.x) - std::min(insert_rectangle.x + insert_rectangle.width, current_rectangle.x + current_rectangle.width);
+		float deltaY = std::max(insert_rectangle.y, current_rectangle.y) - std::min(insert_rectangle.y + insert_rectangle.height, current_rectangle.y + current_rectangle.height);
 
-
-		// check if the distance is less than the minimum required distance
-		if (distance < config::MINIMUM_OBSTACLE_DISTANCE) {
+		// If the distance is less than the minimum required distance, return false
+		if (deltaX < config::MINIMUM_OBSTACLE_DISTANCE && deltaY < config::MINIMUM_OBSTACLE_DISTANCE) {
 			return false;
 		}
 	}
@@ -65,13 +59,15 @@ void level::level::build_tumbleweed(){
 		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT);
 		auto tumbleweed = std::make_unique<entities::tumbleweed>(entities::tumbleweed(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
-
-		while (not can_insert_obstacle(tumbleweed->get_rectangle(), level_entities_)) {
+		auto num_attempts = 0;
+		while (not can_insert_obstacle(tumbleweed->get_rectangle(), level_entities_) and num_attempts < 20) {
 			tumbleweed->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::TUMBLEWEED_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::TUMBLEWEED_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::TUMBLEWEED_HEIGHT,config::OBSTACLE_RANGE_HEIGHT - config::TUMBLEWEED_HEIGHT));
+			++num_attempts;
 		}
-
-		level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
+		if (num_attempts < 20) {
+			level_entities_.insert(std::make_unique<entities::tumbleweed>(*tumbleweed.get()));
+		}
 	}
 }
 /**  the following methods have the same logic, just are separated by the obstacle that they place in the level */
@@ -88,13 +84,17 @@ void level::level::build_cacti(){
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 		
 		/**  until it can be inserted, generate a random position  */
-		while (not can_insert_obstacle(cactus->get_rectangle(), level_entities_)) {
+		auto num_attempts = 0;
+		while (not can_insert_obstacle(cactus->get_rectangle(), level_entities_) and num_attempts < 20) {
 
 			cactus->set_pos(static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_X + config::CACTUS_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::CACTUS_WIDTH)),
 				static_cast<float>(util::generate_random_num(config::OBSTACLE_RANGE_Y + config::CACTUS_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::CACTUS_HEIGHT)));
+			++num_attempts;
 		}
 		/**  if it can be inserted in the level, do so */
-		level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
+		if (num_attempts < 20) {
+			level_entities_.insert(std::make_unique<entities::cactus>(*cactus.get()));
+		}
 	}
 }
 
@@ -107,12 +107,17 @@ void level::level::build_barrels(){
 		auto barrel = std::make_unique<entities::barrel>(entities::barrel(
 			static_cast<float>(random_x), static_cast<float>(random_y)));
 
-		while (not can_insert_obstacle(barrel->get_rectangle(), level_entities_)) {
+		auto num_attempts = 0;
+		while (not can_insert_obstacle(barrel->get_rectangle(), level_entities_) and num_attempts < 20) {
 
 			barrel->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::BARREL_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::BARREL_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::BARREL_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::BARREL_HEIGHT));
+		
+			++num_attempts;
 		}
-		level_entities_.insert(std::make_unique<entities::barrel>(*barrel.get()));
+		if (num_attempts < 20) {
+			level_entities_.insert(std::make_unique<entities::barrel>(*barrel.get()));
+		}
 	}
 }
 
@@ -124,13 +129,17 @@ void level::level::build_wagons(){
 		auto random_y = util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT);
 		auto wagon = std::make_unique<entities::wagon>(entities::wagon(
 			static_cast<float>(random_x), static_cast<float>(random_y), 0.0, config::WAGON_SPEED));
-
-		while (not can_insert_obstacle(wagon->get_rectangle(), level_entities_)) {
+		
+		auto num_attempts = 0;
+		while (not can_insert_obstacle(wagon->get_rectangle(), level_entities_) and num_attempts < 20) {
 
 			wagon->set_pos(util::generate_random_num<float>(config::OBSTACLE_RANGE_X + config::WAGON_DOWN_WIDTH, config::OBSTACLE_RANGE_X + config::OBSTACLE_RANGE_WIDTH - config::WAGON_DOWN_WIDTH),
 				util::generate_random_num<float>(config::OBSTACLE_RANGE_Y + config::WAGON_DOWN_HEIGHT, config::OBSTACLE_RANGE_HEIGHT - config::WAGON_DOWN_HEIGHT));
+			++num_attempts;
 		}
-		level_entities_.insert(std::make_unique<entities::wagon>(*wagon.get()));
+		if (num_attempts < 20) {
+			level_entities_.insert(std::make_unique<entities::wagon>(*wagon.get()));
+		}
 	}
 }
 

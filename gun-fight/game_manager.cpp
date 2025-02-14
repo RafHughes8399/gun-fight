@@ -204,8 +204,8 @@ void game_manager::spawn_items(){
 	if (time - last_spawn_time >= config::ITEM_SPAWN_DELAY) {
 		last_spawn_time = time;
 		// pick two random items (use an enum)
-		auto item_1_type = util::generate_random_int(config::item_codes::HEALTH, config::item_codes::AMMO);  // currently either health or armour 
-		auto item_2_type = util::generate_random_int(config::item_codes::HEALTH, config::item_codes::AMMO);  // currently either health or armour 
+		auto item_1_type = util::generate_random_int(config::item_codes::HEALTH, config::item_codes::RIFLE);  // currently either health or armour 
+		auto item_2_type = util::generate_random_int(config::item_codes::HEALTH, config::item_codes::RIFLE);  // currently either health or armour 
 
 
 		// generate the two positions
