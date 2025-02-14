@@ -59,6 +59,14 @@ void entities::health_pickup::use(std::shared_ptr<gunman> gunman, std::shared_pt
 }
 /** change the player's weapon to a rifle */
 void entities::rifle_pickup::use(std::shared_ptr<gunman> gunman, std::shared_ptr<weapon> weapon, std::vector<std::shared_ptr<entity>>& entities){
+		// replace the weapon and the gunman animation
+	weapon = std::make_shared<entities::rifle>(entities::rifle(weapon->get_x(), weapon->get_y(), config::RIFLE_PATH));
+	if (gunman->get_direction() == 1) {
+		gunman->set_animation(animation(config::P1_RIFLE_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS));
+	}
+	else {
+		gunman->set_animation(animation(config::P2_RIFLE_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS));
+	}
 	return;
 }
 

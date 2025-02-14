@@ -156,14 +156,17 @@ bool player::is_dead(){
 void player::reset_player(){
 	// reset the position
 	gunman_->reset(player_start_pos_.x, player_start_pos_.y);
+	
+	// reset the weapon to a revolver
 	weapon_->replenish();
-	item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));
+	
 	// reset the gun position
 	auto gunamn_centre_x = gunman_->get_x() + config::GUNMAN_WIDTH / 2;
 	auto weapon_x = gunamn_centre_x + ((config::GUNMAN_WIDTH / 2) + config::BULLET_WIDTH) * gunman_->get_direction();
 	weapon_->set_pos(weapon_x, gunman_->get_y() + 45);
 
-
+	// reset the item to a clear one
+	item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));
 }
 
 int player::get_score(){

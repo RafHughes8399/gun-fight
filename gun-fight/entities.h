@@ -419,9 +419,6 @@ namespace entities {
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 
-		static Sound fire_sound_;
-		static Sound reload_sound_;
-
 	private:
 
 	};
@@ -447,8 +444,6 @@ namespace entities {
 		bool collide(entity& other) override;
 
 	private:
-		static std::pair<Sound, Sound> fire_reload_sounds_;
-
 	};
 	/**  class definition for dynamite weapon TODO implement */
 	class dynamite : public weapon {

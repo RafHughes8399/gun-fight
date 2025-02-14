@@ -61,7 +61,7 @@ namespace config {
 	inline const int SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
 
 	// bounds with hud 
-	inline const int HUD_WIDTH = SCREEN_WIDTH;
+	inline const int HUD_WIDTH = SCREEN_WIDTH; 
 	inline const int HUD_HEIGHT = 175;
 	inline const int PLAYABLE_X = 0;
 	inline const int PLAYABLE_Y = 50;
@@ -76,6 +76,8 @@ namespace config {
 
 	inline const char* P1_PATH = "sprites/gunman-revolver-left.png";
 	inline const char* P2_PATH = "sprites/gunman-revolver-right.png";
+	inline const char* P1_RIFLE_PATH = "sprites/gunman-rifle-left.png";
+	inline const char* P2_RIFLE_PATH = "sprites/gunman-rifle-right.png";
 	inline const float GUNMAN_HEIGHT = 111;
 	inline const float GUNMAN_WIDTH = 52;
 
@@ -134,10 +136,9 @@ namespace config {
 	inline const float BULLET_SPEED = 14;
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
-
 	// rifle attributes TODO: put in values 
 	inline const int RIFLE_AMMO = 4;
-	inline const int RIFLE_DAMAGE = 1;
+	inline const int RIFLE_DAMAGE = 2;
 	inline const int RIFLE_PENETRATION = 3;
 	inline const char* RIFLE_PATH = "sprites/rifle-clip.png";
 	inline const float RIFLE_ANIMATION_LENGTH = 1;
@@ -147,9 +148,9 @@ namespace config {
 	inline const int RIFLE_FIRE_RATE = 60;
 
 	// rifle bullet attributes
-	inline const char* RIFLE_BULLET_LEFT_PATH = "sprites/rifle-bullet-1.png";
-	inline const char* RIFLE_BULLET_RIGHT_PATH = "sprites/rifle-bullet-2.png";
-	inline const float RIFLE_BULLET_SPEED = 18;
+	inline const char* RIFLE_BULLET_LEFT = "sprites/rifle-bullet-1.png";
+	inline const char* RIFLE_BULLET_RIGHT = "sprites/rifle-bullet-2.png";
+	inline const float RIFLE_BULLET_SPEED = 16;
 	inline const float RIFLE_BULLET_WIDTH = 35;
 	inline const float RIFLE_BULLET_HEIGHT = 10;
 

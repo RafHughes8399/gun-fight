@@ -9,8 +9,7 @@
 
 
 /** initialising static variables */
-Sound entities::revolver::fire_sound_ = LoadSound(config::REVOLVER_FIRE_SOUND);
-Sound entities::revolver::reload_sound_ = LoadSound(config::REVOLVER_RELOAD_SOUND);
+
 /**  firing when the weapon is loaded */
 bool entities::weapon::loaded_state::fire(entities::weapon* w) {
 	if (w->cooldown_ == 0) {
