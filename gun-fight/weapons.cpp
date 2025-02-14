@@ -134,3 +134,46 @@ bool entities::revolver::update(std::vector<std::shared_ptr<entity>>& entities) 
 bool entities::revolver::collide(entity& other) {
 	return false;
 }
+/**  rifle implementation */
+std::shared_ptr<entities::projectile> entities::rifle::create_bullet(float x, float y, int direction){
+	if (direction == 1) {
+		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_LEFT_PATH, direction));
+	}
+	else {
+		return std::make_shared<entities::rifle_bullet>(entities::rifle_bullet(x, y, config::RIFLE_BULLET_RIGHT_PATH, direction));
+	}
+}
+
+
+// TODO find rifle sounds
+bool entities::rifle::fire(){
+	if (state_->fire(this)) {
+		Sound s = LoadSound(config::REVOLVER_FIRE_SOUND);
+		PlaySound(s);
+		return true;
+	}
+	return false;
+}
+
+bool entities::rifle::reload(){
+	Sound s = LoadSound(config::REVOLVER_RELOAD_SOUND);
+	PlaySound(s);
+	return state_->reload(this);
+}
+
+void entities::rifle::replenish(){
+}
+
+void entities::rifle::draw(int x, int y){
+}
+
+void entities::rifle::reset_cooldown(){
+}
+
+bool entities::rifle::update(std::vector<std::shared_ptr<entity>>& entities){
+	return false;
+}
+
+bool entities::rifle::collide(entity& other){
+	return false;
+}

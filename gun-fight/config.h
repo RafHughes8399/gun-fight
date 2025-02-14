@@ -134,21 +134,24 @@ namespace config {
 	inline const float BULLET_SPEED = 14;
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
+
 	// rifle attributes TODO: put in values 
-	inline const int RIFLE_AMMO = 1;
+	inline const int RIFLE_AMMO = 4;
 	inline const int RIFLE_DAMAGE = 1;
-	inline const int RIFLE_PENETRATION = 1;
-	inline const char* RIFLE_PATH = "";
+	inline const int RIFLE_PENETRATION = 3;
+	inline const char* RIFLE_PATH = "sprites/rifle-clip.png";
 	inline const float RIFLE_ANIMATION_LENGTH = 1;
 	inline const float RIFLE_ANIMATIONS = 1;
-	inline const float RIFLE_WIDTH = 1;
-	inline const float RIFLE_HEIGHT = 1;
-	inline const int RIFLE_FIRE_RATE = 1;
+	inline const float RIFLE_WIDTH = 150;
+	inline const float RIFLE_HEIGHT = 150;
+	inline const int RIFLE_FIRE_RATE = 60;
 
 	// rifle bullet attributes
-	inline const float RIFLE_BULLET_SPEED = 0.0;
-	inline const float RIFLE_BULLET_WIDTH = 0.0;
-	inline const float RIFLE_BULLET_HEIGHT = 0.0;
+	inline const char* RIFLE_BULLET_LEFT_PATH = "sprites/rifle-bullet-1.png";
+	inline const char* RIFLE_BULLET_RIGHT_PATH = "sprites/rifle-bullet-2.png";
+	inline const float RIFLE_BULLET_SPEED = 18;
+	inline const float RIFLE_BULLET_WIDTH = 35;
+	inline const float RIFLE_BULLET_HEIGHT = 10;
 
 	// dynamite attributes
 	inline const int DYNAMITE_AMMO = 1;

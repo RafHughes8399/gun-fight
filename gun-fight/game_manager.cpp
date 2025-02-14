@@ -197,7 +197,7 @@ void game_manager::build_level(){
 		game_entities_.push_back(std::move(it.value()));
 	}
 }
-/** every 6.5 seconds, spawn an item on either side of the map */
+/** every 14 seconds, spawn an item on either side of the map */
 void game_manager::spawn_items(){
 	// check time
 	auto time = GetTime();
