@@ -31,6 +31,7 @@ namespace config {
 	inline const char* HUD_HEAD_PATH = "sprites/hud-header.png";
 	inline const char* HUD_FOOT_PATH = "sprites/hud-footer.png";
 	inline const char* HEART_PATH = "sprites/heart.png";
+	inline const char* ARMOUR_PATH = "sprites/armour.png";
 	
 	// button attributes
 	inline const char* PLAY_PATH = "sprites/play.png";
@@ -123,10 +124,10 @@ namespace config {
 	inline const int REVOLVER_AMMO = 5;
 	inline const int REVOLVER_DAMAGE = 1;
 	inline const int REVOLVER_PENETRATION = 0;
-	inline const char* REVOLVER_PATH = "sprites/revolver-chamber.png";
-	inline const float REVOLVER_ANIMATION_LENGTH = 5;
-	inline const float REVOLVER_ANIMATIONS = 11;
-	inline const float REVOLVER_WIDTH = 150;
+	inline const char* REVOLVER_PATH = "sprites/revolver-ammo-display.png";
+	inline const float REVOLVER_ANIMATION_LENGTH = 12;
+	inline const float REVOLVER_ANIMATIONS = 1;
+	inline const float REVOLVER_WIDTH = 100;
 	inline const float REVOLVER_HEIGHT = 150;
 	inline const int REVOLVER_FIRE_RATE = 30;
 	
@@ -137,15 +138,15 @@ namespace config {
 	inline const char* BULLET_LEFT = "sprites/bullet-1.png";
 	inline const char* BULLET_RIGHT = "sprites/bullet-2.png";
 	// rifle attributes TODO: put in values 
-	inline const int RIFLE_AMMO = 4;
+	inline const int RIFLE_AMMO = 3;
 	inline const int RIFLE_DAMAGE = 2;
 	inline const int RIFLE_PENETRATION = 3;
-	inline const char* RIFLE_PATH = "sprites/rifle-clip.png";
-	inline const float RIFLE_ANIMATION_LENGTH = 1;
+	inline const char* RIFLE_PATH = "sprites/rifle-ammo-display.png";
+	inline const float RIFLE_ANIMATION_LENGTH = 8;
 	inline const float RIFLE_ANIMATIONS = 1;
-	inline const float RIFLE_WIDTH = 150;
-	inline const float RIFLE_HEIGHT = 150;
-	inline const int RIFLE_FIRE_RATE = 60;
+	inline const float RIFLE_WIDTH = REVOLVER_WIDTH;
+	inline const float RIFLE_HEIGHT = REVOLVER_HEIGHT;
+	inline const int RIFLE_FIRE_RATE = 100;
 
 	// rifle bullet attributes
 	inline const char* RIFLE_BULLET_LEFT = "sprites/rifle-bullet-1.png";
@@ -275,7 +276,7 @@ namespace config {
 	inline const char* HEALTH_PICKUP_PATH = "sprites/health-pickup.png";
 	inline const char* ARMOUR_PICKUP_PATH = "sprites/armour-pickup.png";
 	inline const char* RIFLE_PICKUP_PATH = "sprites/rifle-pickup.png";
-	inline const char* DYNAMITE_PICKUP_PATH = "sprites/dynamite-pickup.png";
+	inline const char* STRAWMAN_PICKUP_PATH = "sprites/strawman-pickup.png";
 	inline const char* AMMO_PICKUP_PATH = "sprites/ammo-pickup.png";
 	inline const double ITEM_SPAWN_DELAY = 10.5; // in seconds, 10.5 for testing purposes, should be longer in reality
 	
@@ -284,7 +285,7 @@ namespace config {
 		ARMOUR = 1,
 		AMMO = 2,
 		RIFLE = 3,
-		DYNAMITE = 4
+		STRAWMAN = 4
 		// add more as needed
 	};
 

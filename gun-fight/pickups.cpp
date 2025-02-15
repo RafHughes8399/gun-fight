@@ -53,13 +53,12 @@ void entities::empty_pickup::use(std::shared_ptr<gunman>& gunman, std::shared_pt
 /** increase player health to a max of two */
 void entities::health_pickup::use(std::shared_ptr<gunman>& gunman, std::shared_ptr<weapon>& weapon, std::vector<std::shared_ptr<entity>>& entities) {
 	// can have a max health of 2
-	if (gunman->get_health() < 2) {
-		gunman->take_damage(-1);
-	}
+	gunman->increase_health(1);
 }
 /** change the player's weapon to a rifle */
 void entities::rifle_pickup::use(std::shared_ptr<gunman>& gunman, std::shared_ptr<weapon>& weapon, std::vector<std::shared_ptr<entity>>& entities) {
-		// replace the weapon and the gunman animation
+	// replace the weapon and the gunman animation
+	// first check if the weapon is a rifle, do nothing if they already hav e rifle
 	weapon = std::make_shared<entities::rifle>(entities::rifle(weapon->get_x(), weapon->get_y(), config::RIFLE_PATH));
 	if (gunman->get_direction() == 1) {
 		gunman->set_animation(animation(config::P1_RIFLE_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS));
@@ -67,6 +66,7 @@ void entities::rifle_pickup::use(std::shared_ptr<gunman>& gunman, std::shared_pt
 	else {
 		gunman->set_animation(animation(config::P2_RIFLE_PATH, config::GUNMAN_WIDTH, config::GUNMAN_HEIGHT, config::GUNMAN_ANIMAITON_LENGTH, config::GUNMAN_ANIMATIONS));
 	}
+
 	return;
 }
 
@@ -77,9 +77,7 @@ void entities::dynamite_pickup::use(std::shared_ptr<gunman>& gunman, std::shared
 
 /**  give the player armour if not wearing */
 void entities::armour_pickup::use(std::shared_ptr<gunman>& gunman, std::shared_ptr<weapon>& weapon, std::vector<std::shared_ptr<entity>>& entities) {
-	if (gunman->get_armour() < 1) {
-		gunman->increase_armour(1);
-	}
+	gunman->increase_armour(1);
 	return;
 }
 
@@ -99,7 +97,7 @@ void entities::strawman_pickup::use(std::shared_ptr<gunman>& gunman, std::shared
 
 	// right facing gunman
 	else {
-		float x = gunman->get_x() - (gunman->get_animation().get_frame_width() / 2);
+		float x = gunman->get_x() - (gunman->get_animation().get_frame_width() * 1.5);
 		entities.push_back(std::make_shared<entities::strawman>(strawman(x, gunman->get_y(), config::STRAWMAN_RIGHT_PATH, gunman->get_direction())));
 	}
 	return;

@@ -63,7 +63,6 @@ bool player::update_player(std::vector<std::shared_ptr<entities::entity>>& entit
 		// use the item
 		item_->use(gunman_, weapon_, entities);
 		// remove the item from the slot 
-		std::cout << "remove item" << std::endl;
 		item_ = std::make_shared<entities::empty_pickup>(entities::empty_pickup(0.0, 0.0, config::DEFAULT_PATH));
 	}
 	return true;
@@ -84,7 +83,7 @@ void player::draw_player(){
 	gunman_->draw();
 	// draw weapon hud
 	if (gunman_->get_direction() == -1) {
-		float x = config::SCREEN_WIDTH - 115 - weapon_->get_animation().get_frame_width() - 160;
+		float x = config::SCREEN_WIDTH - 115 - weapon_->get_animation().get_frame_width() - 210;
 		weapon_->draw(x, config::SCREEN_HEIGHT - 185);
 		// draw hearts
 		x += weapon_->get_animation().get_frame_width() + 5;
@@ -92,6 +91,11 @@ void player::draw_player(){
 		// draw hearts
 		for (auto i = 0; i < gunman_->get_health(); ++i) {
 			heart_.draw_frame(heart_pos);
+			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
+		}
+		// draw armour 
+		for (auto i = 0; i < gunman_->get_armour(); ++i) {
+			armour_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
 		
 		}
@@ -112,7 +116,12 @@ void player::draw_player(){
 			heart_.draw_frame(heart_pos);
 			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
 		}
-
+		// draw armour 
+		for (auto i = 0; i < gunman_->get_armour(); ++i) {
+			armour_.draw_frame(heart_pos);
+			heart_pos.x += config::HEART_WIDTH + config::HEART_SPACING;
+		
+		}
 
 		// draw item hud, underneath the heart
 		x += item_->get_animation().get_frame_width();

@@ -20,6 +20,9 @@ int entities::gunman::get_health() const {
 int entities::gunman::get_direction() const {
 	return direction_;
 }
+void entities::gunman::increase_health(int value){
+	health_ = std::min(2, health_ + value);
+}
 bool entities::gunman::update(std::vector<std::shared_ptr<entity>>& entities) { // make this a pointer
 	// likewise switch back to the regular if the gunman has no armour
 	return health_ > 0;
@@ -112,9 +115,11 @@ int entities::gunman::get_armour(){
 }
 
 void entities::gunman::increase_armour(int value){
-	armour_ += value;
-	// switch to the armour animation
-	animation_.select_animaiton(1);
+	armour_ = std::min(1, armour_ + value);
+}
+
+bool entities::gunman::is_armoured(){
+	return armour_ > 0;
 }
 
 

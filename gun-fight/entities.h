@@ -85,11 +85,13 @@ namespace entities {
 		/**  unique accessors and behaviours */
 		int get_health() const;
 		int get_direction() const;
+		void increase_health(int value); 
 		void take_damage(int damage);
 		bool move(Vector2& movement_vector, std::vector<std::shared_ptr<entity>>& entities);
 		void reset(float x, float y);
 		int get_armour();
 		void increase_armour(int value);
+		bool is_armoured();
 		/**  operator overloads */
 		bool operator==(const entity& other) override;
 
@@ -375,8 +377,9 @@ namespace entities {
 		bool is_loaded();
 		int get_fire_rate();
 		int get_cooldown();
+		bool is_empty();
 		void decrement_cooldown();
-		virtual void reset_cooldown() = 0;
+		void reset_cooldown();
 
 		/**  operator overloads */
 		weapon& operator=(const weapon& other);
@@ -387,7 +390,7 @@ namespace entities {
 		virtual bool reload() = 0;
 		virtual void replenish() = 0;
 		virtual std::shared_ptr<entities::projectile> create_bullet(float x, float y, int direction) = 0;
-		virtual void draw(int x, int y) = 0;
+		void draw(int x, int y);
 
 	protected:
 		int ammo_;
@@ -412,8 +415,6 @@ namespace entities {
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
-		void draw(int x, int y) override;
-		void reset_cooldown() override;
 
 		/**  entitiy overridden behaivours */
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
@@ -437,8 +438,6 @@ namespace entities {
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
-		void draw(int x, int y) override;
-		void reset_cooldown() override;
 
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
@@ -460,9 +459,6 @@ namespace entities {
 		bool fire() override;
 		bool reload() override;
 		void replenish() override;
-		void draw(int x, int y) override;
-		void reset_cooldown() override;
-
 		bool update(std::vector<std::shared_ptr<entity>>& entities) override;
 		bool collide(entity& other) override;
 	private:
@@ -581,6 +577,9 @@ namespace entities {
 
 	class strawman_pickup :public pickup {
 	public:
+		strawman_pickup(float x, float y, const char* path)
+			: pickup(x, y, path) {
+		};
 	private:
 		void use(std::shared_ptr<gunman>& gunman, std::shared_ptr<weapon>& weapon, std::vector<std::shared_ptr<entity>>& entities) override; // for health changes
 	};

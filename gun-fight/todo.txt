@@ -243,3 +243,20 @@ TODO:
 
  -> test rifle 
  -> redo ammo hud
+
+
+
+
+ -> test cases:
+ 4 shots 
+ 2 damage -> health, does not kill with armour
+ penetrates obstacles
+
+ -> piklcup health then armour 
+ 
+ 
+ 
+ -> pickup armour then health 
+ -> bullet only hits the ostbafcle eone time
+ -> when gun is empty x 
+ -> redxuce the ammo hud size, change it to text x /2 

@@ -10,12 +10,13 @@ public:
 		item_(std::make_unique<entities::empty_pickup>(entities::empty_pickup(0.0,0.0, config::DEFAULT_PATH))), movement_(movement_keys), fire_reload_(fire_reload_keys), item_use_(item_key), score_(0), draw_x_(draw_x) {
 		player_start_pos_ = gunman_->get_position();
 		heart_ = animation(config::HEART_PATH, config::HEART_WIDTH, config::HEART_HEIGHT);
+		armour_ = animation(config::ARMOUR_PATH, config::HEART_WIDTH, config::HEART_HEIGHT);
 		win_ = animation(win_path, config::WIN_WIDTH, config::WIN_HEIGHT);
 	};
 	player(const player& other)
 		: gunman_(other.gunman_), weapon_(other.weapon_),
 		item_(other.item_), score_(other.score_), player_start_pos_(other.player_start_pos_),
-		movement_(other.movement_), fire_reload_(other.fire_reload_), item_use_(other.item_use_), draw_x_(other.draw_x_), heart_(other.heart_), win_(other.win_){};
+		movement_(other.movement_), fire_reload_(other.fire_reload_), item_use_(other.item_use_), draw_x_(other.draw_x_), heart_(other.heart_), armour_(other.armour_),win_(other.win_){};
 
 	player& operator=(const player& other);
 	// get player gunman
@@ -59,6 +60,7 @@ private:
 
 	/** animaations */
 	animation heart_;
+	animation armour_; 
 	animation win_;
 };
 
