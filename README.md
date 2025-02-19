@@ -12,23 +12,23 @@ The first player to four points wins, a point is scored when a player kills the 
 Controls
 Controls are fixed
 Player 1 Controls
-Move Up – W
-Move Left – A
-Move Right – D
-Move Down  - S 
-Use Item – E 
-Fire Weapon – F 
-Reload Weapon – R 
+Move Up – W | 
+Move Left – A | 
+Move Right – D |
+Move Down  - S |
+Use Item – E |
+Fire Weapon – F | 
+Reload Weapon – R |
 
 Player 2 
-Move Up – Up Arrow
-Move Left – Left Arrow
-Move Right – Right Arrow
-Move Down  - Down Arrow
-Use Item –  Backslash (/)
-Fire Weapon – Comma (,)
-Reload Weapon – Full Stop (.)
-
+Move Up – Up Arrow |
+Move Left – Left Arrow | 
+Move Right – Right Arrow | 
+Move Down  - Down Arrow | 
+Use Item –  Backslash (/) | 
+Fire Weapon – Comma (,) | 
+Reload Weapon – Full Stop (.) | 
+ 
 Items and Weapons
 
 Weapon Descriptions
@@ -43,10 +43,10 @@ Strawman Item	- Create a 1 health straw gunman obstacle in front of the player w
 Rifle Pickup - Change the current weapon to a rifle
 
 Setup
-•	Download a .zip file of the repository 
-•	Extract all files 
-•	Open the spaghetti-western folder
-•	Run the file gun_fight.exe
+1. Download a .zip file of the repository 
+2. Extract all files 
+3. Open the spaghetti-western folder
+4. Run the file gun_fight.exe
 
 Credits and Other Notes
 Project Manager: Raffaele Hughes
