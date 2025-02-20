@@ -49,13 +49,9 @@ Controls are fixed
 - **Rifle Pickup**: Changes the current weapon to a rifle.
 
 ## Setup
-
-1. Download a .zip file of the repository.
-2. Extract all files.
-3. Open the spaghetti-western folder. This should be the only folder necessary to play the game.
-4. Run the file `gun_fight.exe`.
-5. Play :D
-
+1. Download the installer at this [link](https://www.dropbox.com/scl/fi/jebworjsod82v1aukv7px/SpaghettiWestern_Setup.exe?rlkey=wiq6l646h6mdmac2bdqkxv54e&st=bh5189di&dl=0)
+2. Run the installer and follow any instructions
+3. It should create a desktop shortcut to an application that you can run
 ## Credits and Other Notes
 
 - **Project Manager**: Raffaele Hughes
