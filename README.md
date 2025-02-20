@@ -49,7 +49,7 @@ Controls are fixed
 - **Rifle Pickup**: Changes the current weapon to a rifle.
 
 ## Setup
-1. Download the installer at this [link](https://www.dropbox.com/scl/fi/jebworjsod82v1aukv7px/SpaghettiWestern_Setup.exe?rlkey=wiq6l646h6mdmac2bdqkxv54e&st=bh5189di&dl=0)
+1. Download the installer at this [link](https://www.dropbox.com/scl/fi/2ly04qzuedc1j6i45ywsr/SpaghettiWestern_Setup_x86.exe?rlkey=5hk5wfhb14xhxsvmx09vp16sj&st=4c9pglfn&dl=0)
 2. Run the installer and follow any instructions
 3. It should create a desktop shortcut to an application that you can run
 ## Credits and Other Notes
